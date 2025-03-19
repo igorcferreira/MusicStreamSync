@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -45,12 +46,24 @@ kotlin {
 
     val xcf = XCFramework(frameworkName)
 
+    fun KotlinNativeTargetWithHostTests.applyMediaRemote() = apply {
+        val frameworkPath = layout.projectDirectory.file("src/native/MediaRemote")
+
+        val main by compilations.getting {
+            val MediaRemote by cinterops.creating {
+                definitionFile.set(project.file("src/native/MediaRemote/MediaRemote.def"))
+                headers("$frameworkPath/MSMediaRemote.h", "$frameworkPath/MSCatalogItem.h")
+                extraOpts("-libraryPath", "$frameworkPath")
+            }
+        }
+    }
+
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
-        macosX64(),
-        macosArm64()
+        macosX64().applyMediaRemote(),
+        macosArm64().applyMediaRemote()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = frameworkName

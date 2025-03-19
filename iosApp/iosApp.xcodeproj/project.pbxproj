@@ -30,6 +30,19 @@
 		78DBA4682D85D4F500D7B917 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DBA4672D85D4F100D7B917 /* PlayerViewModel.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		786852392D8B5BFF00729EFC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -221,6 +234,7 @@
 				7555FF77242A565900829871 /* Sources */,
 				B92378962B6B1156000C7307 /* Frameworks */,
 				7555FF79242A565900829871 /* Resources */,
+				786852392D8B5BFF00729EFC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
