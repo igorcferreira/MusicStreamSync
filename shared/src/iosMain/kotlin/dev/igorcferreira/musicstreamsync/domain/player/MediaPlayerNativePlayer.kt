@@ -1,6 +1,8 @@
 package dev.igorcferreira.musicstreamsync.domain.player
 
+import dev.igorcferreira.musicstreamsync.model.EntryData
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
+import dev.igorcferreira.musicstreamsync.model.entryId
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.readValue
 import kotlinx.cinterop.useContents
@@ -34,8 +36,8 @@ actual class MediaPlayerNativePlayer : NativePlayer {
         player.play()
     }
 
-    override fun set(queue: List<MusicEntry>) {
-        player.setQueueWithStoreIDs(queue.map(MusicEntry::entryId))
+    override fun set(queue: List<EntryData>) {
+        player.setQueueWithStoreIDs(queue.map { it.entryId })
     }
 
     override fun stopPlayback() {

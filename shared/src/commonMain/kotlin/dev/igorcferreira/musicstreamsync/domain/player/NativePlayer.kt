@@ -1,12 +1,13 @@
 package dev.igorcferreira.musicstreamsync.domain.player
 
+import dev.igorcferreira.musicstreamsync.model.EntryData
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
 
 interface NativePlayer {
     val isPlaying: Boolean
     val currentPlaying: MusicEntry?
     fun startPlayback()
-    fun set(queue: List<MusicEntry>)
+    fun set(queue: List<EntryData>)
     fun stopPlayback()
     fun pausePlayback()
 }

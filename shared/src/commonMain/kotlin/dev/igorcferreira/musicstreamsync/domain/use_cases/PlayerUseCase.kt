@@ -3,8 +3,7 @@ package dev.igorcferreira.musicstreamsync.domain.use_cases
 import dev.igorcferreira.musicstreamsync.domain.UseCase
 import dev.igorcferreira.musicstreamsync.domain.player.NativePlayer
 import dev.igorcferreira.musicstreamsync.domain.player.buildNativePlayer
-import dev.igorcferreira.musicstreamsync.model.MusicEntry
-import dev.igorcferreira.musicstreamsync.model.PlaylistEntry
+import dev.igorcferreira.musicstreamsync.model.EntryData
 import kotlinx.coroutines.flow.asSharedFlow
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -20,7 +19,7 @@ class PlayerUseCase(
     fun play() = nativePlayer.currentPlaying?.let { play(it) }
     fun pause() = nativePlayer.pausePlayback()
     fun stop() = nativePlayer.stopPlayback()
-    fun play(item: MusicEntry) {
+    fun play(item: EntryData) {
         if (nativePlayer.currentPlaying?.id == item.id) {
             nativePlayer.startPlayback()
         } else {
@@ -28,18 +27,5 @@ class PlayerUseCase(
             nativePlayer.set(listOf(item))
             nativePlayer.startPlayback()
         }
-    }
-
-    fun play(playlist: PlaylistEntry) {
-        play(
-            MusicEntry(
-                id = playlist.id,
-                entryId = playlist.entryId,
-                title = playlist.name,
-                artist = "",
-                artworkUrl = playlist.artworkUrl ?: "",
-                duration = 0
-            )
-        )
     }
 }

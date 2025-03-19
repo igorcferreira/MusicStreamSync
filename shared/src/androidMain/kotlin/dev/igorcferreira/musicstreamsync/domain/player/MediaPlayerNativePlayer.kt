@@ -20,7 +20,9 @@ import dev.igorcferreira.musicstreamsync.domain.TokenSigner
 import dev.igorcferreira.musicstreamsync.domain.UserTokenProvider
 import dev.igorcferreira.musicstreamsync.domain.signWith
 import dev.igorcferreira.musicstreamsync.model.DeveloperToken
+import dev.igorcferreira.musicstreamsync.model.EntryData
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
+import dev.igorcferreira.musicstreamsync.model.PlaylistEntry
 import kotlinx.coroutines.runBlocking
 
 
@@ -93,7 +95,7 @@ actual class MediaPlayerNativePlayer : NativePlayer {
         player?.play()
     }
 
-    override fun set(queue: List<MusicEntry>) {
+    override fun set(queue: List<EntryData>) {
         if (isPlaying) {
             player?.stop()
         }
@@ -117,13 +119,17 @@ actual class MediaPlayerNativePlayer : NativePlayer {
         }
     }
 
-    private fun MusicEntry.buildCatalog() = CatalogPlaybackQueueItemProvider
+    private fun EntryData.buildCatalog() = CatalogPlaybackQueueItemProvider
         .Builder()
         .let { builder ->
-            if (isPlaylist) {
-                builder.containers(MediaContainerType.PLAYLIST, entryId)
-            } else {
-                builder.items(MediaItemType.SONG, entryId)
+            when (this) {
+                is PlaylistEntry -> builder
+                    .containers(MediaContainerType.PLAYLIST, entryId)
+
+                is MusicEntry -> builder
+                    .items(MediaItemType.SONG, entryId)
+
+                else -> builder
             }
         }
         .build()

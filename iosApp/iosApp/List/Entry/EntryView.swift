@@ -54,7 +54,7 @@ struct EntryView<E: EntryData>: View {
         .padding()
         .background(Color(uiColor: UIColor.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 4.0))
         .listRowSeparator(.hidden)
-        .onTapGesture { playerUseCase.play(entry: entry) }
+        .onTapGesture { playerUseCase.play(item: entry) }
         .accessibilityAddTraits(.isButton)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("entry_\(entry.id)")

@@ -27,16 +27,6 @@ extension MusicEntry {
     }
 }
 
-extension PlayerUseCase {
-    func play(entry: any EntryData) {
-        if let music = entry as? MusicEntry {
-            play(item: music)
-        } else if let playlist = entry as? PlaylistEntry {
-            play(playlist: playlist)
-        }
-    }
-}
-
 #if os(macOS)
 extension NSColor {
     static var secondarySystemBackground: UIColor {

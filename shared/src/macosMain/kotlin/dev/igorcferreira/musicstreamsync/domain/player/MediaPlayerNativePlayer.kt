@@ -1,6 +1,9 @@
 package dev.igorcferreira.musicstreamsync.domain.player
 
+import dev.igorcferreira.musicstreamsync.model.EntryData
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
+import dev.igorcferreira.musicstreamsync.model.entryId
+import dev.igorcferreira.musicstreamsync.model.isPlaylist
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.runBlocking
 import platform.AppKit.NSWorkspace
@@ -37,10 +40,10 @@ actual class MediaPlayerNativePlayer : NativePlayer {
     private val MSCatalogItem.artworkUrl: String?
         get() = artworkData?.let { "data:image/jpeg;base64,${it.base64Encoding()}" }
 
-    private var queue = mutableListOf<MusicEntry>()
+    private var queue = mutableListOf<EntryData>()
     private val mediaRemote = MSMediaRemote()
 
-    private fun urlFor(entry: MusicEntry): String {
+    private fun urlFor(entry: EntryData): String {
         val id = entry.entryId
         val name = entry.title
 
@@ -51,7 +54,7 @@ actual class MediaPlayerNativePlayer : NativePlayer {
         }
     }
 
-    override fun set(queue: List<MusicEntry>) {
+    override fun set(queue: List<EntryData>) {
         this.queue = queue.toMutableList()
     }
 
