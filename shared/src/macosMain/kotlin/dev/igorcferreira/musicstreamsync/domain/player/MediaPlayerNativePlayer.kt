@@ -1,16 +1,44 @@
 package dev.igorcferreira.musicstreamsync.domain.player
 
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.coroutines.runBlocking
 import platform.AppKit.NSWorkspace
 import platform.Foundation.NSURL
+import platform.Foundation.base64Encoding
+import platform.MediaRemote.MSCatalogItem
+import platform.MediaRemote.MSMediaRemote
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
+@OptIn(ExperimentalForeignApi::class)
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class MediaPlayerNativePlayer : NativePlayer {
-    override val isPlaying: Boolean = false
+    override val isPlaying: Boolean
+        get() = false
     override val currentPlaying: MusicEntry?
-        get() = queue.firstOrNull()
+        get() = runBlocking {
+            suspendCoroutine { continuation ->
+                mediaRemote.getCurrentItem { continuation.resume(it?.map()) }
+            }
+        }
+
+    private fun MSCatalogItem.map() = MusicEntry(
+        id = catalogId,
+        entryId = catalogId,
+        title = title,
+        artist = artist,
+        artworkUrl = artworkUrl ?: "",
+        duration = duration.toLong(),
+        album = album,
+        genres = listOf()
+    )
+
+    private val MSCatalogItem.artworkUrl: String?
+        get() = artworkData?.let { "data:image/jpeg;base64,${it.base64Encoding()}" }
 
     private var queue = mutableListOf<MusicEntry>()
+    private val mediaRemote = MSMediaRemote()
 
     private fun urlFor(entry: MusicEntry): String {
         val id = entry.entryId
@@ -23,19 +51,20 @@ actual class MediaPlayerNativePlayer : NativePlayer {
         }
     }
 
-    override fun startPlayback() {
-        val entry = currentPlaying ?: return
-        val formattedURL = urlFor(entry)
-        NSWorkspace.sharedWorkspace.openURL(NSURL(string = formattedURL))
-        queue = mutableListOf()
-    }
-
     override fun set(queue: List<MusicEntry>) {
         this.queue = queue.toMutableList()
     }
 
-    override fun stopPlayback() {}
-    override fun pausePlayback() {}
+    override fun startPlayback() = openCurrentEntry()
+    override fun stopPlayback() = openCurrentEntry()
+    override fun pausePlayback() = openCurrentEntry()
+
+    private fun openCurrentEntry() {
+        val entry = queue.removeFirstOrNull() ?: currentPlaying ?: return
+        val formattedURL = urlFor(entry)
+        NSWorkspace.sharedWorkspace.openURL(NSURL(string = formattedURL))
+        queue = mutableListOf()
+    }
 }
 
 internal actual fun buildNativePlayer(): MediaPlayerNativePlayer = MediaPlayerNativePlayer()

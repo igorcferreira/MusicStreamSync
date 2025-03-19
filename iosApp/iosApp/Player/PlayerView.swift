@@ -27,11 +27,15 @@ struct PlayerView: View {
     }
     
     var actionImage: String {
+        #if os(macOS)
+        "music.note.house.fill"
+        #else
         if viewModel.isPlaying {
             "pause.fill"
         } else {
             "play.fill"
         }
+        #endif
     }
     
     @ViewBuilder
