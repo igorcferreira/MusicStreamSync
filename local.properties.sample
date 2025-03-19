@@ -1,0 +1,12 @@
+## This file must *NOT* be checked into Version Control Systems,
+# as it contains information specific to your local configuration.
+#
+# Location of the SDK. This is only used by Gradle.
+# For customization when using a Version Control System, please read the
+# header note.
+
+# The private key needs to be the Base64 string of the P8 file
+# To get the Base64, run: openssl base64 -in ~/path/to/key.p8 -A | pbcopy
+project.privateKey=<BASE64_STRING_OF_PEM_FILE>
+project.teamId=<APPLE_STORE_TEAM_ID>
+project.keyId=<MUSIC_SERVICE_KEY_ID>
