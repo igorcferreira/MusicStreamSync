@@ -2,13 +2,6 @@ import SwiftUI
 import MusicStream
 import ArkanaKeys
 import MusicKit
-import ScriptingBridge
-
-struct Player {
-    let application = SBApplication(bundleIdentifier: "com.apple.music")
-    
-    
-}
 
 @main
 struct iOSApp: App {
