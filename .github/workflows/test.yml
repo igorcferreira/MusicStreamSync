@@ -20,6 +20,14 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
           cache: gradle
+      - name: Install Arkana
+        run: gem install arkana
+      - name: Run Arkana
+        env:
+          PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
+          TeamId: '<APPLE_STORE_TEAM_ID>'
+          KeyId: '<MUSIC_SERVICE_KEY_ID>'
+        run: arkana -l kotlin
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
       - name: Run tests
@@ -31,6 +39,7 @@ jobs:
           path: ./shared/build/test-results
       - name: Annotate Test Report
         uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
         with:
           report_paths: '**/build/test-results/**/TEST-*.xml'
           comment: 'true'

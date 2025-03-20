@@ -11,7 +11,7 @@ import MusicKit
 
 class Factory {
     private(set) lazy var configuration: MusicStream.Configuration = {
-        .init(developerToken: SecureDeveloperToken())
+        .init()
     }()
     
     func makeRecentlyPlayedUseCase() -> RecentlyPlayedUseCase {

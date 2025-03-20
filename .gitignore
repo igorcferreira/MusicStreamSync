@@ -17,7 +17,7 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 .env
-ArkanaKeys/
+arkana/src/
 package/MusicStream.xcframework
 aars/musicstream/musicstream.aar
 aars/musickitauth/

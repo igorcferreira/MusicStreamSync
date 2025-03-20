@@ -27,20 +27,19 @@ key to integrate/authenticate the API calls. For that, you, as a developer, need
 to [create a media identifier and private key](https://developer.apple.com/help/account/configure-app-capabilities/create-a-media-identifier-and-private-key/)
 that is used in the code as `PrivateKey` to perform the necessary MusicKit calls.
 
-## Running iOS/macOS
+## Configuring MusicKit Service Key
 
-To run the code on iOS:
+This project uses [Arkana](https://github.com/rogerluan/arkana) to obfuscate keys and allow injection of
+values at compile time. To be able to correct build the project, first:
 
 1. Copy the `.env.sample` file as `.env`
 2. Update the values on `.env`
 3. Install Arkana with: `gem install arkana`
 4. Run Arkana with: `arkana`
-5. Open the Xcode project
-6. Update the Bundle ID and Team ID on [App.xcconfig](App.xcconfig)
-7. Run the application
 
-## Running Android
+## Running iOS/macOS
 
-1. Copy the `local.properties.sample` file as `local.properties`
-2. Update the values on `local.properties`
+1. Open the Xcode project
+2. Update the Bundle ID and Team ID on [App.xcconfig](App.xcconfig)
 3. Run the application
+

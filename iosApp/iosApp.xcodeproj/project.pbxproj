@@ -12,9 +12,7 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		7833DE3E2D88BBEF000631FE /* PlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7833DE3D2D88BBEB000631FE /* PlaylistViewModel.swift */; };
-		783F65342D81AB9F00DDC1E2 /* ArkanaKeys in Frameworks */ = {isa = PBXBuildFile; productRef = 783F65332D81AB9F00DDC1E2 /* ArkanaKeys */; };
 		783F65392D8245D600DDC1E2 /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783F65382D8245D400DDC1E2 /* Flow.swift */; };
-		783F653B2D824D6D00DDC1E2 /* SecureDeveloperToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783F653A2D824D6800DDC1E2 /* SecureDeveloperToken.swift */; };
 		7872A47E2D81FC1300DAF5C7 /* RecentlyPlayedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7872A47D2D81FC0F00DAF5C7 /* RecentlyPlayedViewModel.swift */; };
 		788E628A2D88E75E003C4ADA /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788E62892D88E75E003C4ADA /* ListViewModel.swift */; };
 		788E628C2D88E9ED003C4ADA /* FirstTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788E628B2D88E9ED003C4ADA /* FirstTask.swift */; };
@@ -53,7 +51,6 @@
 		7822BFD12D87C53800440567 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = App.xcconfig; path = ../App.xcconfig; sourceTree = SOURCE_ROOT; };
 		7833DE3D2D88BBEB000631FE /* PlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewModel.swift; sourceTree = "<group>"; };
 		783F65382D8245D400DDC1E2 /* Flow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flow.swift; sourceTree = "<group>"; };
-		783F653A2D824D6800DDC1E2 /* SecureDeveloperToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDeveloperToken.swift; sourceTree = "<group>"; };
 		7872A47D2D81FC0F00DAF5C7 /* RecentlyPlayedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyPlayedViewModel.swift; sourceTree = "<group>"; };
 		788E62892D88E75E003C4ADA /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
 		788E628B2D88E9ED003C4ADA /* FirstTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstTask.swift; sourceTree = "<group>"; };
@@ -86,7 +83,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				783F65342D81AB9F00DDC1E2 /* ArkanaKeys in Frameworks */,
 				78B9D65F2D84784B00DAF7FC /* NukeVideo in Frameworks */,
 				78B9D65D2D84784B00DAF7FC /* NukeUI in Frameworks */,
 				78B9D6592D84784B00DAF7FC /* Nuke in Frameworks */,
@@ -173,7 +169,6 @@
 			isa = PBXGroup;
 			children = (
 				78B9D6622D8488DF00DAF7FC /* Factory.swift */,
-				783F653A2D824D6800DDC1E2 /* SecureDeveloperToken.swift */,
 			);
 			path = di;
 			sourceTree = "<group>";
@@ -242,7 +237,6 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
-				783F65332D81AB9F00DDC1E2 /* ArkanaKeys */,
 				78B9D6582D84784B00DAF7FC /* Nuke */,
 				78B9D65A2D84784B00DAF7FC /* NukeExtensions */,
 				78B9D65C2D84784B00DAF7FC /* NukeUI */,
@@ -279,7 +273,6 @@
 			);
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
-				783F65322D81AB9F00DDC1E2 /* XCLocalSwiftPackageReference "../ArkanaKeys/ArkanaKeys" */,
 				78B9D6572D84784B00DAF7FC /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
@@ -334,7 +327,6 @@
 				7833DE3E2D88BBEF000631FE /* PlaylistViewModel.swift in Sources */,
 				783F65392D8245D600DDC1E2 /* Flow.swift in Sources */,
 				7872A47E2D81FC1300DAF5C7 /* RecentlyPlayedViewModel.swift in Sources */,
-				783F653B2D824D6D00DDC1E2 /* SecureDeveloperToken.swift in Sources */,
 				78DBA4682D85D4F500D7B917 /* PlayerViewModel.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				788E628C2D88E9ED003C4ADA /* FirstTask.swift in Sources */,
@@ -573,13 +565,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		783F65322D81AB9F00DDC1E2 /* XCLocalSwiftPackageReference "../ArkanaKeys/ArkanaKeys" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../ArkanaKeys/ArkanaKeys;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		78B9D6572D84784B00DAF7FC /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -592,10 +577,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		783F65332D81AB9F00DDC1E2 /* ArkanaKeys */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ArkanaKeys;
-		};
 		78B9D6582D84784B00DAF7FC /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 78B9D6572D84784B00DAF7FC /* XCRemoteSwiftPackageReference "Nuke" */;
