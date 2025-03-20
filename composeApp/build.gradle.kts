@@ -49,11 +49,11 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "dev.igorcferreira.musicstreamsync"
+        applicationId = getProperty("project.applicationId", "dev.igorcferreira.musicstreamsync")
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = getProperty("project.versionCode", "1").toInt()
+        versionName = getProperty("project.versionName", "1.0")
     }
     packaging {
         resources {
@@ -61,33 +61,9 @@ android {
         }
     }
     buildTypes {
-        all {
-            buildConfigField(
-                "String", "PRIVATE_KEY", "\"${
-                    getProperty("project.privateKey") ?: ""
-                }\""
-            )
-
-            buildConfigField(
-                "String", "TEAM_ID", "\"${
-                    getProperty("project.teamId") ?: ""
-                }\""
-            )
-
-            buildConfigField(
-                "String", "KEY_ID", "\"${
-                    getProperty("project.keyId") ?: ""
-                }\""
-            )
-        }
-
         getByName("release") {
             isMinifyEnabled = false
         }
-    }
-
-    buildFeatures {
-        buildConfig = true
     }
 
     compileOptions {
@@ -100,7 +76,7 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
-fun getProperty(name: String): String? {
+fun getProperty(name: String, defaultValue: String): String {
     val localFile = layout.projectDirectory.file("../local.properties").asFile
     if (localFile.exists()) {
         val localProperties = loadProperties(localFile.path)
@@ -110,8 +86,8 @@ fun getProperty(name: String): String? {
     }
 
     if (!project.hasProperty(name)) {
-        return null
+        return defaultValue
     }
-    return project.property(name)?.toString()
+    return project.property(name)?.toString() ?: defaultValue
 }
 

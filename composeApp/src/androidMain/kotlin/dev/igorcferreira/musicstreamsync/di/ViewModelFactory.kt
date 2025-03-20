@@ -5,12 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
-import dev.igorcferreira.musicstreamsync.domain.JWTTokenSigner
-import dev.igorcferreira.musicstreamsync.domain.MusicUserTokenProvider
 import dev.igorcferreira.musicstreamsync.domain.player.MediaPlayerNativePlayer
 import dev.igorcferreira.musicstreamsync.domain.use_cases.PlayerUseCase
 import dev.igorcferreira.musicstreamsync.history.RecentlyPlayedViewModel
-import dev.igorcferreira.musicstreamsync.model.BuildConfigDeveloperToken
 import dev.igorcferreira.musicstreamsync.model.Configuration
 import dev.igorcferreira.musicstreamsync.player.PlayerViewModel
 import dev.igorcferreira.musicstreamsync.playlist.PlaylistViewModel
@@ -19,7 +16,7 @@ class ViewModelFactory {
     companion object {
         private lateinit var playerInstance: MediaPlayerNativePlayer
 
-        private val configuration = Configuration(BuildConfigDeveloperToken())
+        private val configuration = Configuration()
 
         private fun providePlayer(
             context: Context
@@ -28,9 +25,9 @@ class ViewModelFactory {
                 playerInstance = MediaPlayerNativePlayer().apply {
                     preparePlayer(
                         context = context,
-                        developerToken = BuildConfigDeveloperToken(),
-                        tokenSigner = JWTTokenSigner(),
-                        userTokenProvider = MusicUserTokenProvider.shared
+                        developerToken = configuration.developerToken,
+                        tokenSigner = configuration.tokenSigner,
+                        userTokenProvider = configuration.userTokenProvider,
                     )
                 }
             }

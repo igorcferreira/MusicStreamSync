@@ -20,9 +20,9 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiddenFromObjC
 internal open class AppleMusicAPI(
     private val host: String = "https://api.music.apple.com/v1",
-    private val tokenSigner: TokenSigner,
-    private val userTokenProvider: UserTokenProvider,
-    private val developerToken: DeveloperToken,
+    internal val tokenSigner: TokenSigner,
+    internal val userTokenProvider: UserTokenProvider,
+    internal val developerToken: DeveloperToken,
     private val urlSession: URLSession
 ) {
     @HiddenFromObjC

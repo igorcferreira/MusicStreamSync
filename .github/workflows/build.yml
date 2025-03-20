@@ -19,6 +19,14 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
           cache: gradle
+      - name: Install Arkana
+        run: gem install arkana
+      - name: Run Arkana
+        env:
+          PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
+          TeamId: '<APPLE_STORE_TEAM_ID>'
+          KeyId: '<MUSIC_SERVICE_KEY_ID>'
+        run: arkana -l kotlin
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
