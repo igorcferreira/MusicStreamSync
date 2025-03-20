@@ -35,7 +35,7 @@ values at compile time. To be able to correct build the project, first:
 1. Copy the `.env.sample` file as `.env`
 2. Update the values on `.env`
 3. Install Arkana with: `gem install arkana`
-4. Run Arkana with: `arkana`
+4. Run Arkana with: `arkana -l kotlin`
 
 ## Running iOS/macOS
 
