@@ -39,6 +39,7 @@ jobs:
           path: ./shared/build/test-results
       - name: Annotate Test Report
         uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
         with:
           report_paths: '**/build/test-results/**/TEST-*.xml'
           comment: 'true'
