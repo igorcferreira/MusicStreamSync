@@ -1,0 +1,120 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Authenticate" : {
+
+    },
+    "Authenticate to Last.FM" : {
+
+    },
+    "History" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recentes"
+          }
+        }
+      }
+    },
+    "Input Username and Password to scrobble current listening to Last.FM" : {
+
+    },
+    "Loading..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando…"
+          }
+        }
+      }
+    },
+    "Password" : {
+
+    },
+    "Play %@ - %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play %1$@ - %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tocar %1$@ - %2$@"
+          }
+        }
+      }
+    },
+    "Playlists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlists"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlists"
+          }
+        }
+      }
+    },
+    "Recently Played" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently Played"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escutadas recentemente"
+          }
+        }
+      }
+    },
+    "Refresh" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atualizar"
+          }
+        }
+      }
+    },
+    "Sign off" : {
+
+    },
+    "Username" : {
+
+    }
+  },
+  "version" : "1.0"
+}

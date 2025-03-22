@@ -1,0 +1,83 @@
+package dev.igorcferreira.musicstreamsync.domain
+
+import com.arkanakeys.ArkanaKeys
+import dev.igorcferreira.lastfm.LastFMClient
+import dev.igorcferreira.lastfm.model.HTTPException
+import dev.igorcferreira.musicstreamsync.domain.player.NativePlayer
+import dev.igorcferreira.musicstreamsync.domain.use_cases.PlayerUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlin.coroutines.cancellation.CancellationException
+
+class Scrobbler(
+    apiKey: String = ArkanaKeys.Global.lastFMAPIKey,
+    apiKeySecret: String = ArkanaKeys.Global.lastFMAPISecret,
+    private val playerUserCase: PlayerUseCase = PlayerUseCase()
+) {
+    private val coroutineContext = CoroutineScope(Dispatchers.Unconfined)
+    private var client: LastFMClient? = null
+    private var job: Job? = null
+    internal val isAuthenticated: Boolean
+        get() = client?.isAuthenticated ?: false
+
+    init {
+        start(apiKey, apiKeySecret)
+    }
+
+    fun logout() = client?.logout()
+
+    @Throws(HTTPException::class, CancellationException::class)
+    suspend fun authenticate(username: String, password: String) {
+        val currentClient = client ?: return
+        currentClient.authenticate(username, password)
+    }
+
+    private fun start(apiKey: String, apiKeySecret: String) {
+        job?.cancel()
+        client = LastFMClient(apiKey, apiKeySecret)
+        job = coroutineContext.launch {
+            playerUserCase.playingItem
+                .shareIn(this, SharingStarted.Lazily)
+                .onEach {
+                    val currentClient = client ?: return@onEach
+                    val item = it ?: return@onEach
+                    if (!currentClient.isAuthenticated) {
+                        return@onEach
+                    }
+                    if (item.entryId == lastItemScrobbled) {
+                        return@onEach
+                    }
+                    if (playerUserCase.playerState == NativePlayer.PlayerState.NOT_PLAYING) {
+                        return@onEach
+                    }
+                    lastItemScrobbled = item.entryId
+
+                    currentClient.scrobble(
+                        artist = item.artist,
+                        track = item.title,
+                        timestamp = Clock.System.now(),
+                        album = item.album,
+                        albumArtist = item.albumArtist,
+                    )
+
+                    currentClient.updateNowPlaying(
+                        artist = item.artist,
+                        track = item.title,
+                        album = item.album,
+                        albumArtist = item.albumArtist
+                    )
+                }.launchIn(this)
+        }
+    }
+
+    companion object {
+        private var lastItemScrobbled: String? = null
+    }
+}
