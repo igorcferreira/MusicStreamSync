@@ -26,6 +26,11 @@ dependencyResolutionManagement {
         }
         mavenCentral()
     }
+    versionCatalogs {
+        val kotlincrypto by creating {
+            from("org.kotlincrypto:version-catalog:0.7.0")
+        }
+    }
 }
 
 include(":composeApp")
@@ -33,3 +38,4 @@ include(":shared")
 include(":mediaplayback")
 include(":musickitauth")
 include(":arkana")
+include(":lastfmapi")
