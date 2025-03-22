@@ -1,6 +1,5 @@
 import SwiftUI
 import MusicStream
-import ArkanaKeys
 import MusicKit
 
 @main
