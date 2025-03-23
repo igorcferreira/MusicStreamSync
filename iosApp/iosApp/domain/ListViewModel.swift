@@ -9,7 +9,7 @@ import SwiftUI
 import MusicStream
 
 protocol ListViewModel: ObservableObject {
-    associatedtype ListEntry: EntryData
+    associatedtype ListEntry: EntryData, Hashable
     
     var loading: Bool { get }
     var history: [ListEntry] { get }

@@ -97,6 +97,19 @@ struct PlayerView: View {
                 player(for: item)
                     .transition(.move(edge: .top))
             }
+            #if os(macOS)
+            if item == nil && actionOverwrite != nil {
+                player(for: MusicEntry(
+                    id: "_id",
+                    title: String(localized: "MusicStreamSync"),
+                    artist: String(localized: "Click to see you playlists and favourites"),
+                    artworkUrl: "",
+                    album: nil,
+                    albumArtist: nil
+                ))
+                .transition(.move(edge: .top))
+            }
+            #endif
         }
         .animation(.default, value: item)
     }
