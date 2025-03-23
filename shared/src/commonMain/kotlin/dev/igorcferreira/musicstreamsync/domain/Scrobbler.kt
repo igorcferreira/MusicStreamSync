@@ -59,6 +59,8 @@ class Scrobbler(
                     }
                     lastItemScrobbled = item.entryId
 
+                    SystemLogger.info("Scrobbler", "Scrobbling ${item.title} - ${item.artist}")
+
                     currentClient.scrobble(
                         artist = item.artist,
                         track = item.title,

@@ -7,6 +7,7 @@
 //
 import SwiftUI
 
+#if os(macOS)
 struct SyncMenuBar: View {
     
     @Environment(\.openWindow) var openWindow
@@ -25,10 +26,11 @@ struct SyncMenuBar: View {
         }
         NSApplication.shared.windows.forEach { window in
             if window.identifier?.rawValue.starts(with: "main") ?? false {
-                window.makeKeyAndOrderFront(nil)
+                window.makeKeyAndOrderFront(window)
                 window.orderFrontRegardless()
                 return
             }
         }
     }
 }
+#endif

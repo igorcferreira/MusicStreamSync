@@ -1,5 +1,6 @@
 package dev.igorcferreira.musicstreamsync.domain.use_cases
 
+import dev.igorcferreira.musicstreamsync.domain.SystemLogger
 import dev.igorcferreira.musicstreamsync.domain.player.NativePlayer
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +20,17 @@ internal class PlayerWatcher(
     @Suppress("unused")
     private val task: Job = coroutineContext.async(start = CoroutineStart.UNDISPATCHED) {
         while (true) {
-            _isPlaying.update { nativePlayer.isPlaying }
-            _playingItem.update { nativePlayer.currentPlaying }
+            val isPlaying = nativePlayer.isPlaying
+            if (isPlaying != _isPlaying.value) {
+                _isPlaying.update { isPlaying }
+            }
+
+            val current = nativePlayer.currentPlaying
+            if (current?.entryId != _playingItem.value?.entryId) {
+                SystemLogger.info("PlayerWatcher", "Player is playing ${current?.title} - ${current?.artist}")
+                _playingItem.update { current }
+            }
+
             delay(1.seconds)
         }
     }

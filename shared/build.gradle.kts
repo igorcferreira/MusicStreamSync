@@ -28,6 +28,12 @@ swiftklib {
         minMacos = 14
         packageName("dev.igorcferreira.os.bridge")
     }
+    val OSLogger by creating {
+        path = file(layout.projectDirectory.file("src/native/OSLogger/Sources"))
+        minIos = 17
+        minMacos = 14
+        packageName("dev.igorcferreira.os.logger")
+    }
 }
 
 kotlin {
@@ -80,6 +86,7 @@ kotlin {
             val MediaPlayer by cinterops.creating {
                 definitionFile.set(project.file("src/native/OS/MediaPlayer.def"))
             }
+            val OSLogger by cinterops.creating {}
             val KCrypto by cinterops.creating {}
             val MusicKitBridge by cinterops.creating {}
         }
