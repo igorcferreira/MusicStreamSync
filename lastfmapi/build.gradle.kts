@@ -39,6 +39,13 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
+            languageSettings.optIn("com.russhwolf.settings.ExperimentalSettingsApi")
+        }
+    }
+
+    sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)

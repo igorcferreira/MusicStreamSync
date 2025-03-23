@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CorrectableText(
-    val corrected: String,
+    val corrected: String? = "0",
     @SerialName("#text")
     val text: String,
 ) {

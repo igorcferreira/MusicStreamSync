@@ -1,11 +1,11 @@
 package dev.igorcferreira.lastfm
 
 import com.russhwolf.settings.Settings
-import dev.igorcferreira.lastfm.model.HTTPException
-import dev.igorcferreira.lastfm.model.NowPlaying
-import dev.igorcferreira.lastfm.model.Scrobble
-import dev.igorcferreira.lastfm.model.Session
+import com.russhwolf.settings.serialization.decodeValueOrNull
+import com.russhwolf.settings.serialization.encodeValue
+import dev.igorcferreira.lastfm.model.*
 import dev.igorcferreira.lastfm.model.responses.NowPlayingResponse
+import dev.igorcferreira.lastfm.model.responses.RecenteTracksResponse
 import dev.igorcferreira.lastfm.model.responses.ScrobbleResponse
 import dev.igorcferreira.lastfm.model.responses.SessionResponse
 import dev.igorcferreira.lastfm.network.API
@@ -13,6 +13,14 @@ import dev.igorcferreira.lastfm.network.authentication.KeyHasher
 import io.ktor.http.*
 import kotlinx.datetime.Instant
 import kotlin.coroutines.cancellation.CancellationException
+
+internal var Settings.session: Session?
+    get() = decodeValueOrNull(Session.serializer(), API.SESSION_KEY)
+    set(value) = if (value == null) {
+        remove(API.SESSION_KEY)
+    } else {
+        encodeValue(Session.serializer(), API.SESSION_KEY, value)
+    }
 
 @Suppress("unused")
 class LastFMClient internal constructor(
@@ -22,7 +30,10 @@ class LastFMClient internal constructor(
 ) {
     private val api = API(KeyHasher(apiKey, apiSecret), settings)
     val isAuthenticated: Boolean
-        get() = !settings.getStringOrNull(API.SESSION_KEY).isNullOrBlank()
+        get() {
+            val session: Session = settings.session ?: return false
+            return session.key.isNotBlank()
+        }
 
     constructor(apiKey: String, secret: String) : this(apiKey, secret, Settings())
 
@@ -41,8 +52,22 @@ class LastFMClient internal constructor(
             throw HTTPException(HttpStatusCode.Unauthorized, "Invalid authentication")
         }
 
-        settings.apply { putString(API.SESSION_KEY, response.session.key) }
+        settings.session = response.session
+
         return response.session
+    }
+
+    @Throws(HTTPException::class, CancellationException::class)
+    suspend fun listLatestTracks(
+        user: String? = null
+    ): List<Track> {
+        val response: RecenteTracksResponse = api.get(
+            "user.getRecentTracks", mapOf(
+                "user" to (user ?: settings.session?.name
+                    ?: throw HTTPException(HttpStatusCode.Unauthorized, "Failed to get current user data"))
+            )
+        )
+        return response.tracks
     }
 
     @Throws(HTTPException::class, CancellationException::class)

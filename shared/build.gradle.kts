@@ -34,6 +34,8 @@ kotlin {
     sourceSets {
         all {
             languageSettings.optIn("kotlin.experimental.ExperimentalObjCRefinement")
+            languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
+            languageSettings.optIn("com.russhwolf.settings.ExperimentalSettingsApi")
             languageSettings.optIn("kotlinx.cinterop.BetaInteropApi")
         }
     }

@@ -4,6 +4,7 @@ import com.russhwolf.settings.Settings
 import dev.igorcferreira.lastfm.model.APIErrorResponse
 import dev.igorcferreira.lastfm.model.HTTPException
 import dev.igorcferreira.lastfm.network.authentication.KeyHasher
+import dev.igorcferreira.lastfm.session
 import io.ktor.client.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
@@ -21,11 +22,14 @@ internal class API(
 ) {
     internal suspend inline fun <reified T> get(
         method: String,
-        parameters: Map<String, String> = emptyMap()
+        parameters: Map<String, String> = emptyMap(),
+        complement: Boolean = true
     ): T {
         val client = buildClient()
         try {
-            val query = parameters.complement(method)
+            val query = if (complement) parameters.complement(method) else {
+                parameters
+            }
                 .map { (key, value) -> "$key=$value" }
                 .joinToString("&")
 
@@ -46,14 +50,17 @@ internal class API(
 
     internal suspend inline fun <reified T> post(
         method: String,
-        parameters: Map<String, String>
+        parameters: Map<String, String>,
+        complement: Boolean = true
     ): T {
         val client = buildClient()
         try {
             val response = client.post(endpoint) {
                 contentType(ContentType.Application.FormUrlEncoded)
                 setBody(FormDataContent(Parameters.build {
-                    parameters.complement(method).forEach { (key, value) ->
+                    if (complement) parameters.complement(method) else {
+                        parameters
+                    }.forEach { (key, value) ->
                         append(key, value)
                     }
                 }))
@@ -87,9 +94,7 @@ internal class API(
             put("api_key", keyHasher.apiKey)
         }
 
-        settings.getStringOrNull(SESSION_KEY)?.let {
-            allParameters["sk"] = it
-        }
+        settings.session?.let { allParameters["sk"] = it.key }
 
         allParameters["api_sig"] = keyHasher.hash(allParameters)
         allParameters["format"] = "json"
