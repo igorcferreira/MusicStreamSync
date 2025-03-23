@@ -20,7 +20,9 @@ open class PlayerViewModel: ObservableObject {
 
         self.playerUseCase?.playingItem.sinkOnMain { [weak self] (item: MusicEntry?) in
             guard let playing = item else { return }
-            self?.playingItem = playing
+            if playing.entryId != self?.playingItem?.entryId {
+                self?.playingItem = playing
+            }
         }
     }
     
