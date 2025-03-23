@@ -45,6 +45,9 @@
     "Password" : {
 
     },
+    "Password:" : {
+
+    },
     "Play %@ - %@" : {
       "localizations" : {
         "en" : {
@@ -113,6 +116,9 @@
 
     },
     "Username" : {
+
+    },
+    "Username:" : {
 
     }
   },

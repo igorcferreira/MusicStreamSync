@@ -93,7 +93,6 @@
 		78A2A69E2D83776E00493290 /* appleMain */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = appleMain; path = ../shared/src/appleMain; sourceTree = SOURCE_ROOT; };
 		78DBA4742D860E3600D7B917 /* iosMain */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = iosMain; path = ../shared/src/iosMain; sourceTree = SOURCE_ROOT; };
 		78DBA47C2D860E3600D7B917 /* macosMain */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = macosMain; path = ../shared/src/macosMain; sourceTree = SOURCE_ROOT; };
-		78DBA4932D866BFB00D7B917 /* native */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = native; path = ../shared/src/native; sourceTree = SOURCE_ROOT; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,7 +129,6 @@
 			isa = PBXGroup;
 			children = (
 				7822BFD12D87C53800440567 /* App.xcconfig */,
-				78DBA4932D866BFB00D7B917 /* native */,
 				78DBA4742D860E3600D7B917 /* iosMain */,
 				78DBA47C2D860E3600D7B917 /* macosMain */,
 				78A2A69E2D83776E00493290 /* appleMain */,

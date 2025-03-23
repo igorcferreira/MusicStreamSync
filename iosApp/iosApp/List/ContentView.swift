@@ -22,20 +22,21 @@ struct ContentView<VM: ListViewModel>: View {
                     .id("loding_indicator")
             }
             
-            List {
-                #if os(iOS)
+            #if os(iOS)
+            HStack {
                 Text(title)
                     .font(.title)
                     .padding(.horizontal)
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityIdentifier("home_title")
-                    .listRowSeparator(.hidden)
                     .id("title_\(title)")
-                #endif
-
-                ForEach(viewModel.history, id: \.id) { entry in
-                    EntryView(entry: entry, factory: factory)
-                }
+                Spacer()
+                LastFMToolbarItem()
+            }
+            .listRowSeparator(.hidden)
+            #endif
+            
+            List(viewModel.history, id: \.id) { entry in
+                EntryView(entry: entry, factory: factory)
             }
             .listStyle(.plain)
             .refreshable { Task { await self.load() }}
