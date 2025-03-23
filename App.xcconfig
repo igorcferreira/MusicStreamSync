@@ -1,4 +1,4 @@
-CURRENT_PROJECT_VERSION = 3
+CURRENT_PROJECT_VERSION = 4
 MARKETING_VERSION = 1.0
 APP_NAME = MusicStreamSync
 BUNDLE_ID = dev.igorcferreira.MusicStreamSync
