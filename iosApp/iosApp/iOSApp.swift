@@ -5,10 +5,9 @@ import MusicKit
 @main
 struct iOSApp: App {
     @Environment(\.factory) var factory
-    @State var authenticating: Bool = false
     
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: "main") {
             VStack {
                 PlayerView(factory: factory)
                 TabView {
@@ -31,7 +30,23 @@ struct iOSApp: App {
                     }
                 }
                 .tabViewStyle(.sidebarAdaptable)
+#if os(macOS)
+                .onAppear {
+                    NSApplication.shared.setActivationPolicy(.regular)
+                }
+                .onDisappear {
+                    NSApplication.shared.setActivationPolicy(.prohibited)
+                }
+#endif
             }
         }
+#if os(macOS)
+        MenuBarExtra(isInserted: .constant(true)) {
+            SyncMenuBar()
+        } label: {
+            Image(systemName: "music.note.house.fill")
+        }
+        .menuBarExtraStyle(.window)
+#endif
     }
 }

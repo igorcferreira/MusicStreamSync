@@ -27,6 +27,7 @@
 		78B9D65D2D84784B00DAF7FC /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 78B9D65C2D84784B00DAF7FC /* NukeUI */; };
 		78B9D65F2D84784B00DAF7FC /* NukeVideo in Frameworks */ = {isa = PBXBuildFile; productRef = 78B9D65E2D84784B00DAF7FC /* NukeVideo */; };
 		78B9D6632D8488E200DAF7FC /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B9D6622D8488DF00DAF7FC /* Factory.swift */; };
+		78D295B52D8FAC1F00F09FE8 /* SyncMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D295B42D8FAC1B00F09FE8 /* SyncMenuBar.swift */; };
 		78DBA4662D85D4D700D7B917 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DBA4652D85D4D300D7B917 /* PlayerView.swift */; };
 		78DBA4682D85D4F500D7B917 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DBA4672D85D4F100D7B917 /* PlayerViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -84,6 +85,7 @@
 		78A2A68A2D82D40200493290 /* EntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryView.swift; sourceTree = "<group>"; };
 		78B9D64F2D845AC200DAF7FC /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		78B9D6622D8488DF00DAF7FC /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
+		78D295B42D8FAC1B00F09FE8 /* SyncMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncMenuBar.swift; sourceTree = "<group>"; };
 		78DBA4652D85D4D300D7B917 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		78DBA4672D85D4F100D7B917 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -150,6 +152,7 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				78D295B32D8FAC1100F09FE8 /* MenuBar */,
 				7868BACA2D8F577E00784946 /* LastFM */,
 				788E62882D88E59E003C4ADA /* List */,
 				7833DE3A2D88BBA9000631FE /* Playlist */,
@@ -243,6 +246,14 @@
 				78A2A68A2D82D40200493290 /* EntryView.swift */,
 			);
 			path = Entry;
+			sourceTree = "<group>";
+		};
+		78D295B32D8FAC1100F09FE8 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				78D295B42D8FAC1B00F09FE8 /* SyncMenuBar.swift */,
+			);
+			path = MenuBar;
 			sourceTree = "<group>";
 		};
 		78ECB72A2D843BC600459E3B /* Player */ = {
@@ -394,6 +405,7 @@
 				7833DE3E2D88BBEF000631FE /* PlaylistViewModel.swift in Sources */,
 				783F65392D8245D600DDC1E2 /* Flow.swift in Sources */,
 				7868BACE2D8F58C400784946 /* LastFMAuthentication.swift in Sources */,
+				78D295B52D8FAC1F00F09FE8 /* SyncMenuBar.swift in Sources */,
 				7872A47E2D81FC1300DAF5C7 /* RecentlyPlayedViewModel.swift in Sources */,
 				78DBA4682D85D4F500D7B917 /* PlayerViewModel.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,

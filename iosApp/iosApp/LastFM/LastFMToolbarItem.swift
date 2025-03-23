@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct LastFMToolbarItem: View {
-    @ObservedObject private var lastFMViewModel = LastFMViewModel()
+    @ObservedObject private var lastFMViewModel: LastFMViewModel
     @State private var authenticating: Bool = false
+    
+    init(lastFMViewModel: LastFMViewModel = LastFMViewModel()) {
+        self.lastFMViewModel = lastFMViewModel
+    }
     
     var body: some View {
         ZStack {

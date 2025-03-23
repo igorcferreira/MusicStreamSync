@@ -13,13 +13,22 @@ import MusicKit
 struct PlayerView: View {
     
     @StateObject private var viewModel: PlayerViewModel
+    private var actionOverwrite: (() -> Void)?
     
-    init(viewModel: PlayerViewModel) {
+    init(
+        viewModel: PlayerViewModel,
+        actionOverwrite: (() -> Void)? = nil
+    ) {
         self._viewModel = .init(wrappedValue: viewModel)
+        self.actionOverwrite = actionOverwrite
     }
     
-    init(factory: Factory) {
+    init(
+        factory: Factory,
+        actionOverwrite: (() -> Void)? = nil
+    ) {
         self._viewModel = .init(wrappedValue: .init(factory: factory))
+        self.actionOverwrite = actionOverwrite
     }
     
     var item: MusicEntry? {
@@ -93,6 +102,10 @@ struct PlayerView: View {
     }
     
     private func action() {
+        if let overwrite = actionOverwrite {
+            return overwrite()
+        }
+
         if viewModel.isPlaying {
             viewModel.pause()
         } else {
