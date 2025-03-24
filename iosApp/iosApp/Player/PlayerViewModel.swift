@@ -18,12 +18,8 @@ open class PlayerViewModel: ObservableObject {
         self.playerUseCase?.isPlaying
             .collect(into: \.isPlaying, observer: self)
 
-        self.playerUseCase?.playingItem.sinkOnMain { [weak self] (item: MusicEntry?) in
-            guard let playing = item else { return }
-            if playing.entryId != self?.playingItem?.entryId {
-                self?.playingItem = playing
-            }
-        }
+        self.playerUseCase?.playingItem
+            .collect(into: \.playingItem, observer: self)
     }
     
     convenience init(factory: Factory) {
