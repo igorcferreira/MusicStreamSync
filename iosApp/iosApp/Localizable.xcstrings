@@ -2,22 +2,37 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Authenticate" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrar"
+          }
+        }
+      }
     },
     "Authenticate to Last.FM" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entre com sua conta Last.FM"
+          }
+        }
+      }
     },
-    "Click to see you playlists and favourites" : {
-
+    "Click to see your playlists and favourites" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperte para ver suas playlists e músicas favoritas"
+          }
+        }
+      }
     },
     "History" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "History"
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27,16 +42,17 @@
       }
     },
     "Input Username and Password to scrobble current listening to Last.FM" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entre seu usuário e senha do Last.FM para atualizar seu perfil com as músicas que estão tocando"
+          }
+        }
+      }
     },
     "Loading..." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading..."
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -45,14 +61,46 @@
         }
       }
     },
+    "Manual Scrobble" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scrobble manual"
+          }
+        }
+      }
+    },
     "MusicStreamSync" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MusicStreamSync"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "Password" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senha"
+          }
+        }
+      }
     },
     "Password:" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senha:"
+          }
+        }
+      }
     },
     "Play %@ - %@" : {
       "localizations" : {
@@ -72,12 +120,6 @@
     },
     "Playlists" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playlists"
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -88,12 +130,6 @@
     },
     "Recently Played" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recently Played"
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -104,12 +140,6 @@
     },
     "Refresh" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh"
-          }
-        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -118,14 +148,48 @@
         }
       }
     },
-    "Sign off" : {
+    "Scrobble" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scrobble"
+          }
+        }
+      }
+    },
+    "Select the items to scrobble and then hit 'Scrobble' to update your Last.fm library" : {
 
+    },
+    "Sign off" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sair"
+          }
+        }
+      }
     },
     "Username" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuário"
+          }
+        }
+      }
     },
     "Username:" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuário:"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

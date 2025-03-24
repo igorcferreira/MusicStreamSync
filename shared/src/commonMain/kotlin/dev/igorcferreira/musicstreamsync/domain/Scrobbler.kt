@@ -3,8 +3,10 @@ package dev.igorcferreira.musicstreamsync.domain
 import com.arkanakeys.ArkanaKeys
 import dev.igorcferreira.lastfm.LastFMClient
 import dev.igorcferreira.lastfm.model.HTTPException
+import dev.igorcferreira.lastfm.model.Scrobble
 import dev.igorcferreira.musicstreamsync.domain.player.NativePlayer
 import dev.igorcferreira.musicstreamsync.domain.use_cases.PlayerUseCase
+import dev.igorcferreira.musicstreamsync.model.MusicEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -37,6 +39,23 @@ class Scrobbler(
     suspend fun authenticate(username: String, password: String) {
         val currentClient = client ?: return
         currentClient.authenticate(username, password)
+    }
+
+    suspend fun scrobble(items: List<MusicEntry>) {
+        val currentClient = client ?: return
+        try {
+            currentClient.scrobble(items.map {
+                Scrobble(
+                    track = it.title,
+                    artist = it.artist,
+                    timestamp = Clock.System.now(),
+                    album = it.album,
+                    albumArtist = it.albumArtist,
+                )
+            })
+        } catch (e: Exception) {
+            SystemLogger.error("LAST_FM_SCROBBLER", "Unable to scrobble: ${e.message ?: ""}", e)
+        }
     }
 
     private fun start(apiKey: String, apiKeySecret: String) {

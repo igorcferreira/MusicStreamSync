@@ -74,20 +74,24 @@ class LastFMClient internal constructor(
     suspend fun scrobble(
         items: List<Scrobble>
     ): Scrobble {
-        val parameters = mutableMapOf<String, String>()
+        try {
+            val parameters = mutableMapOf<String, String>()
 
-        items.forEachIndexed { index, scrobble ->
-            parameters.apply {
-                put("artist[$index]", scrobble.artist.text)
-                put("track[$index]", scrobble.track.text)
-                put("timestamp[$index]", scrobble.timestamp.toString())
-                scrobble.album?.text?.let { put("album[$index]", it) }
-                scrobble.albumArtist?.text?.let { put("albumArtist[$index]", it) }
+            items.forEachIndexed { index, scrobble ->
+                parameters.apply {
+                    put("artist[$index]", scrobble.artist.text)
+                    put("track[$index]", scrobble.track.text)
+                    put("timestamp[$index]", scrobble.timestamp.toString())
+                    scrobble.album?.text?.let { put("album[$index]", it) }
+                    scrobble.albumArtist?.text?.let { put("albumArtist[$index]", it) }
+                }
             }
-        }
 
-        val response: ScrobbleResponse = api.post("track.scrobble", parameters)
-        return response.scrobble
+            val response: ScrobbleResponse = api.post("track.scrobble", parameters)
+            return response.scrobble
+        } catch (ex: Exception) {
+            throw HTTPException(HttpStatusCode.InternalServerError, ex.message ?: "")
+        }
     }
 
     @Throws(HTTPException::class, CancellationException::class)

@@ -11,6 +11,7 @@
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
+		78098AF32D91B65D00769998 /* ScrobbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78098AF22D91B65A00769998 /* ScrobbleView.swift */; };
 		7833DE3E2D88BBEF000631FE /* PlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7833DE3D2D88BBEB000631FE /* PlaylistViewModel.swift */; };
 		783F65392D8245D600DDC1E2 /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783F65382D8245D400DDC1E2 /* Flow.swift */; };
 		7868BACC2D8F578A00784946 /* LastFMViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7868BACB2D8F578500784946 /* LastFMViewModel.swift */; };
@@ -69,6 +70,7 @@
 		7555FF7B242A565900829871 /* MusicStreamSync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicStreamSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78098AF22D91B65A00769998 /* ScrobbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrobbleView.swift; sourceTree = "<group>"; };
 		7822BFD12D87C53800440567 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = App.xcconfig; path = ../App.xcconfig; sourceTree = SOURCE_ROOT; };
 		7833DE3D2D88BBEB000631FE /* PlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewModel.swift; sourceTree = "<group>"; };
 		783AF00C2D8F7A5B00E468B8 /* MediaRemote.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MediaRemote.xcodeproj; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				78098AF42D91B66400769998 /* Scrobble */,
 				78D295B32D8FAC1100F09FE8 /* MenuBar */,
 				7868BACA2D8F577E00784946 /* LastFM */,
 				788E62882D88E59E003C4ADA /* List */,
@@ -168,6 +171,14 @@
 				788E63302D88FF82003C4ADA /* Localizable.xcstrings */,
 			);
 			path = iosApp;
+			sourceTree = "<group>";
+		};
+		78098AF42D91B66400769998 /* Scrobble */ = {
+			isa = PBXGroup;
+			children = (
+				78098AF22D91B65A00769998 /* ScrobbleView.swift */,
+			);
+			path = Scrobble;
 			sourceTree = "<group>";
 		};
 		7833DE3A2D88BBA9000631FE /* Playlist */ = {
@@ -417,6 +428,7 @@
 				78A2A68B2D82D40400493290 /* EntryView.swift in Sources */,
 				7868BAD02D8F5FD200784946 /* LastFMToolbarItem.swift in Sources */,
 				78B9D6632D8488E200DAF7FC /* Factory.swift in Sources */,
+				78098AF32D91B65D00769998 /* ScrobbleView.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -31,6 +31,11 @@ struct iOSApp: App {
                     ).tabItem  {
                         Label("Playlists", systemImage: "play.square.stack.fill")
                     }
+                    ScrobbleView(
+                        factory: factory
+                    ).tabItem {
+                        Label("Scrobble", systemImage: "icloud.and.arrow.up.fill")
+                    }
                 }
                 .toolbar {
                     ToolbarItem(id: "lastfm") {

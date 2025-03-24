@@ -102,7 +102,7 @@ struct PlayerView: View {
                 player(for: MusicEntry(
                     id: "_id",
                     title: String(localized: "MusicStreamSync"),
-                    artist: String(localized: "Click to see you playlists and favourites"),
+                    artist: String(localized: "Click to see your playlists and favourites"),
                     artworkUrl: "",
                     album: nil,
                     albumArtist: nil

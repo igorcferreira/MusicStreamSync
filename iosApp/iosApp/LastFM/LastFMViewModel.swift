@@ -31,6 +31,10 @@ class LastFMViewModel: ObservableObject {
         }
     }
     
+    func scrobble(_ selection: Set<MusicEntry>) async {
+        try? await useCase.scrobble(selection: Array(selection))
+    }
+    
     func logout() {
         useCase.logout()
         isAuthenticated = false

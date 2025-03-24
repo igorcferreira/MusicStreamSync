@@ -12,11 +12,13 @@ import NukeUI
 
 struct EntryView<E: EntryData>: View {
     @State var entry: E
+    private let tapAction: ((E) -> Void)?
     private let playerUseCase: PlayerUseCase
     
-    init(entry: E, factory: Factory) {
+    init(entry: E, factory: Factory, tapAction: ((E) -> Void)? = nil) {
         self.entry = entry
         self.playerUseCase = factory.makePlayerUseCase()
+        self.tapAction = tapAction
     }
     
     var body: some View {
@@ -54,7 +56,13 @@ struct EntryView<E: EntryData>: View {
         .padding()
         .background(Color(uiColor: UIColor.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 4.0))
         .listRowSeparator(.hidden)
-        .onTapGesture { playerUseCase.play(item: entry) }
+        .onTapGesture {
+            if let tapAction {
+                tapAction(entry)
+            } else {
+                playerUseCase.play(item: entry)
+            }
+        }
         .accessibilityAddTraits(.isButton)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("entry_\(entry.id)")
