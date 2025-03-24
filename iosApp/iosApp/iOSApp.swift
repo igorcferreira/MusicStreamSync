@@ -11,6 +11,7 @@ struct iOSApp: App {
     
     @Environment(\.factory) var factory
     @Environment(\.scenePhase) private var phase
+    @ObservedObject private var recentlyPlayedViewModel = RecentlyPlayedViewModel(useCase: FactoryKey.defaultValue.makeRecentlyPlayedUseCase())
     @ObservedObject private var playerViewModel = PlayerViewModel(factory: FactoryKey.defaultValue)
     @ObservedObject private var lastFMViewModel = LastFMViewModel()
     
@@ -21,7 +22,7 @@ struct iOSApp: App {
                 TabView {
                     ContentView(
                         title: String(localized: "Recently Played"),
-                        viewModel: RecentlyPlayedViewModel(useCase: factory.makeRecentlyPlayedUseCase())
+                        viewModel: recentlyPlayedViewModel
                     ).tabItem  {
                         Label("History", systemImage: "music.note.house.fill")
                     }
@@ -32,7 +33,8 @@ struct iOSApp: App {
                         Label("Playlists", systemImage: "play.square.stack.fill")
                     }
                     ScrobbleView(
-                        factory: factory
+                        recentlyPlayed: recentlyPlayedViewModel,
+                        lastFMViewModel: lastFMViewModel
                     ).tabItem {
                         Label("Scrobble", systemImage: "icloud.and.arrow.up.fill")
                     }

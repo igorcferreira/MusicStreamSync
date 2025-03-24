@@ -17,13 +17,13 @@ struct ScrobbleView: View {
     @State var selection = Set<MusicEntry>()    
     
     init(factory: Factory) {
-        self.recentlyPlayed = RecentlyPlayedViewModel(useCase: factory.makeRecentlyPlayedUseCase())
-        self.lastFMViewModel = LastFMViewModel()
+        self._recentlyPlayed = .init(initialValue: RecentlyPlayedViewModel(useCase: factory.makeRecentlyPlayedUseCase()))
+        self._lastFMViewModel = .init(initialValue: LastFMViewModel())
     }
     
     init(recentlyPlayed: RecentlyPlayedViewModel, lastFMViewModel: LastFMViewModel) {
-        self.recentlyPlayed = recentlyPlayed
-        self.lastFMViewModel = lastFMViewModel
+        self._recentlyPlayed = .init(initialValue: recentlyPlayed)
+        self._lastFMViewModel = .init(initialValue: lastFMViewModel)
     }
     
     @ViewBuilder
@@ -52,52 +52,47 @@ struct ScrobbleView: View {
                     .accessibilityLabel(Text("Loading..."))
                     .listRowSeparator(.hidden)
                     .id("loding_indicator")
+            } else {
+                Text("Select the items to scrobble and then hit 'Scrobble' to update your Last.fm library")
+                    .font(.body)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .id("header_text")
             }
-            List(selection: $selection) {
-                if !recentlyPlayed.loading {
-                    Text("Select the items to scrobble and then hit 'Scrobble' to update your Last.fm library")
-                        .font(.body)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .listRowSeparator(.hidden)
+            
+            List(recentlyPlayed.history) { entry in
+                EntryView(entry: entry, factory: factory) { item in
+                    toggle(selection: item)
                 }
-                ForEach(recentlyPlayed.history) { entry in
-                    EntryView(entry: entry, factory: factory) { item in
-                        toggle(selection: item)
-                    }
-                    .overlay {
-                        if (isSelected(entry)) {
-                            RoundedRectangle(cornerRadius: 4.0)
-                            #if os(iOS)
-                                .foregroundStyle(Color(uiColor: UIColor.tintColor.withAlphaComponent(0.33)))
-                            #else
-                                .foregroundStyle(Color(nsColor: NSColor.selectedContentBackgroundColor.withAlphaComponent(0.33)))
-                            #endif
-                                .onTapGesture { toggle(selection: entry) }
-                        }
+                .overlay {
+                    if (isSelected(entry)) {
+                        RoundedRectangle(cornerRadius: 4.0)
+                        #if os(iOS)
+                            .foregroundStyle(Color(uiColor: UIColor.tintColor.withAlphaComponent(0.33)))
+                        #else
+                            .foregroundStyle(Color(nsColor: NSColor.selectedContentBackgroundColor.withAlphaComponent(0.33)))
+                        #endif
+                            .onTapGesture { toggle(selection: entry) }
                     }
                 }
+                .id(entry.id)
             }
-            .refreshable {
-                await self.load()
-            }
+            .listStyle(.plain)
+            .refreshable { self.load() }
         }
         .navigationTitle("Manual Scrobble")
         .padding()
-        .onFirstTask {
-            await self.load()
-        }
         .toolbar { scrobbleButton }
         .contextMenu {
-            Button("Refresh") { Task {
-                await self.load()
-            }}
+            Button("Refresh") {
+                self.load()
+            }
             .keyboardShortcut("r", modifiers: [.command])
         }
     }
     
-    private func load() async {
+    private func load() { Task {
         try? await recentlyPlayed.load()
-    }
+    }}
     
     private func isSelected(_ entry: MusicEntry) -> Bool {
         return selection.contains(entry)
