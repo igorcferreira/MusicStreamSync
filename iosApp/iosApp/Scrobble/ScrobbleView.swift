@@ -53,11 +53,14 @@ struct ScrobbleView: View {
                     .listRowSeparator(.hidden)
                     .id("loding_indicator")
             }
-            Text("Select the items to scrobble and then hit 'Scrobble' to update your Last.fm library")
-                .font(.body)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            List(recentlyPlayed.history, selection: $selection) { entry in
-                HStack {
+            List(selection: $selection) {
+                if !recentlyPlayed.loading {
+                    Text("Select the items to scrobble and then hit 'Scrobble' to update your Last.fm library")
+                        .font(.body)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .listRowSeparator(.hidden)
+                }
+                ForEach(recentlyPlayed.history) { entry in
                     EntryView(entry: entry, factory: factory) { item in
                         toggle(selection: item)
                     }
@@ -73,7 +76,6 @@ struct ScrobbleView: View {
                         }
                     }
                 }
-                .listRowSeparator(.hidden)
             }
             .refreshable {
                 await self.load()

@@ -159,7 +159,14 @@
       }
     },
     "Select the items to scrobble and then hit 'Scrobble' to update your Last.fm library" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione as músicas abaixo e use  o botão ‘Scrobble’ para atualizar a sua biblioteca Last.FM"
+          }
+        }
+      }
     },
     "Sign off" : {
       "localizations" : {
