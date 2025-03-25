@@ -104,6 +104,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(project(":arkana"))
             implementation(project(":lastfmapi"))
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.multiplatform.settings.serialization)
+            implementation(libs.multiplatform.settings.coroutines)
         }
         commonTest.dependencies {
             api(libs.jjwt.api)

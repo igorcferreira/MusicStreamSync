@@ -1,6 +1,8 @@
 package dev.igorcferreira.musicstreamsync.domain
 
 import com.arkanakeys.ArkanaKeys
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.set
 import dev.igorcferreira.lastfm.LastFMClient
 import dev.igorcferreira.lastfm.model.HTTPException
 import dev.igorcferreira.lastfm.model.Scrobble
@@ -99,6 +101,10 @@ class Scrobbler(
     }
 
     companion object {
-        private var lastItemScrobbled: String? = null
+        private val settings = Settings()
+        private const val LAST_ITEM_KEY = "LAST_ITEM_KEY"
+        private var lastItemScrobbled: String?
+            get() = settings.getStringOrNull(LAST_ITEM_KEY)
+            set(value) = settings.set(LAST_ITEM_KEY, value)
     }
 }
