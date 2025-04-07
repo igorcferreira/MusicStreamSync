@@ -22,3 +22,4 @@ package/MusicStream.xcframework
 aars/musicstream/musicstream.aar
 aars/musickitauth/
 aars/mediaplayback/
+build.env

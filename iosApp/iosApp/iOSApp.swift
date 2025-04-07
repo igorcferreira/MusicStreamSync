@@ -6,7 +6,6 @@ import OSLog
 
 @main
 struct iOSApp: App {
-    private let kBackgroundTask = "dev.igorcferreira.musicstream.current"
     private let logger = Logger(subsystem: "dev.igorcferreira.musicstream", category: "music")
     
     @Environment(\.factory) var factory
@@ -55,19 +54,6 @@ struct iOSApp: App {
 #endif
             }
         }
-        .onChange(of: phase) { _, newPhase in
-            if case .background = newPhase {
-                requestBackgroundTask()
-            }
-        }
-#if os(iOS)
-        .backgroundTask(.appRefresh(kBackgroundTask)) {
-            try? await Task.sleep(for: .seconds(2))
-            let isPlaying = await playerViewModel.isPlaying
-            logger.info("Background Task -  Is playing: \(isPlaying)")
-            await requestBackgroundTask()
-        }
-#endif
 #if os(macOS)
         MenuBarExtra(isInserted: .constant(true)) {
             SyncMenuBar()
@@ -75,19 +61,6 @@ struct iOSApp: App {
             Image(systemName: "music.note.house.fill")
         }
         .menuBarExtraStyle(.window)
-#endif
-    }
-    
-    func requestBackgroundTask() {
-#if os(iOS)
-        let request = BGAppRefreshTaskRequest(identifier: kBackgroundTask)
-        request.earliestBeginDate = Date().addingTimeInterval(60)
-        do {
-            try BGTaskScheduler.shared.submit(request)
-            logger.info("Requested background task")
-        } catch {
-            logger.info("Failed to request background task: \(error)")
-        }
 #endif
     }
 }

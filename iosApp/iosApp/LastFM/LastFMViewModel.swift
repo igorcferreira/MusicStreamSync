@@ -31,8 +31,11 @@ class LastFMViewModel: ObservableObject {
         }
     }
     
-    func scrobble(_ selection: Set<MusicEntry>) async {
-        try? await useCase.scrobble(selection: Array(selection))
+    func scrobble(_ selection: [MusicEntry], items: [MusicEntry]) async {
+        //This is done to keep the sorting of the input, regardless
+        //of the order of the selection made by the user.
+        let itemsToUpload = items.filter({ selection.contains($0) })
+        try? await useCase.scrobble(selection: itemsToUpload)
     }
     
     func logout() {

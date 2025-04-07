@@ -14,7 +14,7 @@ struct ScrobbleView: View {
     @Environment(\.factory) var factory
     @ObservedObject var recentlyPlayed: RecentlyPlayedViewModel
     @ObservedObject var lastFMViewModel: LastFMViewModel
-    @State var selection = Set<MusicEntry>()    
+    @State var selection = [MusicEntry]()
     
     init(factory: Factory) {
         self._recentlyPlayed = .init(initialValue: RecentlyPlayedViewModel(useCase: factory.makeRecentlyPlayedUseCase()))
@@ -100,14 +100,19 @@ struct ScrobbleView: View {
     
     private func toggle(selection: MusicEntry) {
         if isSelected(selection) {
-            self.selection.remove(selection)
+            self.selection.removeAll(where: {
+                $0.id == selection.id
+            })
         } else {
-            self.selection.insert(selection)
+            self.selection.append(selection)
         }
     }
     
     private func scrobble() { Task {
-        await lastFMViewModel.scrobble(selection)
+        await lastFMViewModel.scrobble(
+            selection,
+            items: recentlyPlayed.history
+        )
         selection.removeAll()
     }}
 }
