@@ -17,19 +17,19 @@ val frameworkName = "MusicStream"
 @Suppress("LocalVariableName")
 swiftklib {
     val KCrypto by creating {
-        path = file(layout.projectDirectory.file("src/native/KCrypto/Sources"))
+        path = file(layout.projectDirectory.file("src/native/KCrypto/Sources/KCrypto"))
         minIos = 17
         minMacos = 14
         packageName("dev.igorcferreira.crypt")
     }
     val MusicKitBridge by creating {
-        path = file(layout.projectDirectory.file("src/native/MusicKitBridge/Sources"))
+        path = file(layout.projectDirectory.file("src/native/MusicKitBridge/Sources/MusicKitBridge"))
         minIos = 17
         minMacos = 14
         packageName("dev.igorcferreira.os.bridge")
     }
     val OSLogger by creating {
-        path = file(layout.projectDirectory.file("src/native/OSLogger/Sources"))
+        path = file(layout.projectDirectory.file("src/native/OSLogger/Sources/OSLogger"))
         minIos = 17
         minMacos = 14
         packageName("dev.igorcferreira.os.logger")
