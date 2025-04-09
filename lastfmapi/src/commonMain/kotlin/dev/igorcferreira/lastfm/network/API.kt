@@ -13,6 +13,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
+import kotlin.jvm.JvmOverloads
 
 internal class API(
     private val keyHasher: KeyHasher,
@@ -27,7 +28,7 @@ internal class API(
     ): T {
         val client = buildClient()
         try {
-            val query = if (complement) parameters.complement(method) else {
+            val query = if (complement) parameters.complement(method, null) else {
                 parameters
             }
                 .map { (key, value) -> "$key=$value" }
@@ -58,7 +59,7 @@ internal class API(
             val response = client.post(endpoint) {
                 contentType(ContentType.Application.FormUrlEncoded)
                 setBody(FormDataContent(Parameters.build {
-                    if (complement) parameters.complement(method) else {
+                    if (complement) parameters.complement(method, null) else {
                         parameters
                     }.forEach { (key, value) ->
                         append(key, value)
@@ -87,7 +88,7 @@ internal class API(
 
     private fun Map<String, String>.complement(
         method: String,
-        userSession: String? = null
+        userSession: String?
     ): Map<String, String> {
         val allParameters = toMutableMap().apply {
             put("method", method)
