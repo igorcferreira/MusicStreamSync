@@ -5,6 +5,11 @@ import PackageDescription
 
 let package = Package(
     name: "KCrypto",
+    platforms: [
+        .iOS(.v17),
+        .macOS(.v14),
+        .macCatalyst(.v17)
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(name: "KCrypto", type: .static, targets: ["KCrypto"]),
