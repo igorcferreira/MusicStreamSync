@@ -35,6 +35,8 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>The app needs access to Apple Music to list the recently listenned to tracks</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>MuscStreamSync needs permission to read the current song.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
