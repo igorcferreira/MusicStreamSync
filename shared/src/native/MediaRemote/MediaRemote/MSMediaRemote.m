@@ -1,45 +1,71 @@
+//
+//  MediaRemote.m
+//  MediaRemote
+//
+//  Created by Igor Ferreira on 14/04/2025.
+//
 #import "MSMediaRemote.h"
-#import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
-#import <objc/runtime.h>
-#import "Enums.h"
 #import "MSCatalogItem.h"
+#import "Music.h"
 
-typedef void (*MRMediaRemoteGetNowPlayingInfoFunction)(dispatch_queue_t queue, void (^handler)(NSDictionary* information));
-typedef void (*MRMediaRemoteSetElapsedTimeFunction)(double time);
-typedef Boolean (*MRMediaRemoteSendCommandFunction)(MRMediaRemoteCommand cmd, NSDictionary* userInfo);
+const NSTimeInterval kPollingInterval = 10.0;
 
-NSDictionary<NSString*, NSNumber*> *cmdTranslate = @{
-    @"play": @(MRMediaRemoteCommandPlay),
-    @"pause": @(MRMediaRemoteCommandPause),
-    @"togglePlayPause": @(MRMediaRemoteCommandTogglePlayPause),
-    @"next": @(MRMediaRemoteCommandNextTrack),
-    @"previous": @(MRMediaRemoteCommandPreviousTrack),
-};
+@interface MSMediaRemote()
+
+@property (nonatomic, retain) MusicApplication *music;
+
+@end
 
 @implementation MSMediaRemote
 
-- (void)getCurrentItem:(void (^__strong)(MSCatalogItem *__strong))completion {
-    CFURLRef ref = (__bridge CFURLRef) [NSURL fileURLWithPath:@"/System/Library/PrivateFrameworks/MediaRemote.framework"];
-    CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, ref);
-    MRMediaRemoteGetNowPlayingInfoFunction MRMediaRemoteGetNowPlayingInfo = (MRMediaRemoteGetNowPlayingInfoFunction) CFBundleGetFunctionPointerForName(bundle, CFSTR("MRMediaRemoteGetNowPlayingInfo"));
-    MRMediaRemoteGetNowPlayingInfo(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(NSDictionary* information) {
-        MSCatalogItem *item = [[MSCatalogItem alloc] initWith: information];
-        completion(item);
-    });
+@synthesize music;
+
+- (id) init {
+    self = [super init];
+    if (self) {
+        self.music = [SBApplication applicationWithBundleIdentifier:@"com.apple.music"];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [[NSDistributedNotificationCenter defaultCenter] removeObserver:self name:nil object:nil];
+    self.music = nil;
 }
 
 - (void)pause {
-    [self exec:@"pause"];
+    [self.music playpause];
 }
+
 - (void)resume {
-    [self exec:@"play"];
+    [self.music pause];
 }
-- (void) exec:(NSString *)command {
-    CFURLRef ref = (__bridge CFURLRef) [NSURL fileURLWithPath:@"/System/Library/PrivateFrameworks/MediaRemote.framework"];
-    CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, ref);
-    MRMediaRemoteSendCommandFunction MRMediaRemoteSendCommand = (MRMediaRemoteSendCommandFunction) CFBundleGetFunctionPointerForName(bundle, CFSTR("MRMediaRemoteSendCommand"));
-    MRMediaRemoteSendCommand((MRMediaRemoteCommand) [cmdTranslate[command] intValue], nil);
+
+- (void)getCurrentItem:(void (^__strong)(MSCatalogItem *))completion {
+    MSCatalogItem *content = [self fetchCatalogItem];
+    completion(content);
+}
+
+-(MSCatalogItem *)fetchCatalogItem {
+    MusicTrack *currentTrack = nil;
+    
+    if ([self.music isRunning] && [self.music playerState] == MusicEPlSPlaying) {
+        currentTrack = [self.music currentTrack];
+    }
+    
+    if (currentTrack == nil) {
+        return nil;
+    }
+    
+    MSCatalogItem *item = [[MSCatalogItem alloc] init];
+    item.title = [currentTrack name];
+    item.artist = [currentTrack artist];
+    item.album = [currentTrack album];
+    item.artworkData = [[[currentTrack artworks] firstObject] rawData];
+    item.duration = [currentTrack duration];
+    item.elapsedTime = [self.music playerPosition];
+    item.catalogId = [NSString stringWithFormat:@"%ld", [currentTrack id]];
+    return item;
 }
 
 @end
