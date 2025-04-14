@@ -86,7 +86,7 @@ internal class API(
         }
     }
 
-    private fun Map<String, String>.complement(
+    internal fun Map<String, String>.complement(
         method: String,
         userSession: String?
     ): Map<String, String> {
