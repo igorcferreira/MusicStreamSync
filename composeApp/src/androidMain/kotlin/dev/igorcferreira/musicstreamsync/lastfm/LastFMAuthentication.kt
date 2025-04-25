@@ -21,22 +21,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.igorcferreira.musicstreamsync.R
 import dev.igorcferreira.musicstreamsync.application.theme.AppTheme
-import dev.igorcferreira.musicstreamsync.di.ViewModelFactory
-
-@Composable
-fun LastFMAuthentication(
-    viewModel: LastFMViewModel = viewModel(factory = ViewModelFactory.LastFM)
-) {
-    val authenticating = viewModel.authenticating.collectAsState(initial = false)
-    LastFMAuthentication(
-        authenticating = authenticating.value,
-    ) { username, password ->
-        viewModel.authenticate(username, password)
-    }
-}
 
 @Composable
 fun LastFMAuthentication(
@@ -53,7 +39,7 @@ fun LastFMAuthentication(
         usernameFocus.requestFocus()
     }
 
-    BoxWithConstraints(
+    Box(
         Modifier.padding(16.dp)
     ) {
         AnimatedVisibility(authenticating, Modifier.align(Alignment.Center)) {
@@ -135,7 +121,7 @@ fun LastFMAuthentication(
 }
 
 @Composable
-@Preview(name = "Inputs")
+@Preview(name = "Inputs", showBackground = true)
 fun LastFMAuthenticationPreview() {
     AppTheme {
         LastFMAuthentication(
@@ -145,7 +131,7 @@ fun LastFMAuthenticationPreview() {
 }
 
 @Composable
-@Preview(name = "Loading")
+@Preview(name = "Loading", showBackground = true)
 fun LastFMAuthenticatingPreview() {
     AppTheme {
         LastFMAuthentication(

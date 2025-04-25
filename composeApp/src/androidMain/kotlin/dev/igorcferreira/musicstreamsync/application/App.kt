@@ -21,7 +21,7 @@ import dev.igorcferreira.musicstreamsync.playlist.Playlist
 @Composable
 fun App() {
     val context = LocalContext.current
-    var tabIndex by remember { mutableStateOf(0) }
+    var tabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf(R.string.history, R.string.playlists)
 
     Column(
@@ -44,6 +44,7 @@ fun App() {
                     1 -> context.getString(R.string.playlists)
                     else -> ""
                 },
+                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )

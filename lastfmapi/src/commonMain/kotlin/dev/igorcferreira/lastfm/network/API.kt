@@ -13,7 +13,6 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
-import kotlin.jvm.JvmOverloads
 
 internal class API(
     private val keyHasher: KeyHasher,

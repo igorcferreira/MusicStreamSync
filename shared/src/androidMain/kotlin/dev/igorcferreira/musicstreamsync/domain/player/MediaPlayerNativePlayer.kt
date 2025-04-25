@@ -19,10 +19,20 @@ import dev.igorcferreira.musicstreamsync.domain.player.NativePlayer.PlayerState
 import dev.igorcferreira.musicstreamsync.domain.signWith
 import dev.igorcferreira.musicstreamsync.model.*
 import kotlinx.coroutines.runBlocking
+import java.lang.ref.WeakReference
 
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class MediaPlayerNativePlayer : NativePlayer {
+
+    private data class PlayerConfiguration(
+        val context: WeakReference<Context>,
+        val developerToken: DeveloperToken,
+        val tokenSigner: TokenSigner,
+        val userTokenProvider: UserTokenProvider
+    )
+
+    private var playerConfiguration: PlayerConfiguration? = null
     private var player: MediaPlayerController? = null
     override val playerState: PlayerState
         get() = if (isPlaying) PlayerState.PLAYING else PlayerState.NOT_PLAYING
@@ -52,69 +62,85 @@ actual class MediaPlayerNativePlayer : NativePlayer {
         tokenSigner: TokenSigner,
         userTokenProvider: UserTokenProvider
     ) {
-        val audioManager = getSystemService(context, AudioManager::class.java)
-        audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, 20, 0)
+        playerConfiguration = PlayerConfiguration(
+            context = WeakReference(context),
+            developerToken = developerToken,
+            tokenSigner = tokenSigner,
+            userTokenProvider = userTokenProvider
+        )
 
         player?.release()
-        player = MediaPlayerControllerFactory.createLocalController(
-            context.applicationContext,
-            Handler(Looper.getMainLooper()),
-            object : TokenProvider {
-                override fun getDeveloperToken(): String = runBlocking {
-                    developerToken.signWith(tokenSigner)
-                }
-
-                override fun getUserToken(): String = runBlocking {
-                    userTokenProvider.getUserToken(getDeveloperToken())
-                }
-            }
-        )
-        player?.addListener(object : MediaPlayerController.Listener {
-            override fun onPlaybackError(p0: MediaPlayerController, p1: MediaPlayerException) {}
-            override fun onPlayerStateRestored(p0: MediaPlayerController) {}
-            override fun onPlaybackStateChanged(p0: MediaPlayerController, p1: Int, p2: Int) {
-                if (p1 == STOPPED && p2 == PAUSED) {
-                    p0.play()
-                }
-            }
-
-            override fun onPlaybackStateUpdated(p0: MediaPlayerController) {}
-            override fun onBufferingStateChanged(p0: MediaPlayerController, p1: Boolean) {}
-            override fun onCurrentItemChanged(p0: MediaPlayerController, p1: PlayerQueueItem?, p2: PlayerQueueItem?) {}
-            override fun onItemEnded(p0: MediaPlayerController, p1: PlayerQueueItem, p2: Long) {}
-            override fun onMetadataUpdated(p0: MediaPlayerController, p1: PlayerQueueItem) {}
-            override fun onPlaybackQueueChanged(p0: MediaPlayerController, p1: MutableList<PlayerQueueItem>) {}
-            override fun onPlaybackQueueItemsAdded(p0: MediaPlayerController, p1: Int, p2: Int, p3: Int) {}
-            override fun onPlaybackRepeatModeChanged(p0: MediaPlayerController, p1: Int) {}
-            override fun onPlaybackShuffleModeChanged(p0: MediaPlayerController, p1: Int) {}
-        })
+        player = null
     }
 
+    private val currentPlayer: MediaPlayerController?
+        get() {
+            if (player != null) { return player }
+            val configuration = playerConfiguration ?: return null
+            val context = configuration.context.get() ?: return null
+
+            val audioManager = getSystemService(context, AudioManager::class.java)
+            audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, 20, 0)
+            player = MediaPlayerControllerFactory.createLocalController(
+                context.applicationContext,
+                Handler(Looper.getMainLooper()),
+                object : TokenProvider {
+                    override fun getDeveloperToken(): String = runBlocking {
+                        configuration.developerToken.signWith(configuration.tokenSigner)
+                    }
+
+                    override fun getUserToken(): String = runBlocking {
+                        configuration.userTokenProvider.getUserToken(getDeveloperToken())
+                    }
+                }
+            )
+            player?.addListener(object : MediaPlayerController.Listener {
+                override fun onPlaybackError(p0: MediaPlayerController, p1: MediaPlayerException) {}
+                override fun onPlayerStateRestored(p0: MediaPlayerController) {}
+                override fun onPlaybackStateChanged(p0: MediaPlayerController, p1: Int, p2: Int) {
+                    if (p1 == STOPPED && p2 == PAUSED) {
+                        p0.play()
+                    }
+                }
+
+                override fun onPlaybackStateUpdated(p0: MediaPlayerController) {}
+                override fun onBufferingStateChanged(p0: MediaPlayerController, p1: Boolean) {}
+                override fun onCurrentItemChanged(p0: MediaPlayerController, p1: PlayerQueueItem?, p2: PlayerQueueItem?) {}
+                override fun onItemEnded(p0: MediaPlayerController, p1: PlayerQueueItem, p2: Long) {}
+                override fun onMetadataUpdated(p0: MediaPlayerController, p1: PlayerQueueItem) {}
+                override fun onPlaybackQueueChanged(p0: MediaPlayerController, p1: MutableList<PlayerQueueItem>) {}
+                override fun onPlaybackQueueItemsAdded(p0: MediaPlayerController, p1: Int, p2: Int, p3: Int) {}
+                override fun onPlaybackRepeatModeChanged(p0: MediaPlayerController, p1: Int) {}
+                override fun onPlaybackShuffleModeChanged(p0: MediaPlayerController, p1: Int) {}
+            })
+            return player
+        }
+
     override fun startPlayback() {
-        player?.play()
+        currentPlayer?.play()
     }
 
     override fun set(queue: List<EntryData>) {
         if (isPlaying) {
-            player?.stop()
+            currentPlayer?.stop()
         }
 
-        player?.queueItems?.forEach {
-            player?.removeQueueItemWithId(it.playbackQueueId)
+        currentPlayer?.queueItems?.forEach {
+            currentPlayer?.removeQueueItemWithId(it.playbackQueueId)
         }
 
         val mutable = queue.toMutableList()
         val first = mutable.removeFirstOrNull() ?: return
         val catalog = first.buildCatalog()
-        player?.repeatMode = PlaybackRepeatMode.REPEAT_MODE_OFF
-        player?.shuffleMode = PlaybackShuffleMode.SHUFFLE_MODE_OFF
-        player?.prepare(catalog)
+        currentPlayer?.repeatMode = PlaybackRepeatMode.REPEAT_MODE_OFF
+        currentPlayer?.shuffleMode = PlaybackShuffleMode.SHUFFLE_MODE_OFF
+        currentPlayer?.prepare(catalog)
 
         mutable
             .filter { it.entryId != first.entryId }
             .forEach { entry ->
                 val item = entry.buildCatalog()
-                player?.addQueueItems(
+                currentPlayer?.addQueueItems(
                     item,
                     PlaybackQueueInsertionType.INSERTION_TYPE_AT_END
                 )
@@ -137,11 +163,11 @@ actual class MediaPlayerNativePlayer : NativePlayer {
         .build()
 
     override fun stopPlayback() {
-        player?.stop()
+        currentPlayer?.stop()
     }
 
     override fun pausePlayback() {
-        player?.pause()
+        currentPlayer?.pause()
     }
 
     companion object {
