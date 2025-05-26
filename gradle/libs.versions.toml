@@ -20,7 +20,7 @@ kvault = "1.12.0"
 media = "1.7.0"
 multiplatformSettings = "1.3.0"
 swiftklib = "0.6.4"
-mokkery = "2.7.2"
+mokkery = "2.8.0"
 material3Android = "1.3.2"
 kmmdeploy = "2.3.0"
 
