@@ -14,7 +14,7 @@ plugins {
 
 val frameworkName = "MusicStream"
 
-@Suppress("LocalVariableName")
+@Suppress("LocalVariableName", "unused")
 swiftklib {
     val KCrypto by creating {
         path = file(layout.projectDirectory.file("src/native/KCrypto/Sources/KCrypto"))
@@ -54,6 +54,7 @@ kotlin {
 
     val xcf = XCFramework(frameworkName)
 
+    @Suppress("LocalVariableName", "unused")
     fun KotlinNativeTargetWithHostTests.applyMediaRemote() = apply {
         val frameworkPath = layout.projectDirectory.file("src/native/MediaRemote")
 
@@ -81,7 +82,7 @@ kotlin {
             isStatic = true
             xcf.add(this)
         }
-        @Suppress("LocalVariableName")
+        @Suppress("LocalVariableName", "unused")
         val main by iosTarget.compilations.getting {
             val MediaPlayer by cinterops.creating {
                 definitionFile.set(project.file("src/native/OS/MediaPlayer.def"))
