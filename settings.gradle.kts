@@ -28,7 +28,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         val kotlincrypto by creating {
-            from("org.kotlincrypto:version-catalog:0.7.0")
+            from("org.kotlincrypto:version-catalog:0.7.2")
         }
     }
 }
