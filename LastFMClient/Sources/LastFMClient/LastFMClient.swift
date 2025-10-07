@@ -3,8 +3,12 @@
 import Foundation
 import AuthenticationServices
 
+extension Notification.Name {
+    public static let LastFMAuthenticationChanged = Notification.Name("LastFMClient.AuthenticationChanged")
+}
+
 public struct LastFMClient: Sendable {
-    
+
     private(set) var keyConfiguration: KeyConfiguration? {
         get {
             KeyConfiguration.restore()
@@ -14,13 +18,8 @@ public struct LastFMClient: Sendable {
             newValue.store()
         }
     }
-    private(set) var userCredentials: UserSession? {
-        get {
-            UserSession.restore()
-        }
-        set {
-            newValue.store()
-        }
+    private var userCredentials: UserSession? {
+        UserSession.restore()
     }
     
     private let networkClient: NetworkClient
@@ -79,10 +78,12 @@ public struct LastFMClient: Sendable {
         )
         let response: SessionResponse = try await self.networkClient.perform(endpoint)
         response.session.store()
+        NotificationCenter.default.post(name: .LastFMAuthenticationChanged, object: false)
         return response.session.name
     }
     
     public func logout() {
         UserSession.erase()
+        NotificationCenter.default.post(name: .LastFMAuthenticationChanged, object: false)
     }
 }
