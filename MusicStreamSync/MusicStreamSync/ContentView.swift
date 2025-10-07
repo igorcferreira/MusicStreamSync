@@ -9,58 +9,80 @@ import SwiftUI
 import LastFMClient
 
 struct ContentView: View {
-    @State private var tracks: [Track] = []
-    @State private var error: Error? = nil
-    @Environment(\.lastFMClient) private var client
+    
+    enum TabEntry: String {
+        case home = "Home"
+        case playlist = "Playlist"
+        case scrobble = "Scrobble"
+    }
+    
+    @State private var selectedTab = TabEntry.home
+    @State private var isPlaying: Bool = false
+    @Environment(\.lastFMClient) private var lastFMClient
     
     var body: some View {
-        VStack {
-            AuthenticationButton()
-            
-            if let error {
-                Text("Error: \(error.localizedDescription)")
-            }
-            
-            List(tracks) { track in
-                VStack(alignment: .leading) {
-                    Text(track.name)
-                        .font(.body)
-                    Text(track.album.text)
-                        .font(.footnote)
+        TopStyle {
+            TabView(selection: $selectedTab) {
+                Tab(TabEntry.home.rawValue, systemImage: "music.note.house.fill", value: .home) {
+                    HomeView(client: lastFMClient)
+                        .navigationTitle(Text(TabEntry.home.rawValue))
                 }
-                .id(track.id)
+                Tab(TabEntry.playlist.rawValue, systemImage: "play.square.stack.fill", value: .playlist) {
+                    HomeView(client: lastFMClient)
+                        .navigationTitle(Text(TabEntry.playlist.rawValue))
+                }
+                Tab(TabEntry.scrobble.rawValue, systemImage: "icloud.and.arrow.up.fill", value: .scrobble) {
+                    HomeView(client: lastFMClient)
+                        .navigationTitle(Text(TabEntry.scrobble.rawValue))
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    AuthenticationButton(client: lastFMClient)
+                }
+            }
+            .tabViewBottomAccessory {
+                if isPlaying {
+                    Text("Custom Playing item")
+                }
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .LastFMAuthenticationChanged)) { _ in
-            loadContent()
+#if os(macOS)
+        .onAppear {
+            NSApplication.shared.setActivationPolicy(.regular)
         }
-        .task {
-            loadContent()
+        .onDisappear {
+            NSApplication.shared.setActivationPolicy(.prohibited)
         }
+#endif
     }
     
-    func loadContent() { Task.detached {
-        guard await client.isAuthenticated else {
-            return
+    @ViewBuilder
+    func TopStyle<Content: View>(
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        #if os(macOS)
+        content()
+            .tabViewStyle(.sidebarAdaptable)
+        #else
+        NavigationView {
+            content()
+                .navigationTitle(Text(selectedTab.rawValue))
         }
-        
-        do {
-            let tracks = try await client.listLatestTracks()
-            await update(tracks)
-            await update(error: nil)
-        } catch {
-            await update(error: error)
-        }
-    }}
-    
-    func update(error: Error?) {
-        self.error = error
-    }
-    
-    func update(_ tracks: [Track]) {
-        self.tracks = tracks
+        #endif
     }
 }
+
+#if os(macOS)
+extension View {
+    @ViewBuilder
+    func tabViewBottomAccessory<Content>(
+        @ViewBuilder content: () -> Content
+    ) -> some View where Content : View {
+        overlay(alignment: .bottom, content: content)
+    }
+}
+#endif
 
 #Preview {
     ContentView()
