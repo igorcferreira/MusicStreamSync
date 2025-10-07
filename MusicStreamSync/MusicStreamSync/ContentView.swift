@@ -16,44 +16,69 @@ struct ContentView: View {
     @Environment(\.lastFMClient) private var client
     
     var body: some View {
-        VStack {
-            
-            if isAuthenticated {
-                Button("Logout") {
-                    client.logout()
-                    handleAuthentication()
+        GeometryReader { geometry in
+            VStack {
+                if isAuthenticated {
+                    Button("Logout") {
+                        client.logout()
+                        handleAuthentication()
+                    }
+                } else {
+                    Button("Authenticate") {
+                        showAuthentication = true
+                    }
                 }
-            } else {
-                Button("Authenticate") {
-                    showAuthentication = true
+                
+                if let error {
+                    Text("Error: \(error.localizedDescription)")
+                }
+                
+                List(tracks) { track in
+                    VStack(alignment: .leading) {
+                        Text(track.name)
+                            .font(.body)
+                        Text(track.album.text)
+                            .font(.footnote)
+                    }
+                    .id(track.id)
                 }
             }
-            
-            if let error {
-                Text("Error: \(error.localizedDescription)")
+            .task {
+                handleAuthentication()
             }
-            
-            List(tracks) { track in
-                VStack(alignment: .leading) {
-                    Text(track.name)
-                        .font(.body)
-                    Text(track.album.text)
-                        .font(.footnote)
-                }
-                .id(track.id)
+            .padding()
+            .sheet(isPresented: $showAuthentication) {
+                LoginView(geometry: geometry)
             }
-        }
-        .task {
-            handleAuthentication()
-        }
-        .padding()
-        .sheet(isPresented: $showAuthentication) {
-            LoginView()
         }
     }
     
+    #if os(macOS)
     @ViewBuilder
-    func LoginView() -> some View {
+    func LoginView(geometry: GeometryProxy) -> some View {
+        VStack {
+            HStack {
+                Spacer()
+                Text("Login")
+                    .font(.title)
+                Spacer()
+                Button {
+                    handleAuthentication()
+                } label: {
+                    Image(systemName: "xmark")
+                }
+                .buttonStyle(.glassProminent)
+            }
+            client.loginView { _ in
+                await handleAuthentication()
+            }
+        }
+        .frame(width: geometry.size.width, height: geometry.size.height)
+        .padding()
+    }
+    #else
+    @ViewBuilder
+    func LoginView(geometry: GeometryProxy) -> some View {
         NavigationView {
             client.loginView { _ in
                 await handleAuthentication()
@@ -72,6 +97,7 @@ struct ContentView: View {
             }
         }
     }
+    #endif
     
     @MainActor
     func handleAuthentication() {
@@ -104,3 +130,18 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+
+#if os(macOS)
+enum TitleDisplayMode: Sendable {
+    case inline
+}
+
+extension View {
+    @ViewBuilder
+    func navigationBarTitleDisplayMode(
+        _ mode: TitleDisplayMode
+    ) -> some View {
+        self
+    }
+}
+#endif
