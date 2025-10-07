@@ -1,10 +1,11 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 import Foundation
+import AuthenticationServices
 
 public struct LastFMClient: Sendable {
     
-    private var keyConfiguration: KeyConfiguration? {
+    private(set) var keyConfiguration: KeyConfiguration? {
         get {
             KeyConfiguration.restore()
         }
@@ -13,9 +14,9 @@ public struct LastFMClient: Sendable {
             newValue.store()
         }
     }
-    private var userCredentials: UserCredential? {
+    private(set) var userCredentials: UserSession? {
         get {
-            UserCredential.restore()
+            UserSession.restore()
         }
         set {
             newValue.store()
@@ -23,6 +24,14 @@ public struct LastFMClient: Sendable {
     }
     
     private let networkClient: NetworkClient
+    
+    public var isAuthenticated: Bool {
+        return userCredentials?.key != nil
+    }
+    
+    public var userName: String? {
+        userCredentials?.name
+    }
     
     public init(
         apiKey: String,
@@ -57,5 +66,23 @@ public struct LastFMClient: Sendable {
         
         let response: RecenteTracksResponse = try await self.networkClient.perform(endpoint)
         return response.tracks
+    }
+    
+    @concurrent
+    public func validate(
+        token: String
+    ) async throws -> String {
+        let endpoint = Endpoint(
+            apiMethod: "auth.getSession",
+            method: .get,
+            parameters: ["token": token]
+        )
+        let response: SessionResponse = try await self.networkClient.perform(endpoint)
+        response.session.store()
+        return response.session.name
+    }
+    
+    public func logout() {
+        UserSession.erase()
     }
 }
