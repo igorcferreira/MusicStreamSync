@@ -8,27 +8,26 @@ import SwiftUI
 import LastFMClient
 
 struct AuthenticationButton: View {
-    @State private var showAuthentication: Bool = false
-    @State private var isAuthenticated: Bool = false
-    @Environment(\.lastFMClient) private var client
+    
+    @State private var viewModel: AuthenticationViewModel
+    
+    init(client: LastFMClient) {
+        viewModel = .init(client: client)
+    }
     
     var body: some View {
         Group {
-            if isAuthenticated {
+            if viewModel.isAuthenticated {
                 Button("Logout") {
-                    client.logout()
-                    handleAuthentication()
+                    viewModel.logout()
                 }
             } else {
                 Button("Authenticate") {
-                    showAuthentication = true
+                    viewModel.login()
                 }
             }
         }
-        .task {
-            handleAuthentication()
-        }
-        .sheet(isPresented: $showAuthentication) {
+        .sheet(isPresented: $viewModel.showAuthentication) {
             LoginView()
         }
     }
@@ -36,18 +35,11 @@ struct AuthenticationButton: View {
     @ViewBuilder
     func DismissButton() -> some View {
         Button {
-            handleAuthentication()
+            viewModel.handleAuthentication()
         } label: {
             Image(systemName: "xmark")
         }
         .buttonStyle(.glassProminent)
-    }
-    
-    @ViewBuilder
-    func WebContent() -> some View {
-        client.loginView { _ in
-            await handleAuthentication()
-        }
     }
     
     #if os(macOS)
@@ -60,7 +52,7 @@ struct AuthenticationButton: View {
                 Spacer()
                 DismissButton()
             }
-            WebContent()
+            viewModel.loginView()
         }
         .padding()
         .frame(minWidth: 500.0, minHeight: 500.0)
@@ -69,7 +61,7 @@ struct AuthenticationButton: View {
     @ViewBuilder
     func LoginView() -> some View {
         NavigationView {
-            WebContent()
+            viewModel.loginView()
             .navigationTitle("Login")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -80,12 +72,6 @@ struct AuthenticationButton: View {
         }
     }
     #endif
-    
-    @MainActor
-    func handleAuthentication() {
-        self.showAuthentication = false
-        isAuthenticated = client.isAuthenticated
-    }
 }
 
 #if os(macOS)
@@ -104,5 +90,5 @@ extension View {
 #endif
 
 #Preview {
-    AuthenticationButton()
+    AuthenticationButton(client: LastFMClientKey.defaultValue)
 }
