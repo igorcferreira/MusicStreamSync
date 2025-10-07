@@ -33,6 +33,8 @@ profile
 *.~nib
 .env
 .env.*
+!.env.sample
 ArkanaKeys/
+arkana/
 scripts/Build/
 scripts/tmp/
