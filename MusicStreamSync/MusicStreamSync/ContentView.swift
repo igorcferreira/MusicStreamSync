@@ -6,41 +6,91 @@
 //
 
 import SwiftUI
-import ArkanaKeys
 import LastFMClient
 
 struct ContentView: View {
-    @State var tracks: [Track] = []
-    @State var error: Error? = nil
+    @State private var tracks: [Track] = []
+    @State private var error: Error? = nil
+    @State private var showAuthentication: Bool = false
+    @State private var isAuthenticated: Bool = false
+    @Environment(\.lastFMClient) private var client
     
     var body: some View {
         VStack {
+            
+            if isAuthenticated {
+                Button("Logout") {
+                    client.logout()
+                    handleAuthentication()
+                }
+            } else {
+                Button("Authenticate") {
+                    showAuthentication = true
+                }
+            }
+            
             if let error {
                 Text("Error: \(error.localizedDescription)")
             }
             
             List(tracks) { track in
-                Text(track.name)
+                VStack(alignment: .leading) {
+                    Text(track.name)
+                        .font(.body)
+                    Text(track.album.text)
+                        .font(.footnote)
+                }
+                .id(track.id)
             }
         }
         .task {
-            await loadContent()
+            handleAuthentication()
         }
         .padding()
+        .sheet(isPresented: $showAuthentication) {
+            LoginView()
+        }
     }
     
-    @concurrent
-    func loadContent() async {
-        let arkana = ArkanaKeys.Global()
-        let client = LastFMClient(apiKey: arkana.lastFMAPIKey, apiSecret: arkana.lastFMAPISecret)
+    @ViewBuilder
+    func LoginView() -> some View {
+        NavigationView {
+            client.loginView { _ in
+                await handleAuthentication()
+            }
+            .navigationTitle("Login")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItemGroup(placement: .primaryAction) {
+                    Button {
+                        handleAuthentication()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .buttonStyle(.glassProminent)
+                }
+            }
+        }
+    }
+    
+    @MainActor
+    func handleAuthentication() {
+        self.showAuthentication = false
+        isAuthenticated = client.isAuthenticated
+        if isAuthenticated {
+            loadContent()
+        }
+    }
+    
+    func loadContent() { Task.detached {
         do {
-            let tracks = try await client.listLatestTracks(user: "igorcferreira")
+            let tracks = try await client.listLatestTracks()
             await update(tracks)
             await update(error: nil)
         } catch {
             await update(error: error)
         }
-    }
+    }}
     
     func update(error: Error?) {
         self.error = error

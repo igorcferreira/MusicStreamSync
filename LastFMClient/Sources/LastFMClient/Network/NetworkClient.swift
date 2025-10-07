@@ -17,8 +17,8 @@ struct NetworkClient: Sendable {
         KeyConfiguration.restore()
     }
     
-    private var userCredentials: UserCredential? {
-        UserCredential.restore()
+    private var userCredentials: UserSession? {
+        UserSession.restore()
     }
     
     init(
@@ -95,7 +95,7 @@ struct NetworkClient: Sendable {
         
         base["api_key"] = configuration.apiKey
         
-        if let token = userCredentials?.token {
+        if let token = userCredentials?.key {
             base["sk"] = token
         }
         

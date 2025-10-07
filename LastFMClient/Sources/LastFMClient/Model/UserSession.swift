@@ -6,9 +6,10 @@
 //
 import Foundation
 
-struct UserCredential: Sendable, Codable, SecureValue {
+struct UserSession: Sendable, Codable, SecureValue {
     static let valueKey: String = "last_fm_user_credential"
     
     let name: String
-    let token: String
+    let key: String
+    let subscriber: Int
 }
