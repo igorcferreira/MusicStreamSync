@@ -6,13 +6,11 @@
 //
 import Foundation
 
-public struct CorrectableText: Codable, Sendable, CustomStringConvertible {
+public struct CorrectableText: Codable, Sendable {
     public enum CodingKeys: String, CodingKey {
         case corrected
         case text = "#text"
     }
-    
-    public var description: String { text }
     
     public let corrected: String?
     public let text: String
