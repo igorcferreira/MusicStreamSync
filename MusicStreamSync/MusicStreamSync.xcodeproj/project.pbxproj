@@ -9,15 +9,46 @@
 /* Begin PBXBuildFile section */
 		7813D4362E952E27000A867F /* LastFMClient in Frameworks */ = {isa = PBXBuildFile; productRef = 7813D4352E952E27000A867F /* LastFMClient */; };
 		7813D4392E95410B000A867F /* ArkanaKeys in Frameworks */ = {isa = PBXBuildFile; productRef = 7813D4382E95410B000A867F /* ArkanaKeys */; };
+		782021D32E96674900B5CBDB /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 782021D22E96674900B5CBDB /* MediaRemote.framework */; platformFilters = (macos, ); };
+		782021D42E96674900B5CBDB /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 782021D22E96674900B5CBDB /* MediaRemote.framework */; platformFilters = (macos, ); settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		782021D52E96674900B5CBDB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				782021D42E96674900B5CBDB /* MediaRemote.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7813D4262E952E0E000A867F /* MusicStreamSync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicStreamSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7820216A2E9664B900B5CBDB /* libMediaRemote.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMediaRemote.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		782021D22E96674900B5CBDB /* MediaRemote.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MediaRemote.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		782021B62E96655B00B5CBDB /* Exceptions for "MusicStreamSync" folder in "MusicStreamSync" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7813D4252E952E0E000A867F /* MusicStreamSync */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7813D4282E952E0E000A867F /* MusicStreamSync */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				782021B62E96655B00B5CBDB /* Exceptions for "MusicStreamSync" folder in "MusicStreamSync" target */,
+			);
 			path = MusicStreamSync;
 			sourceTree = "<group>";
 		};
@@ -30,6 +61,7 @@
 			files = (
 				7813D4392E95410B000A867F /* ArkanaKeys in Frameworks */,
 				7813D4362E952E27000A867F /* LastFMClient in Frameworks */,
+				782021D32E96674900B5CBDB /* MediaRemote.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				7813D4282E952E0E000A867F /* MusicStreamSync */,
+				782021692E9664B900B5CBDB /* Frameworks */,
 				7813D4272E952E0E000A867F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,6 +85,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		782021692E9664B900B5CBDB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				782021D22E96674900B5CBDB /* MediaRemote.framework */,
+				7820216A2E9664B900B5CBDB /* libMediaRemote.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -62,6 +104,7 @@
 				7813D4222E952E0E000A867F /* Sources */,
 				7813D4232E952E0E000A867F /* Frameworks */,
 				7813D4242E952E0E000A867F /* Resources */,
+				782021D52E96674900B5CBDB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -278,6 +321,9 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MusicStreamSync/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "MuscStreamSync needs permission to read the current song.";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "The app needs access to your media library to check the latest played songs";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -334,6 +380,9 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MusicStreamSync/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "MuscStreamSync needs permission to read the current song.";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "The app needs access to your media library to check the latest played songs";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

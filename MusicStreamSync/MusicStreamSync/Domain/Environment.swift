@@ -26,3 +26,18 @@ extension EnvironmentValues {
         }
     }
 }
+
+struct PlayerBridgeKey: EnvironmentKey {
+    static var defaultValue: PlayerBridge = fetchSystemBridge()
+}
+
+extension EnvironmentValues {
+    var playerBridge: PlayerBridge {
+        get {
+            self[PlayerBridgeKey.self]
+        }
+        set {
+            self[PlayerBridgeKey.self] = newValue
+        }
+    }
+}
