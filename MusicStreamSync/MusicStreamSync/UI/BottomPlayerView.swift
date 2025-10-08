@@ -56,7 +56,7 @@ extension View {
             duration: 42.0,
             elapsedTime: 2.0,
             album: "Random album",
-            artwork: nil
+            artwork: UIImage(named: "cover")?.jpegData(compressionQuality: 1.0)
         )
     )))
 }
