@@ -23,3 +23,30 @@ struct PlayerView: View {
         Text("\(label) \(currentItem?.title ?? "-")")
     }
 }
+
+#Preview("No item available") {
+    PlayerView(playerBridge: MockedPlayerBridge(isPlaying: false))
+        .frame(height: 54.0)
+        .frame(maxWidth: .infinity)
+        .glassEffect()
+        .padding()
+}
+
+#Preview("Playing") {
+    PlayerView(playerBridge: MockedPlayerBridge(
+        isPlaying: true,
+        currentItem: .init(
+            id: UUID().uuidString,
+            title: "Random song",
+            artist: "Random artist",
+            duration: 42.0,
+            elapsedTime: 2.0,
+            album: "Random album",
+            artwork: nil
+        )
+    ))
+    .frame(height: 54.0)
+    .frame(maxWidth: .infinity)
+    .glassEffect()
+    .padding()
+}
