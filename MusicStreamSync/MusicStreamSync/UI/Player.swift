@@ -12,7 +12,7 @@ struct PlayerView: View {
     var isPlaying: Bool { playerBridge.isPlaying }
     var currentItem: PlayingItem? { playerBridge.currentItem }
     var label: String {
-        isPlaying ? "Playing" : "Paused"
+        isPlaying ? "pause.fill" : "play.fill"
     }
     
     init(playerBridge: PlayerBridge) {
@@ -20,8 +20,81 @@ struct PlayerView: View {
     }
     
     var body: some View {
-        Text("\(label) \(currentItem?.title ?? "-")")
+        if let currentItem = playerBridge.currentItem {
+            player(with: currentItem)
+        } else {
+            emptyPlayer()
+        }
     }
+    
+    @ViewBuilder
+    func emptyPlayer() -> some View {
+        HStack(spacing: 8.0) {
+            Image(systemName: "music.note.house.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(10.0)
+                .foregroundStyle(Color.accent)
+                .background(Color(uiColor: UIColor.secondarySystemBackground))
+                .frame(width: 40.0, height: 40.0)
+                .cornerRadius(4.0)
+            VStack {
+                Text(String(localized: "MusicStreamSync"))
+                    .font(.body)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(String(localized: "Click to see your playlists and favourites"))
+                    .font(.footnote)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .padding(.horizontal, 28.0)
+    }
+    
+    @ViewBuilder
+    func player(with currentItem: PlayingItem) -> some View {
+        HStack(spacing: 8.0) {
+            if let artwork = currentItem.artwork,
+               let image = UIImage(data: artwork) {
+                Image(uiImage: image)
+                    .resizable()
+                    .frame(width: 40.0, height: 40.0)
+                    .cornerRadius(4.0)
+            } else {
+                Image(systemName: "music.note.house.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(10.0)
+                    .foregroundStyle(Color.accent)
+                    .background(Color(uiColor: UIColor.secondarySystemBackground))
+                    .frame(width: 40.0, height: 40.0)
+                    .cornerRadius(4.0)
+            }
+            VStack {
+                Text(currentItem.title)
+                    .font(.body)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(currentItem.artist)
+                    .font(.footnote)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            
+            Button {
+                toggle()
+            } label: {
+                Image(systemName: label)
+                    .foregroundStyle(Color.accent)
+            }
+        }
+        .padding(.horizontal, 28.0)
+    }
+    
+    func toggle() { Task {
+        if playerBridge.isPlaying {
+            await playerBridge.pause()
+        } else {
+            await playerBridge.play()
+        }
+    }}
 }
 
 #Preview("No item available") {
@@ -33,6 +106,25 @@ struct PlayerView: View {
 }
 
 #Preview("Playing") {
+    PlayerView(playerBridge: MockedPlayerBridge(
+        isPlaying: true,
+        currentItem: .init(
+            id: UUID().uuidString,
+            title: "Random song",
+            artist: "Random artist",
+            duration: 42.0,
+            elapsedTime: 2.0,
+            album: "Random album",
+            artwork: UIImage(named: "cover")?.jpegData(compressionQuality: 1.0)
+        )
+    ))
+    .frame(height: 54.0)
+    .frame(maxWidth: .infinity)
+    .glassEffect()
+    .padding()
+}
+
+#Preview("No artwork") {
     PlayerView(playerBridge: MockedPlayerBridge(
         isPlaying: true,
         currentItem: .init(
