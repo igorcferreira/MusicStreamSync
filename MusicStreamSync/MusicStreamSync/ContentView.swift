@@ -17,7 +17,6 @@ struct ContentView: View {
     }
     
     @State private var selectedTab = TabEntry.home
-    @State private var isPlaying: Bool = false
     @Environment(\.lastFMClient) private var lastFMClient
     
     var body: some View {
@@ -41,11 +40,7 @@ struct ContentView: View {
                     AuthenticationButton(client: lastFMClient)
                 }
             }
-            .tabViewBottomAccessory {
-                if isPlaying {
-                    Text("Custom Playing item")
-                }
-            }
+            .withBottomPlayer()
         }
 #if os(macOS)
         .onAppear {
