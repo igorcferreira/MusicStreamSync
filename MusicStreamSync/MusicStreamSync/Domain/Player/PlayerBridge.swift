@@ -22,3 +22,26 @@ func fetchSystemBridge() -> PlayerBridge {
     MediaKitPlayerBridge()
     #endif
 }
+
+@Observable
+class MockedPlayerBridge: PlayerBridge {
+    var isPlaying: Bool
+    var currentItem: PlayingItem?
+    
+    init(isPlaying: Bool = false, currentItem: PlayingItem? = nil) {
+        self.isPlaying = isPlaying
+        self.currentItem = currentItem
+    }
+    
+    func play() async {
+        self.isPlaying = true
+    }
+    
+    func pause() async {
+        self.isPlaying = false
+    }
+    
+    func getCurrentItem() async -> PlayingItem? {
+        currentItem
+    }
+}
