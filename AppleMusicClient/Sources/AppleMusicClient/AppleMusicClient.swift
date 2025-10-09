@@ -4,13 +4,31 @@ import SwiftUI
 import MusicKit
 
 public final class AppleMusicClient: Sendable {
+    public static let authenticationChange = Notification.Name("AppleMusicClient.authenticationChange")
     public var authorized: Bool {
         MusicAuthorization.currentStatus.authorized
     }
     
+    private let token: DeveloperToken
+    private let tokenSigner: TokenSigner
+    
+    public init(
+        teamId: String,
+        keyId: String,
+        privateKey: String
+    ) {
+        self.token = .init(teamId: teamId, keyId: keyId)
+        self.tokenSigner = JWTTokenSigner(privateKey: privateKey)
+    }
+    
+    @discardableResult
     public func authorize() async -> Bool {
+        let old = authorized
         let status = await MusicAuthorization.request()
         let authorization = status.authorized
+        if old != authorized {
+            notifyAuthenticationChange()
+        }
         return authorization
     }
     
@@ -53,19 +71,18 @@ public final class AppleMusicClient: Sendable {
             return []
         }
     }
-}
 
-struct AppleMusicClientKey: EnvironmentKey {
-    static let defaultValue: AppleMusicClient = .init()
-}
-
-public extension EnvironmentValues {
-    var appleMusicClient: AppleMusicClient {
-        get {
-            self[AppleMusicClientKey.self]
-        } set {
-            self[AppleMusicClientKey.self] = newValue
-        }
+    public func getDeveloperToken() async throws -> String {
+        let provider = MusicUserTokenProvider()
+        let signature = try tokenSigner.sign(token)
+        return try await provider.userToken(for: signature, options: .ignoreCache)
+    }
+    
+    private func notifyAuthenticationChange() {
+        NotificationCenter.default.post(
+            name: Self.authenticationChange,
+            object: authorized
+        )
     }
 }
 
