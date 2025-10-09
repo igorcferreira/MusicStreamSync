@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import Combine
+import AppleMusicClient
 
 struct BottomPlayerView: ViewModifier {
     @State private var playerBridge: PlayerBridge
@@ -54,9 +55,9 @@ extension View {
             title: "Random song",
             artist: "Random artist",
             duration: 42.0,
-            elapsedTime: 2.0,
             album: "Random album",
-            artwork: UIImage(named: "cover")?.jpegData(compressionQuality: 1.0)
+            url: nil,
+            artwork: nil
         )
     )))
 }

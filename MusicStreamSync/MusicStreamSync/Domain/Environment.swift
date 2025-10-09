@@ -16,7 +16,7 @@ struct LastFMClientKey: EnvironmentKey {
     }()
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var lastFMClient: LastFMClient {
         get {
             self[LastFMClientKey.self]
