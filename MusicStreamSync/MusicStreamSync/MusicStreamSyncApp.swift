@@ -6,6 +6,26 @@
 //
 
 import SwiftUI
+import AppleMusicClient
+import ArkanaKeys
+
+struct AppleMusicClientKey: EnvironmentKey {
+    static let defaultValue: AppleMusicClient = .init(
+        teamId: ArkanaKeys.Global().teamId,
+        keyId: ArkanaKeys.Global().keyId,
+        privateKey: ArkanaKeys.Global().privateKey
+    )
+}
+
+public extension EnvironmentValues {
+    var appleMusicClient: AppleMusicClient {
+        get {
+            self[AppleMusicClientKey.self]
+        } set {
+            self[AppleMusicClientKey.self] = newValue
+        }
+    }
+}
 
 #if os(macOS)
 typealias UIColor = NSColor
@@ -32,9 +52,12 @@ extension Image {
 
 @main
 struct MusicStreamSyncApp: App {
+    @Environment(\.appleMusicClient) var appleMusicClient
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .task { await appleMusicClient.authorize() }
         }
     }
 }

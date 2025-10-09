@@ -110,15 +110,7 @@ struct PlayerView: View {
 #Preview("Playing") {
     PlayerView(playerBridge: MockedPlayerBridge(
         isPlaying: true,
-        currentItem: .init(
-            id: UUID().uuidString,
-            title: "Random song",
-            artist: "Random artist",
-            duration: 42.0,
-            album: "Random album",
-            url: nil,
-            artwork: nil
-        )
+        currentItem: .mockData()
     ))
     .frame(height: 54.0)
     .frame(maxWidth: .infinity)
@@ -129,15 +121,7 @@ struct PlayerView: View {
 #Preview("No artwork") {
     PlayerView(playerBridge: MockedPlayerBridge(
         isPlaying: true,
-        currentItem: .init(
-            id: UUID().uuidString,
-            title: "Random song",
-            artist: "Random artist",
-            duration: 42.0,
-            album: "Random album",
-            url: nil,
-            artwork: nil
-        )
+        currentItem: .mockData()
     ))
     .frame(height: 54.0)
     .frame(maxWidth: .infinity)
