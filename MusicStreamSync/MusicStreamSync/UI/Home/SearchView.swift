@@ -29,14 +29,6 @@ struct SearchView: View {
         .onChange(of: search) { _, newValue in
             search(term: newValue)
         }
-        .task {
-            do {
-                let token = try await appleMusicClient.getDeveloperToken()
-                print("Token: \(token)")
-            } catch {
-                print("Error: \(error)")
-            }
-        }
     }
     
     func play(item: PlayingItem) { Task {
