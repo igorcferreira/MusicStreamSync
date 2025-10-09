@@ -29,7 +29,9 @@ struct JWTTokenSigner: TokenSigner {
         guard let key = privateKey else {
             throw URLError(.cannotDecodeContentData)
         }
-        return try sign(unsigned, privateKey: key)
+        let signature = try sign(unsigned, privateKey: key)
+        
+        return "\(unsigned).\(signature)"
     }
     
     func sign(_ content: String, privateKey: String) throws -> String {
