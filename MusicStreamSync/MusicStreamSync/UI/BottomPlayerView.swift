@@ -50,14 +50,6 @@ extension View {
     }
     .modifier(BottomPlayerView(playerBridge: MockedPlayerBridge(
         isPlaying: true,
-        currentItem: .init(
-            id: UUID().uuidString,
-            title: "Random song",
-            artist: "Random artist",
-            duration: 42.0,
-            album: "Random album",
-            url: nil,
-            artwork: nil
-        )
+        currentItem: .mockData()
     )))
 }

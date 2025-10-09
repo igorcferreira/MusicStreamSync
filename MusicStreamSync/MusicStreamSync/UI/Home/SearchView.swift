@@ -18,19 +18,7 @@ struct SearchView: View {
     var body: some View {
         Grouping {
             List(items) { item in
-                HStack {
-                    if let artwork = item.artwork {
-                        LazyImage(url: artwork) { phase in
-                            phase.image?.resizable()
-                        }
-                        .frame(width: 40, height: 40)
-                        .cornerRadius(4.0)
-                    }
-                    Text(item.title)
-                }
-                .onTapGesture {
-                    play(item: item)
-                }
+                EntryView(item: item)
             }
             .searchable(text: $search)
         }
@@ -40,6 +28,14 @@ struct SearchView: View {
         }
         .onChange(of: search) { _, newValue in
             search(term: newValue)
+        }
+        .task {
+            do {
+                let token = try await appleMusicClient.getDeveloperToken()
+                print("Token: \(token)")
+            } catch {
+                print("Error: \(error)")
+            }
         }
     }
     
