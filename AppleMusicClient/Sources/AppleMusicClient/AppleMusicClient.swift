@@ -33,6 +33,26 @@ public final class AppleMusicClient: Sendable {
             return []
         }
     }
+    
+    public func searchSong(
+        term: String,
+        limit: Int = 20,
+        offset: Int = 0
+    ) async -> [PlayingItem] {
+        var request = MusicCatalogSearchRequest(term: term, types: [
+            Song.self
+        ])
+        request.limit = limit
+        request.offset = offset
+        request.includeTopResults = true
+        
+        do {
+            let response = try await request.response()
+            return response.songs.map { $0.toPlayerItem() }
+        } catch {
+            return []
+        }
+    }
 }
 
 struct AppleMusicClientKey: EnvironmentKey {
