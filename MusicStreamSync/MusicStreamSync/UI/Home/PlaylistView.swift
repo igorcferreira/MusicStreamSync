@@ -1,15 +1,14 @@
 //
-//  HomeView.swift
+//  PlaylistView.swift
 //  MusicStreamSync
 //
-//  Created by Igor Ferreira on 07/10/2025.
+//  Created by Igor Ferreira on 9/10/25.
 //
 import SwiftUI
-import LastFMClient
 import AppleMusicClient
 import NukeUI
 
-struct HomeView: View {
+struct PlaylistView: View {
     @Environment(\.appleMusicClient) var appleMusicClient
     @Environment(\.playerBridge) var playerBridge
     @State private var authorized: Bool = false
@@ -60,10 +59,10 @@ struct HomeView: View {
     }}
     
     func loadList() { Task {
-        items = await appleMusicClient.fetchLatestSongs()
+        items = await appleMusicClient.fetchPlayslists()
     }}
 }
 
 #Preview {
-    HomeView()
+    PlaylistView()
 }

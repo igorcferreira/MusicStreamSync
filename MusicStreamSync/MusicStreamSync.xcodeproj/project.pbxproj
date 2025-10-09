@@ -11,6 +11,8 @@
 		7813D4392E95410B000A867F /* ArkanaKeys in Frameworks */ = {isa = PBXBuildFile; productRef = 7813D4382E95410B000A867F /* ArkanaKeys */; };
 		782021D32E96674900B5CBDB /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 782021D22E96674900B5CBDB /* MediaRemote.framework */; platformFilters = (macos, ); };
 		782021D42E96674900B5CBDB /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 782021D22E96674900B5CBDB /* MediaRemote.framework */; platformFilters = (macos, ); settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78D83A242E97E88A0045E0FD /* AppleMusicClient in Frameworks */ = {isa = PBXBuildFile; productRef = 78D83A232E97E88A0045E0FD /* AppleMusicClient */; };
+		78D83A272E97FE880045E0FD /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 78D83A262E97FE880045E0FD /* NukeUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,8 +61,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78D83A272E97FE880045E0FD /* NukeUI in Frameworks */,
 				7813D4392E95410B000A867F /* ArkanaKeys in Frameworks */,
 				7813D4362E952E27000A867F /* LastFMClient in Frameworks */,
+				78D83A242E97E88A0045E0FD /* AppleMusicClient in Frameworks */,
 				782021D32E96674900B5CBDB /* MediaRemote.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,6 +121,8 @@
 			packageProductDependencies = (
 				7813D4352E952E27000A867F /* LastFMClient */,
 				7813D4382E95410B000A867F /* ArkanaKeys */,
+				78D83A232E97E88A0045E0FD /* AppleMusicClient */,
+				78D83A262E97FE880045E0FD /* NukeUI */,
 			);
 			productName = MusicStreamSync;
 			productReference = 7813D4262E952E0E000A867F /* MusicStreamSync.app */;
@@ -149,6 +155,8 @@
 			packageReferences = (
 				7813D4342E952E27000A867F /* XCLocalSwiftPackageReference "../LastFMClient" */,
 				7813D4372E95410B000A867F /* XCLocalSwiftPackageReference "../arkana/ArkanaKeys" */,
+				78D83A222E97E88A0045E0FD /* XCLocalSwiftPackageReference "../AppleMusicClient" */,
+				78D83A252E97FE880045E0FD /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7813D4272E952E0E000A867F /* Products */;
@@ -340,7 +348,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.igorcferreira.MusicStreamSync;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igorcferreira.MusicStreamSyncApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -399,7 +407,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.igorcferreira.MusicStreamSync;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.igorcferreira.MusicStreamSyncApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -447,7 +455,22 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../arkana/ArkanaKeys;
 		};
+		78D83A222E97E88A0045E0FD /* XCLocalSwiftPackageReference "../AppleMusicClient" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../AppleMusicClient;
+		};
 /* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		78D83A252E97FE880045E0FD /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		7813D4352E952E27000A867F /* LastFMClient */ = {
@@ -457,6 +480,15 @@
 		7813D4382E95410B000A867F /* ArkanaKeys */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ArkanaKeys;
+		};
+		78D83A232E97E88A0045E0FD /* AppleMusicClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppleMusicClient;
+		};
+		78D83A262E97FE880045E0FD /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78D83A252E97FE880045E0FD /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
