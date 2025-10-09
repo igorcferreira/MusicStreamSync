@@ -5,6 +5,8 @@
 //  Created by Igor Ferreira on 8/10/25.
 //
 import SwiftUI
+import AppleMusicClient
+import NukeUI
 
 struct PlayerView: View {
     @State private var playerBridge: PlayerBridge
@@ -40,10 +42,10 @@ struct PlayerView: View {
                 .cornerRadius(4.0)
             VStack {
                 Text(String(localized: "MusicStreamSync"))
-                    .font(.body)
+                    .font(.caption)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(String(localized: "Click to see your playlists and favourites"))
-                    .font(.footnote)
+                    .font(.caption2)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
@@ -53,12 +55,12 @@ struct PlayerView: View {
     @ViewBuilder
     func player(with currentItem: PlayingItem) -> some View {
         HStack(spacing: 8.0) {
-            if let artwork = currentItem.artwork,
-               let image = UIImage(data: artwork) {
-                Image(uiImage: image)
-                    .resizable()
-                    .frame(width: 40.0, height: 40.0)
-                    .cornerRadius(4.0)
+            if let artwork = currentItem.artwork {
+                LazyImage(url: artwork) { phase in
+                    phase.image?.resizable()
+                }
+                .frame(width: 40.0, height: 40.0)
+                .cornerRadius(4.0)
             } else {
                 Image(systemName: "music.note.house.fill")
                     .resizable()
@@ -71,10 +73,10 @@ struct PlayerView: View {
             }
             VStack {
                 Text(currentItem.title)
-                    .font(.body)
+                    .font(.caption)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(currentItem.artist)
-                    .font(.footnote)
+                    .font(.caption2)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
@@ -113,9 +115,9 @@ struct PlayerView: View {
             title: "Random song",
             artist: "Random artist",
             duration: 42.0,
-            elapsedTime: 2.0,
             album: "Random album",
-            artwork: UIImage(named: "cover")?.jpegData(compressionQuality: 1.0)
+            url: nil,
+            artwork: nil
         )
     ))
     .frame(height: 54.0)
@@ -132,8 +134,8 @@ struct PlayerView: View {
             title: "Random song",
             artist: "Random artist",
             duration: 42.0,
-            elapsedTime: 2.0,
             album: "Random album",
+            url: nil,
             artwork: nil
         )
     ))

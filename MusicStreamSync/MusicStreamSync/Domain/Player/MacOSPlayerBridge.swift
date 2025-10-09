@@ -7,6 +7,8 @@
 #if os(macOS)
 import Foundation
 import MediaRemote
+import AppleMusicClient
+import Combine
 
 @Observable
 class MacOSPlayerBridge: PlayerBridge, Sendable {
@@ -20,7 +22,7 @@ class MacOSPlayerBridge: PlayerBridge, Sendable {
         self.stateTimer = Timer.publish(every: 1.0, on: .current, in: .common)
             .autoconnect()
             .sink(receiveValue: { _ in Task.detached {
-                let current = await getCurrentItem()
+                let current = await self.getCurrentItem()
                 await self.update(currentItem: current)
             }})
     }
@@ -31,6 +33,14 @@ class MacOSPlayerBridge: PlayerBridge, Sendable {
     }
     
     func play() async {
+        player.resume()
+    }
+    
+    func play(_ item: PlayingItem) async {
+        player.resume()
+    }
+    
+    func play(_ items: [PlayingItem]) async {
         player.resume()
     }
     
@@ -48,9 +58,9 @@ class MacOSPlayerBridge: PlayerBridge, Sendable {
             title: item.title,
             artist: item.artist,
             duration: item.duration,
-            elapsedTime: item.elapsedTime,
             album: item.album ?? "",
-            artwork: item.artworkData
+            url: nil,
+            artwork: nil
         )
     }
     

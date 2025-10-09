@@ -14,6 +14,7 @@ struct ContentView: View {
         case home = "Home"
         case playlist = "Playlist"
         case scrobble = "Scrobble"
+        case search = "Search"
     }
     
     @State private var selectedTab = TabEntry.home
@@ -23,16 +24,20 @@ struct ContentView: View {
         TopStyle {
             TabView(selection: $selectedTab) {
                 Tab(TabEntry.home.rawValue, systemImage: "music.note.house.fill", value: .home) {
-                    HomeView(client: lastFMClient)
+                    HomeView()
                         .navigationTitle(Text(TabEntry.home.rawValue))
                 }
                 Tab(TabEntry.playlist.rawValue, systemImage: "play.square.stack.fill", value: .playlist) {
-                    HomeView(client: lastFMClient)
+                    PlaylistView()
                         .navigationTitle(Text(TabEntry.playlist.rawValue))
                 }
                 Tab(TabEntry.scrobble.rawValue, systemImage: "icloud.and.arrow.up.fill", value: .scrobble) {
-                    HomeView(client: lastFMClient)
+                    Text("Scrobble")
                         .navigationTitle(Text(TabEntry.scrobble.rawValue))
+                }
+                Tab(TabEntry.search.rawValue, systemImage: "magnifyingglass", value: .search, role: .search) {
+                    SearchView()
+                        .navigationTitle(Text(TabEntry.search.rawValue))
                 }
             }
             .toolbar {
@@ -40,6 +45,9 @@ struct ContentView: View {
                     AuthenticationButton(client: lastFMClient)
                 }
             }
+            #if os(iOS)
+            .tabBarMinimizeBehavior(.onScrollDown)
+            #endif
             .withBottomPlayer()
         }
 #if os(macOS)

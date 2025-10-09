@@ -8,6 +8,7 @@
 import Foundation
 import MediaPlayer
 import Combine
+import AppleMusicClient
 
 @Observable
 class MediaKitPlayerBridge: PlayerBridge {
@@ -32,10 +33,25 @@ class MediaKitPlayerBridge: PlayerBridge {
         stateTimer = nil
     }
     
+    @MainActor
     func play() async {
         player.play()
     }
     
+    func play(_ item: PlayingItem) async {
+        await self.play([item])
+    }
+    
+    @MainActor
+    func play(_ items: [PlayingItem]) async {
+        let ids = items.map(\.id)
+        player.setQueue(
+            with: MPMusicPlayerStoreQueueDescriptor(storeIDs: ids)
+        )
+        player.play()
+    }
+    
+    @MainActor
     func pause() async {
         player.pause()
     }
@@ -44,14 +60,15 @@ class MediaKitPlayerBridge: PlayerBridge {
         guard let item = player.nowPlayingItem else {
             return nil
         }
+        
         return .init(
             id: item.playbackStoreID,
             title: item.title ?? "",
             artist: item.artist ?? "",
             duration: item.playbackDuration,
-            elapsedTime: item.playbackDuration,
             album: item.albumTitle ?? "",
-            artwork: item.artworkData
+            url: item.assetURL,
+            artwork: item.artworkURL
         )
     }
     
@@ -63,6 +80,27 @@ class MediaKitPlayerBridge: PlayerBridge {
 }
 
 extension MPMediaItem {
+    var artworkURL: URL? {
+        guard let data = artworkData else {
+            return nil
+        }
+        
+        let fileManager = FileManager.default
+        let temporaryDirectoryURL = fileManager.temporaryDirectory
+        let filename = playbackStoreID + ".jpg"
+        let fileURL = temporaryDirectoryURL.appendingPathComponent(filename)
+        
+        if fileManager.fileExists(atPath: fileURL.path()) {
+            return fileURL
+        }
+        
+        do {
+            try data.write(to: fileURL)
+            return fileURL
+        } catch {
+            return nil
+        }
+    }
     var artworkData: Data? {
         guard let artwork else {
             return nil
