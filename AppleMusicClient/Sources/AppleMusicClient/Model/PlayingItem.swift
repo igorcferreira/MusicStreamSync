@@ -7,6 +7,11 @@
 import Foundation
 
 public struct PlayingItem: Identifiable, Codable, Sendable, Equatable {
+    public enum Artwork: Sendable, Codable {
+        case remote(url: URL)
+        case local(data: Data)
+    }
+    
     public static func ==(lhs: PlayingItem, rhs: PlayingItem) -> Bool {
         return lhs.id == rhs.id
     }
@@ -17,9 +22,9 @@ public struct PlayingItem: Identifiable, Codable, Sendable, Equatable {
     public let duration: TimeInterval
     public let album: String
     public let url: URL?
-    public let artwork: URL?
+    public let artwork: Artwork?
     
-    public init(id: String, title: String, artist: String, duration: TimeInterval, album: String, url: URL?, artwork: URL?) {
+    public init(id: String, title: String, artist: String, duration: TimeInterval, album: String, url: URL?, artwork: Artwork?) {
         self.id = id
         self.title = title
         self.artist = artist

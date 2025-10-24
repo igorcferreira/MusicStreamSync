@@ -16,7 +16,7 @@ extension Song {
             duration: duration ?? 0.0,
             album: albumTitle ?? "",
             url: url,
-            artwork: artwork?.url
+            artwork: artwork?.data.map({ .local(data: $0) })
         )
     }
 }

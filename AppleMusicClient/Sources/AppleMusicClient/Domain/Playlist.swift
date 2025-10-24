@@ -15,7 +15,7 @@ extension Playlist {
             duration: 0.0,
             album: "",
             url: url,
-            artwork: artwork?.url
+            artwork: artwork?.data.map({ .local(data: $0) })
         )
     }
 }
