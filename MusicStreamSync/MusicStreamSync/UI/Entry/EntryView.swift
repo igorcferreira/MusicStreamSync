@@ -20,11 +20,9 @@ struct EntryView: View {
     var body: some View {
         HStack(spacing: 8.0) {
             if let artwork = item.artwork {
-                LazyImage(url: artwork) { phase in
-                    phase.image?.resizable()
-                }
-                .frame(width: 40, height: 40)
-                .cornerRadius(4.0)
+                ArtworkImage(artwork: artwork)
+                    .frame(width: 40, height: 40)
+                    .cornerRadius(4.0)
             }
             VStack(alignment: .leading) {
                 Text(item.title)
@@ -58,7 +56,7 @@ extension PlayingItem {
             duration: 0.0,
             album: "The Human Contradiction",
             url: nil,
-            artwork: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg")
+            artwork: .remote(url: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg")!)
             )
     }
 }

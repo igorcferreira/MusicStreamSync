@@ -27,11 +27,12 @@ public final class AppleMusicClient: Sendable {
         let status = await MusicAuthorization.request()
         let authorization = status.authorized
         if old != authorized {
-            notifyAuthenticationChange()
+            await notifyAuthenticationChange()
         }
         return authorization
     }
     
+    @concurrent
     public func fetchLatestSongs() async -> [PlayingItem] {
         let request = MusicRecentlyPlayedRequest<Track>()
         do {
@@ -42,6 +43,7 @@ public final class AppleMusicClient: Sendable {
         }
     }
     
+    @concurrent
     public func fetchPlayslists() async -> [PlayingItem] {
         let request = MusicLibraryRequest<Playlist>()
         do {
@@ -52,6 +54,7 @@ public final class AppleMusicClient: Sendable {
         }
     }
     
+    @concurrent
     public func searchSong(
         term: String,
         limit: Int = 20,
@@ -72,12 +75,14 @@ public final class AppleMusicClient: Sendable {
         }
     }
 
+    @MainActor
     public func getDeveloperToken() async throws -> String {
         let provider = MusicUserTokenProvider()
         let signature = try tokenSigner.sign(token)
         return try await provider.userToken(for: signature, options: .ignoreCache)
     }
     
+    @MainActor
     private func notifyAuthenticationChange() {
         NotificationCenter.default.post(
             name: Self.authenticationChange,

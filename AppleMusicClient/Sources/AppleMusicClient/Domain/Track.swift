@@ -9,9 +9,17 @@ import MusicKit
 
 extension Artwork {
     var url: URL? {
-        let width = max(40, maximumWidth)
-        let height = max(40, maximumHeight)
+        let width = min(max(40, maximumWidth), 400)
+        let height = min(max(40, maximumHeight), 400)
         return url(width: width, height: height)
+    }
+    
+    var data: Data? {
+        guard let url = url else {
+            return nil
+        }
+        print("Artwork url: \(url)")
+        return try? Data(contentsOf: url)
     }
 }
 
@@ -24,11 +32,7 @@ extension Track {
             duration: duration ?? 0.0,
             album: albumTitle ?? "",
             url: url,
-            artwork: artworkURL
+            artwork: artwork?.data.map({ .local(data: $0) })
         )
-    }
-    
-    var artworkURL: URL? {
-        artwork?.url
     }
 }

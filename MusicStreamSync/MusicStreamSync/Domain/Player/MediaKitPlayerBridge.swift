@@ -68,7 +68,7 @@ class MediaKitPlayerBridge: PlayerBridge {
             duration: item.playbackDuration,
             album: item.albumTitle ?? "",
             url: item.assetURL,
-            artwork: item.artworkURL
+            artwork: item.artworkData.map({ .local(data: $0) })
         )
     }
     

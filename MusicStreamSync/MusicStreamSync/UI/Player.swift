@@ -8,6 +8,32 @@ import SwiftUI
 import AppleMusicClient
 import NukeUI
 
+struct ArtworkImage: View {
+    let artwork: PlayingItem.Artwork
+    
+    var body: some View {
+        switch artwork {
+        case let .local(data):
+            localImage(data)
+        case let .remote(url):
+            remoteImage(url)
+        }
+    }
+    
+    @ViewBuilder
+    func localImage(_ data: Data) -> some View {
+        Image(uiImage: UIImage(data: data)!)
+            .resizable()
+    }
+    
+    @ViewBuilder
+    func remoteImage(_ url: URL) -> some View {
+        LazyImage(url: url) { phase in
+            phase.image?.resizable()
+        }
+    }
+}
+
 struct PlayerView: View {
     @State private var playerBridge: PlayerBridge
     
@@ -56,11 +82,9 @@ struct PlayerView: View {
     func player(with currentItem: PlayingItem) -> some View {
         HStack(spacing: 8.0) {
             if let artwork = currentItem.artwork {
-                LazyImage(url: artwork) { phase in
-                    phase.image?.resizable()
-                }
-                .frame(width: 40.0, height: 40.0)
-                .cornerRadius(4.0)
+                ArtworkImage(artwork: artwork)
+                    .frame(width: 40.0, height: 40.0)
+                    .cornerRadius(4.0)
             } else {
                 Image(systemName: "music.note.house.fill")
                     .resizable()
