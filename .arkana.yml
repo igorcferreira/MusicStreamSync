@@ -6,8 +6,5 @@ is_kotlin_multiplatform_module: true # Optional. Whether the generated Kotlin mo
 kotlin_jvm_toolchain_version: 21 # Optional. The kotlin JVM toolchain JDK version to be used in the generated build.gradle file. Defaults to 11.
 should_infer_types: true # Optional. Whether type inference should be done based on the values of the secrets. When false, the type will always be string for all languages. One of: true, false. Defaults to true.
 global_secrets: # Optional. List of secrets that are the same regardless of which environment is being built. Defaults to empty.
-  - TeamId
-  - KeyId
-  - PrivateKey
   - LastFMAPIKey
   - LastFMAPISecret

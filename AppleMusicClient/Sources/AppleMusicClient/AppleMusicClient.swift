@@ -4,13 +4,22 @@ import SwiftUI
 import MusicKit
 
 public final class AppleMusicClient: Sendable {
+    public enum CredentialError: Error {
+        case missingLicense
+    }
+    
     public static let authenticationChange = Notification.Name("AppleMusicClient.authenticationChange")
     public var authorized: Bool {
         MusicAuthorization.currentStatus.authorized
     }
     
-    private let token: DeveloperToken
-    private let tokenSigner: TokenSigner
+    private let token: DeveloperToken?
+    private let tokenSigner: TokenSigner?
+    
+    public init() {
+        self.token = nil
+        self.tokenSigner = nil
+    }
     
     public init(
         teamId: String,
@@ -77,6 +86,10 @@ public final class AppleMusicClient: Sendable {
 
     @MainActor
     public func getDeveloperToken() async throws -> String {
+        guard let token, let tokenSigner else {
+            throw CredentialError.missingLicense
+        }
+        
         let provider = MusicUserTokenProvider()
         let signature = try tokenSigner.sign(token)
         return try await provider.userToken(for: signature, options: .ignoreCache)

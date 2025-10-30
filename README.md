@@ -1,13 +1,6 @@
 # MusicStreamSync
 
-## MusicKit Developer Token
-
-This app uses [MusicKit API](https://developer.apple.com/musickit/), which is an Apple API. This requires a private
-key to integrate/authenticate the API calls. For that, you, as a developer, needs
-to [create a media identifier and private key](https://developer.apple.com/help/account/configure-app-capabilities/create-a-media-identifier-and-private-key/)
-that is used in the code as `PrivateKey` to perform the necessary MusicKit calls.
-
-## Configuring MusicKit Service Key
+## Configuring LastFM API Keys
 
 This project uses [Arkana](https://github.com/rogerluan/arkana) to obfuscate keys and allow injection of
 values at compile time. To be able to correct build the project, first:

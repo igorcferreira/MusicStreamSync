@@ -10,11 +10,7 @@ import AppleMusicClient
 import ArkanaKeys
 
 struct AppleMusicClientKey: EnvironmentKey {
-    static let defaultValue: AppleMusicClient = .init(
-        teamId: ArkanaKeys.Global().teamId,
-        keyId: ArkanaKeys.Global().keyId,
-        privateKey: ArkanaKeys.Global().privateKey
-    )
+    static let defaultValue: AppleMusicClient = .init()
 }
 
 public extension EnvironmentValues {
