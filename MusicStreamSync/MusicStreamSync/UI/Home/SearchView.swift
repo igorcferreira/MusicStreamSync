@@ -55,6 +55,11 @@ struct SearchView: View {
             }
             await set(loading: true)
             let items = await appleMusicClient.searchSong(term: trimmed)
+            
+            guard !Task.isCancelled else {
+                return
+            }
+            
             await update(search: items)
             await set(loading: false)
         }
