@@ -30,7 +30,7 @@ struct ContentView: View {
                         .navigationTitle(Text(TabEntry.playlist.rawValue))
                 }
                 Tab(TabEntry.scrobble.rawValue, systemImage: "icloud.and.arrow.up.fill", value: .scrobble) {
-                    Text("Scrobble")
+                    ScrobbleView()
                         .navigationTitle(Text(TabEntry.scrobble.rawValue))
                 }
                 Tab(TabEntry.search.rawValue, systemImage: "magnifyingglass", value: .search, role: .search) {
