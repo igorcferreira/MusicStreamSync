@@ -9,6 +9,7 @@ import Foundation
 import MediaRemote
 import AppleMusicClient
 import Combine
+import AppKit
 
 @Observable
 class MacOSPlayerBridge: PlayerBridge, Sendable {
@@ -37,11 +38,22 @@ class MacOSPlayerBridge: PlayerBridge, Sendable {
     }
     
     func play(_ item: PlayingItem) async {
-        player.resume()
+        if currentItem?.id == item.id {
+            player.resume()
+            return
+        }
+        
+        guard let url = item.url else {
+            return
+        }
+        
+        NSWorkspace.shared.open(url)
     }
     
     func play(_ items: [PlayingItem]) async {
-        player.resume()
+        if let first = items.first {
+            await play(first)
+        }
     }
     
     func pause() async {
