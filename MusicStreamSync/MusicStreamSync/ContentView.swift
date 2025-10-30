@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import LastFMClient
 
 struct ContentView: View {
     
@@ -18,7 +17,6 @@ struct ContentView: View {
     }
     
     @State private var selectedTab = TabEntry.history
-    @Environment(\.lastFMClient) private var lastFMClient
     
     var body: some View {
         TopStyle {
@@ -41,8 +39,8 @@ struct ContentView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    AuthenticationButton(client: lastFMClient)
+                if case .scrobble = selectedTab {
+                    ScrobbleToolbar()
                 }
             }
             #if os(iOS)

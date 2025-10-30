@@ -18,7 +18,6 @@ extension Artwork {
         guard let url = url else {
             return nil
         }
-        print("Artwork URL: \(url)")
         return try? Data(contentsOf: url)
     }
 }
