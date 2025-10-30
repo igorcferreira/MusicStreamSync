@@ -115,3 +115,11 @@ extension MusicAuthorization.Status {
         }
     }
 }
+
+#if DEBUG
+import Playgrounds
+#Playground {
+    let client = AppleMusicClient()
+    _ = await client.fetchLatestSongs()
+}
+#endif

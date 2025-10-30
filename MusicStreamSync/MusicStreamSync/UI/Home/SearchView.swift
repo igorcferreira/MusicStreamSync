@@ -14,11 +14,21 @@ struct SearchView: View {
     @State private var search: String = ""
     @FocusState private var searchFocus: Bool
     @State private var items: [PlayingItem] = []
+    @State private var loading: Bool = false
+    @State private var currentSearch: Task<Void, Never>? = nil
     
     var body: some View {
         Grouping {
-            List(items) { item in
-                EntryView(item: item)
+            List {
+                if loading {
+                    VStack(alignment: .center) {
+                        ProgressView()
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                ForEach(items) { item in
+                    EntryView(item: item)
+                }
             }
             .searchable(text: $search)
         }
@@ -35,16 +45,25 @@ struct SearchView: View {
         await playerBridge.play(item)
     }}
     
-    private func search(term: String) { Task {
-        let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else {
-            await update(search: [])
-            return
+    private func search(term: String) {
+        currentSearch?.cancel()
+        currentSearch = Task.detached {
+            let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else {
+                await update(search: [])
+                return
+            }
+            await set(loading: true)
+            let items = await appleMusicClient.searchSong(term: trimmed)
+            await update(search: items)
+            await set(loading: false)
         }
-        
-        let items = await appleMusicClient.searchSong(term: trimmed)
-        await update(search: items)
-    }}
+    }
+    
+    @MainActor
+    private func set(loading: Bool) {
+        self.loading = loading
+    }
     
     @MainActor
     private func update(search: [PlayingItem]) async {

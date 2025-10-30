@@ -16,7 +16,9 @@ extension Song {
             duration: duration ?? 0.0,
             album: albumTitle ?? "",
             url: url,
-            artwork: artwork?.data.map({ .local(data: $0) })
+            artwork: artworkURL.map({ .remote(url: $0) })
         )
     }
 }
+
+extension Song: MediaItemArtwork {}

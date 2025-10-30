@@ -68,7 +68,7 @@ class MediaKitPlayerBridge: PlayerBridge {
             duration: item.playbackDuration,
             album: item.albumTitle ?? "",
             url: item.assetURL,
-            artwork: item.artworkData.map({ .local(data: $0) })
+            artwork: item.artworkURL.map({ .remote(url: $0) })
         )
     }
     
@@ -81,10 +81,6 @@ class MediaKitPlayerBridge: PlayerBridge {
 
 extension MPMediaItem {
     var artworkURL: URL? {
-        guard let data = artworkData else {
-            return nil
-        }
-        
         let fileManager = FileManager.default
         let temporaryDirectoryURL = fileManager.temporaryDirectory
         let filename = playbackStoreID + ".jpg"
@@ -92,6 +88,10 @@ extension MPMediaItem {
         
         if fileManager.fileExists(atPath: fileURL.path()) {
             return fileURL
+        }
+        
+        guard let data = artworkData else {
+            return nil
         }
         
         do {

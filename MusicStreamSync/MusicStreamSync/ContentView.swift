@@ -11,21 +11,21 @@ import LastFMClient
 struct ContentView: View {
     
     enum TabEntry: String {
-        case home = "Home"
+        case history = "History"
         case playlist = "Playlist"
         case scrobble = "Scrobble"
         case search = "Search"
     }
     
-    @State private var selectedTab = TabEntry.home
+    @State private var selectedTab = TabEntry.history
     @Environment(\.lastFMClient) private var lastFMClient
     
     var body: some View {
         TopStyle {
             TabView(selection: $selectedTab) {
-                Tab(TabEntry.home.rawValue, systemImage: "music.note.house.fill", value: .home) {
+                Tab(TabEntry.history.rawValue, systemImage: "music.note.house.fill", value: .history) {
                     HomeView()
-                        .navigationTitle(Text(TabEntry.home.rawValue))
+                        .navigationTitle(Text(TabEntry.history.rawValue))
                 }
                 Tab(TabEntry.playlist.rawValue, systemImage: "play.square.stack.fill", value: .playlist) {
                     PlaylistView()
@@ -82,7 +82,12 @@ extension View {
     func tabViewBottomAccessory<Content>(
         @ViewBuilder content: () -> Content
     ) -> some View where Content : View {
-        overlay(alignment: .bottom, content: content)
+        overlay(alignment: .bottom) {
+            content()
+                .padding(.vertical)
+                .glassEffect()
+                .padding()
+        }
     }
 }
 #endif

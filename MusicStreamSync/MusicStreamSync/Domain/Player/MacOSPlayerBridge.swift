@@ -59,8 +59,8 @@ class MacOSPlayerBridge: PlayerBridge, Sendable {
             artist: item.artist,
             duration: item.duration,
             album: item.album ?? "",
-            url: nil,
-            artwork: nil
+            url: URL(string: "https://music.apple.com/song/\(item.title)/\(item.catalogId)?i=\(item.catalogId)"),
+            artwork: item.artworkURL.map({ .remote(url: $0) })
         )
     }
     
@@ -68,6 +68,30 @@ class MacOSPlayerBridge: PlayerBridge, Sendable {
     private func update(currentItem: PlayingItem?) {
         self.isPlaying = currentItem != nil
         self.currentItem = currentItem
+    }
+}
+
+extension MSCatalogItem {
+    var artworkURL: URL? {
+        let fileManager = FileManager.default
+        let temporaryDirectoryURL = fileManager.temporaryDirectory
+        let filename = catalogId + ".jpg"
+        let fileURL = temporaryDirectoryURL.appendingPathComponent(filename)
+        
+        if fileManager.fileExists(atPath: fileURL.path()) {
+            return fileURL
+        }
+        
+        guard let data = artworkData else {
+            return nil
+        }
+        
+        do {
+            try data.write(to: fileURL)
+            return fileURL
+        } catch {
+            return nil
+        }
     }
 }
 #endif

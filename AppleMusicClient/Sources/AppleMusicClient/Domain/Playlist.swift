@@ -5,6 +5,7 @@
 //  Created by Igor Ferreira on 9/10/25.
 //
 import MusicKit
+import Foundation
 
 extension Playlist {
     func toPlayerItem() -> PlayingItem {
@@ -15,7 +16,9 @@ extension Playlist {
             duration: 0.0,
             album: "",
             url: url,
-            artwork: artwork?.data.map({ .local(data: $0) })
+            artwork: artworkURL.map({ .remote(url: $0) })
         )
     }
 }
+
+extension Playlist: MediaItemArtwork {}
