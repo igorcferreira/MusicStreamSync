@@ -1,0 +1,4 @@
+language = Objective-C
+modules = MediaPlayer
+package = platform.MediaPlayer
+linkerOpts.osx = -framework MediaPlayer

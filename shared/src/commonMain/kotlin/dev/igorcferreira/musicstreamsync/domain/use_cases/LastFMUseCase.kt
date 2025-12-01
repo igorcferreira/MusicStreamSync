@@ -1,0 +1,43 @@
+package dev.igorcferreira.musicstreamsync.domain.use_cases
+
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
+import dev.igorcferreira.lastfm.model.HTTPException
+import dev.igorcferreira.musicstreamsync.domain.Scrobbler
+import dev.igorcferreira.musicstreamsync.domain.UseCase
+import dev.igorcferreira.musicstreamsync.model.MusicEntry
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlin.coroutines.cancellation.CancellationException
+
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+class LastFMUseCase(
+    private val scrobbler: Scrobbler
+) : UseCase() {
+    private val _isAuthenticated = MutableStateFlow(scrobbler.isAuthenticated)
+    @NativeCoroutinesState
+    val isAuthenticated: StateFlow<Boolean>
+        get() = _isAuthenticated.asStateFlow()
+
+    constructor() : this(Scrobbler())
+
+    fun logout() {
+        scrobbler.logout()
+        _isAuthenticated.update { false }
+    }
+
+    suspend fun scrobble(selection: List<MusicEntry>) {
+        scrobbler.scrobble(selection)
+    }
+
+    @Throws(HTTPException::class, CancellationException::class)
+    suspend fun authenticate(username: String, password: String) {
+        try {
+            scrobbler
+                .authenticate(username, password)
+        } finally {
+            _isAuthenticated.update { scrobbler.isAuthenticated }
+        }
+    }
+}

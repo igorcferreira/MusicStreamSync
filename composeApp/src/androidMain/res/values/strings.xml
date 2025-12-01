@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MusicStreamSync</string>
+    <string name="history">History</string>
+    <string name="playlists">Playlists</string>
+    <string name="recently_played">Recently Played</string>
+    <string name="loading">Loading…</string>
+    <string name="authenticate_to_last_fm">Authenticate to Last.FM</string>
+    <string name="authentication_label">Input Username and Password to scrobble current listening to Last.FM</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="authenticate">Authenticate</string>
+</resources>
