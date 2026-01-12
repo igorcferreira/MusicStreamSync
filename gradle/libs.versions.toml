@@ -23,7 +23,7 @@ swiftklib = "0.6.4"
 mokkery = "3.0.0"
 material3Android = "1.4.0"
 kmmdeploy = "2.3.0"
-nativecoroutines="1.0.0-ALPHA-48"
+nativecoroutines="1.0.0-kotlin-2.3.20-Beta1"
 
 [libraries]
 androidx-media = { module = "androidx.media:media", version.ref = "media" }
