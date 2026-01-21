@@ -27,7 +27,7 @@ actual class MediaPlayerNativePlayer : NativePlayer {
 
     private data class PlayerConfiguration(
         val context: WeakReference<Context>,
-        val developerToken: DeveloperToken,
+        val developerToken: IDeveloperToken,
         val tokenSigner: TokenSigner,
         val userTokenProvider: UserTokenProvider
     )
@@ -58,7 +58,7 @@ actual class MediaPlayerNativePlayer : NativePlayer {
 
     fun preparePlayer(
         context: Context,
-        developerToken: DeveloperToken,
+        developerToken: IDeveloperToken,
         tokenSigner: TokenSigner,
         userTokenProvider: UserTokenProvider
     ) {
