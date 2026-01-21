@@ -18,8 +18,8 @@ Copy `.env.sample` to `.env` and fill in required values first.
 
 ### Common Commands
 ```bash
-# Run all tests (JVM, iOS simulator, macOS)
-./gradlew test macosX64Test iosSimulatorArm64Test
+# Run all tests (JVM, iOS simulator)
+./gradlew testAndroid iosSimulatorArm64Test
 
 # Build Android app
 ./gradlew :composeApp:assembleDebug
@@ -27,8 +27,11 @@ Copy `.env.sample` to `.env` and fill in required values first.
 # Build shared XCFramework for iOS
 ./gradlew :shared:assembleMusicStreamXCFramework
 
-# Run specific test class
-./gradlew :shared:testDebugUnitTest --tests "dev.igorcferreira.musicstreamsync.SomeTest"
+# Run specific Android test class
+./gradlew :shared:testAndroidHostTest --tests "dev.igorcferreira.musicstreamsync.SomeTest"
+
+# Run specific iOS test class
+./gradlew :shared:iosSimulatorArm64Test --tests "dev.igorcferreira.musicstreamsync.SomeTest"
 ```
 
 ### Running the Apps

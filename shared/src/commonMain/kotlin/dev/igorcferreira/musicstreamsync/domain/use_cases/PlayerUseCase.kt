@@ -7,7 +7,6 @@ import dev.igorcferreira.musicstreamsync.domain.player.buildNativePlayer
 import dev.igorcferreira.musicstreamsync.model.EntryData
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class PlayerUseCase(
@@ -18,10 +17,10 @@ class PlayerUseCase(
 
     @NativeCoroutinesState
     val isPlaying: StateFlow<Boolean>
-        get() = PlayerWatcher.getWatcher(nativePlayer)._isPlaying.asStateFlow()
+        get() = PlayerWatcher.getWatcher(nativePlayer).isPlaying
     @NativeCoroutinesState
     val playingItem: StateFlow<MusicEntry?>
-        get() = PlayerWatcher.getWatcher(nativePlayer)._playingItem.asStateFlow()
+        get() = PlayerWatcher.getWatcher(nativePlayer).playingItem
     val playerState: NativePlayer.PlayerState
         get() = nativePlayer.playerState
 
