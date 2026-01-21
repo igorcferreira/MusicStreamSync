@@ -75,8 +75,26 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		788FE0192D825EA800604B0D /* commonMain */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = commonMain; path = ../shared/src/commonMain; sourceTree = SOURCE_ROOT; };
-		78DBA4742D860E3600D7B917 /* iosMain */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = iosMain; path = ../shared/src/iosMain; sourceTree = SOURCE_ROOT; };
+		788FE0192D825EA800604B0D /* commonMain */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			name = commonMain;
+			path = ../androidHostTest/src/commonMain;
+			sourceTree = SOURCE_ROOT;
+		};
+		78DBA4742D860E3600D7B917 /* iosMain */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			name = iosMain;
+			path = ../androidHostTest/src/iosMain;
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */

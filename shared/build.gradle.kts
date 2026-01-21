@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.swiftklib)
     alias(libs.plugins.mokkery)
-    alias(libs.plugins.kmmdeploy)
     `maven-publish`
     alias(libs.plugins.nativecoroutines)
 }
@@ -39,15 +38,23 @@ kotlin {
         }
     }
 
-    androidTarget {
+    androidLibrary {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
+        }
+        namespace = "dev.igorcferreira.musicstreamsync.shared"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        // Opt-in to enable and configure host-side (unit) tests
+        withHostTest {
+            isIncludeAndroidResources = true
         }
     }
 
     val xcf = XCFramework(frameworkName)
 
     listOf(
+        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
@@ -104,35 +111,25 @@ kotlin {
             implementation(libs.kvault)
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.media)
             api(libs.jjwt.api)
             runtimeOnly(libs.jjwt.impl)
             runtimeOnly("io.jsonwebtoken:jjwt-orgjson:${libs.versions.jjwtApi.get()}") {
                 exclude(group = "org.json", module = "json") //provided by Android natively
             }
         }
-        androidUnitTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
+
+        @Suppress("unused")
+        val androidHostTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
+            }
         }
     }
 }
 
 nativeCoroutines {
     exposedSeverity = ExposedSeverity.NONE
-}
-
-android {
-    namespace = "dev.igorcferreira.musicstreamsync.shared"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-    dependencies {
-        implementation(libs.kotlinx.coroutines.android)
-        implementation(libs.androidx.media)
-    }
 }

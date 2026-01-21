@@ -2,31 +2,29 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
-    androidTarget {
+    target {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
     sourceSets {
-
-        androidMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(compose.preview)
+        dependencies {
+            implementation(libs.runtime)
+            implementation(libs.foundation)
+            implementation(libs.jetbrains.material)
+            implementation(libs.ui)
+            implementation(libs.material3)
+            implementation(libs.material.icons.extended)
+            implementation(libs.components.resources)
+            implementation(libs.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
@@ -75,7 +73,7 @@ android {
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+    debugImplementation(libs.ui.tooling)
 }
 
 fun getProperty(name: String, defaultValue: String): String {

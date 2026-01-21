@@ -1,6 +1,6 @@
 package dev.igorcferreira.musicstreamsync.domain
 
-import dev.igorcferreira.musicstreamsync.model.DeveloperToken
+import dev.igorcferreira.musicstreamsync.model.IDeveloperToken
 import dev.igorcferreira.musicstreamsync.model.jwt.JWTBody
 import dev.igorcferreira.musicstreamsync.model.jwt.JWTHeader
 import kotlinx.serialization.json.Json
@@ -13,7 +13,7 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @HiddenFromObjC
-internal suspend fun DeveloperToken.signWith(
+internal suspend fun IDeveloperToken.signWith(
     signer: TokenSigner
 ): String {
     val header = JWTHeader(

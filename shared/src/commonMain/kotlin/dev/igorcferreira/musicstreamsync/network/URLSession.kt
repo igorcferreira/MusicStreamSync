@@ -6,21 +6,52 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.serialization.serializer
 import kotlin.native.HiddenFromObjC
+
+interface IURLSession {
+    suspend fun <T> perform(
+        deserializer: DeserializationStrategy<T>,
+        path: String,
+        method: HttpMethod,
+        headers: Map<String, String> = mapOf(),
+        decoder: Json = json,
+    ): T
+
+    companion object {
+        val json = Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+        }
+    }
+}
+
+suspend inline fun <reified T> IURLSession.perform(
+    path: String,
+    method: HttpMethod,
+    headers: Map<String, String> = mapOf(),
+    decoder: Json = IURLSession.json
+): T = perform(
+    deserializer = decoder.serializersModule.serializer(),
+    path = path,
+    method = method,
+    headers = headers,
+    decoder = decoder
+)
 
 @HiddenFromObjC
 internal class URLSession(
-    private val decoder: Json = Json { ignoreUnknownKeys = true },
     private val logger: Logger = Logger.DEFAULT
-) {
-    @Throws(HTTPException::class, CancellationException::class)
-    suspend inline fun <reified T> perform(
+): IURLSession {
+    override suspend fun <T> perform(
+        deserializer: DeserializationStrategy<T>,
         path: String,
         method: HttpMethod,
-        headers: Map<String, String> = mapOf()
+        headers: Map<String, String>,
+        decoder: Json,
     ): T {
         val client = buildClient()
 
@@ -43,7 +74,7 @@ internal class URLSession(
                 throw HTTPException(response.status.value, response.status.description)
             }
 
-            return decoder.decodeFromString(body)
+            return decoder.decodeFromString(deserializer, body)
         } catch (ex: SerializationException) {
             logger.log("Error: ${ex.message}")
             throw HTTPException(HttpStatusCode.UnprocessableEntity.value, ex.message ?: "")

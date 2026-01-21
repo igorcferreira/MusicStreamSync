@@ -3,7 +3,7 @@ package dev.igorcferreira.musicstreamsync.network
 import dev.igorcferreira.musicstreamsync.domain.TokenSigner
 import dev.igorcferreira.musicstreamsync.domain.UserTokenProvider
 import dev.igorcferreira.musicstreamsync.domain.signWith
-import dev.igorcferreira.musicstreamsync.model.DeveloperToken
+import dev.igorcferreira.musicstreamsync.model.IDeveloperToken
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
 import dev.igorcferreira.musicstreamsync.model.PlaylistEntry
 import dev.igorcferreira.musicstreamsync.network.model.HTTPException
@@ -22,8 +22,8 @@ internal open class AppleMusicAPI(
     internal open val host: String = "https://api.music.apple.com/v1",
     internal open val tokenSigner: TokenSigner,
     internal open val userTokenProvider: UserTokenProvider,
-    internal open val developerToken: DeveloperToken,
-    internal open val urlSession: URLSession
+    internal open val developerToken: IDeveloperToken,
+    internal open val urlSession: IURLSession
 ) {
     @HiddenFromObjC
     @Throws(HTTPException::class, CancellationException::class)

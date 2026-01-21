@@ -17,8 +17,6 @@ kotlin {
         iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
-        macosX64(),
-        macosArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = frameworkName
@@ -32,10 +30,13 @@ kotlin {
         browser()
         nodejs()
     }
-    androidTarget {
+    androidLibrary {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
+        namespace = "dev.igorcferreira.lastfm"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
     sourceSets {
@@ -67,21 +68,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
         }
-    }
-}
-
-android {
-    namespace = "dev.igorcferreira.lastfm"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-    dependencies {
-        implementation(libs.kotlinx.coroutines.android)
     }
 }
