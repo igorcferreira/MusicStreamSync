@@ -3,13 +3,13 @@ package dev.igorcferreira.musicstreamsync.model
 import dev.igorcferreira.musicstreamsync.domain.JWTTokenSigner
 import dev.igorcferreira.musicstreamsync.domain.clearKey
 import io.jsonwebtoken.Jwts
-import io.ktor.util.*
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.MissingFieldException
 import java.security.KeyFactory
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.X509EncodedKeySpec
+import kotlin.io.encoding.Base64
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Clock
@@ -58,8 +58,8 @@ class JWTTokenSignerTests {
         val iat = Clock.System.now().epochSeconds
         val exp = Clock.System.now().plus(1.days).epochSeconds
 
-        val body = "{\"iss\":\"TEAM_ID\",\"iat\":$iat,\"exp\":$exp}".encodeBase64()
-        val header = "{\"invalid\": \"header\"}".encodeBase64()
+        val body = Base64.encode("{\"iss\":\"TEAM_ID\",\"iat\":$iat,\"exp\":$exp}".encodeToByteArray())
+        val header = Base64.encode("{\"invalid\": \"header\"}".encodeToByteArray())
         JWTTokenSigner().sign(
             "$header.$body",
             privateKey = MOCK_PRIVATE_KEY
@@ -69,8 +69,8 @@ class JWTTokenSignerTests {
     private fun mockToken(): String {
         val iat = Clock.System.now().epochSeconds
         val exp = Clock.System.now().plus(1.days).epochSeconds
-        val body = "{\"iss\":\"TEAM_ID\",\"iat\":$iat,\"exp\":$exp}".encodeBase64()
-        val header = "{\"alg\": \"ES256\", \"kid\": \"KEY_ID\"}".encodeBase64()
+        val body = Base64.encode("{\"iss\":\"TEAM_ID\",\"iat\":$iat,\"exp\":$exp}".encodeToByteArray())
+        val header = Base64.encode("{\"alg\": \"ES256\", \"kid\": \"KEY_ID\"}".encodeToByteArray())
 
         return "$header.$body"
     }
