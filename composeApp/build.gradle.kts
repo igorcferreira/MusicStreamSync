@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {
@@ -76,7 +77,10 @@ dependencies {
     debugImplementation(libs.ui.tooling)
 }
 
-fun getProperty(name: String, defaultValue: String): String {
+fun getProperty(
+    name: String,
+    defaultValue: String,
+): String {
     val localFile = layout.projectDirectory.file("../local.properties").asFile
     if (localFile.exists()) {
         val localProperties = loadProperties(localFile.path)
@@ -90,4 +94,3 @@ fun getProperty(name: String, defaultValue: String): String {
     }
     return project.property(name)?.toString() ?: defaultValue
 }
-

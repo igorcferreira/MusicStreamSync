@@ -26,6 +26,7 @@ swiftklib = "0.6.4"
 mokkery = "3.2.0"
 material3Android = "1.4.0"
 nativecoroutines="1.0.1"
+ktlint = "12.1.2"
 
 [libraries]
 androidx-media = { module = "androidx.media:media", version.ref = "media" }
@@ -78,3 +79,4 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 swiftklib = { id = "io.github.ttypic.swiftklib", version.ref = "swiftklib" }
 mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
 nativecoroutines = { id = "com.rickclephas.kmp.nativecoroutines", version.ref = "nativecoroutines" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }

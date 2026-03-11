@@ -1,0 +1,32 @@
+included:
+  - iosApp/iosApp
+  - shared/src/native/MusicKitBridge
+  - shared/src/native/OSLogger
+
+excluded:
+  - iosApp/iosApp.xcodeproj
+  - shared/src/native/MusicKitBridge/Tests
+  - shared/src/native/OSLogger/Tests
+
+disabled_rules:
+  - todo
+
+opt_in_rules:
+  - closure_spacing
+  - contains_over_first_not_nil
+  - empty_count
+  - force_unwrapping
+  - operator_usage_whitespace
+  - vertical_parameter_alignment_on_call
+
+line_length:
+  warning: 120
+  error: 200
+
+type_body_length:
+  warning: 300
+  error: 400
+
+file_length:
+  warning: 400
+  error: 1000
