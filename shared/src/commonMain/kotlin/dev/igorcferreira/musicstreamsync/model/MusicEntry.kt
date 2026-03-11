@@ -9,7 +9,7 @@ data class MusicEntry(
     val duration: Long,
     val album: String? = null,
     val albumArtist: String? = null,
-    val genres: List<String> = listOf()
+    val genres: List<String> = listOf(),
 ) : EntryData {
     override val body: String?
         get() = album

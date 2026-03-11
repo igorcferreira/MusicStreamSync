@@ -10,9 +10,7 @@ import dev.igorcferreira.musicstreamsync.list.EntryList
 import dev.igorcferreira.musicstreamsync.player.Player
 
 @Composable
-fun History(
-    viewModel: RecentlyPlayedViewModel = viewModel(factory = ViewModelFactory.RecentlyPlayed)
-) {
+fun History(viewModel: RecentlyPlayedViewModel = viewModel(factory = ViewModelFactory.RecentlyPlayed)) {
     val history = viewModel.history.collectAsState(initial = listOf())
     val loading = viewModel.loading.collectAsState(initial = false)
 
@@ -22,4 +20,3 @@ fun History(
 
     EntryList(history.value, loading.value, { Entry(it) }, { Player() })
 }
-

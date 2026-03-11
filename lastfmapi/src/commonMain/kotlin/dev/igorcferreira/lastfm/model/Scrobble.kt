@@ -24,6 +24,6 @@ data class Scrobble(
         artist = CorrectableText(artist),
         timestamp = timestamp.epochSeconds,
         album = album?.let { CorrectableText(it) },
-        albumArtist = albumArtist?.let { CorrectableText(it) }
+        albumArtist = albumArtist?.let { CorrectableText(it) },
     )
 }

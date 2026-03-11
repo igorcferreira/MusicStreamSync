@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LastFMViewModel(
-    private val useCase: LastFMUseCase = LastFMUseCase()
+    private val useCase: LastFMUseCase = LastFMUseCase(),
 ) : ViewModel() {
     val error = MutableStateFlow<String?>(null)
     val isAuthenticated: StateFlow<Boolean>
@@ -20,7 +20,7 @@ class LastFMViewModel(
 
     fun authenticate(
         username: String,
-        password: String
+        password: String,
     ) = viewModelScope.launch {
         error.update { null }
         authenticating.update { true }

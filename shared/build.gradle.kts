@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.mokkery)
     `maven-publish`
     alias(libs.plugins.nativecoroutines)
+    alias(libs.plugins.ktlint)
 }
 
 val frameworkName = "MusicStream"
@@ -116,7 +117,7 @@ kotlin {
             api(libs.jjwt.api)
             runtimeOnly(libs.jjwt.impl)
             runtimeOnly("io.jsonwebtoken:jjwt-orgjson:${libs.versions.jjwtApi.get()}") {
-                exclude(group = "org.json", module = "json") //provided by Android natively
+                exclude(group = "org.json", module = "json") // provided by Android natively
             }
         }
 

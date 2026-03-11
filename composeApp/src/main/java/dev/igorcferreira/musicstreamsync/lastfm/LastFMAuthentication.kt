@@ -1,11 +1,24 @@
 package dev.igorcferreira.musicstreamsync.lastfm
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -27,7 +40,7 @@ import dev.igorcferreira.musicstreamsync.application.theme.AppTheme
 @Composable
 fun LastFMAuthentication(
     authenticating: Boolean,
-    authenticate: (String, String) -> Unit
+    authenticate: (String, String) -> Unit,
 ) {
     val context = LocalContext.current
     val usernameFocus = remember { FocusRequester() }
@@ -40,18 +53,19 @@ fun LastFMAuthentication(
     }
 
     Box(
-        Modifier.padding(16.dp)
+        Modifier.padding(16.dp),
     ) {
         AnimatedVisibility(authenticating, Modifier.align(Alignment.Center)) {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .width(64.dp)
-                    .padding(16.dp)
-                    .semantics {
-                        testTag = "loading"
-                        contentDescription = context.getString(R.string.loading)
-                    },
-                color = MaterialTheme.colorScheme.primary
+                modifier =
+                    Modifier
+                        .width(64.dp)
+                        .padding(16.dp)
+                        .semantics {
+                            testTag = "loading"
+                            contentDescription = context.getString(R.string.loading)
+                        },
+                color = MaterialTheme.colorScheme.primary,
             )
         }
         AnimatedVisibility(!authenticating, Modifier.align(Alignment.TopCenter)) {
@@ -60,13 +74,14 @@ fun LastFMAuthentication(
                     text = stringResource(R.string.authenticate_to_last_fm),
                     modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = stringResource(R.string.authentication_label),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
                 )
                 TextField(
                     value = username,
@@ -74,18 +89,21 @@ fun LastFMAuthentication(
                         username = it
                     },
                     label = { Text(stringResource(R.string.username)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .focusRequester(usernameFocus),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                            .focusRequester(usernameFocus),
                     maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        autoCorrectEnabled = false,
-                        imeAction = ImeAction.Next,
-                    ),
-                    keyboardActions = KeyboardActions(onNext = {
-                        passwordFocus.requestFocus()
-                    })
+                    keyboardOptions =
+                        KeyboardOptions(
+                            autoCorrectEnabled = false,
+                            imeAction = ImeAction.Next,
+                        ),
+                    keyboardActions =
+                        KeyboardActions(onNext = {
+                            passwordFocus.requestFocus()
+                        }),
                 )
                 TextField(
                     value = password,
@@ -94,24 +112,28 @@ fun LastFMAuthentication(
                     },
                     label = { Text(stringResource(R.string.password)) },
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .focusRequester(passwordFocus),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                            .focusRequester(passwordFocus),
                     maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions = KeyboardActions(onDone = {
-                        authenticate(username, password)
-                    })
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
+                    keyboardActions =
+                        KeyboardActions(onDone = {
+                            authenticate(username, password)
+                        }),
                 )
                 Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    onClick = { authenticate(username, password) }
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                    onClick = { authenticate(username, password) },
                 ) {
                     Text(stringResource(R.string.authenticate))
                 }

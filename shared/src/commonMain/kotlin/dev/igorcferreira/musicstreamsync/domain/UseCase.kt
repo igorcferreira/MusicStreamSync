@@ -8,15 +8,16 @@ import kotlin.native.HiddenFromObjC
 
 abstract class UseCase {
     @HiddenFromObjC
-    internal val _performing = MutableStateFlow(false)
+    internal val mutablePerforming = MutableStateFlow(false)
 
     @HiddenFromObjC
-    internal val _error = MutableStateFlow<Exception?>(null)
+    internal val mutableError = MutableStateFlow<Exception?>(null)
 
     @NativeCoroutinesState
     val isPerforming: StateFlow<Boolean>
-        get() = _performing.asStateFlow()
+        get() = mutablePerforming.asStateFlow()
+
     @NativeCoroutinesState
     val error: StateFlow<Exception?>
-        get() = _error.asStateFlow()
+        get() = mutableError.asStateFlow()
 }

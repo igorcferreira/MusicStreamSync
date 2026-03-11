@@ -20,19 +20,20 @@ actual class MediaPlayerNativePlayer : NativePlayer {
     actual override val isPlaying: Boolean
         get() = player.playbackState() == MPMusicPlaybackState.MPMusicPlaybackStatePlaying
     actual override val currentPlaying: MusicEntry?
-        get() = player.nowPlayingItem()?.let { item ->
-            return MusicEntry(
-                id = item.playbackStoreID,
-                entryId = item.playbackStoreID,
-                title = item.title ?: "",
-                artist = item.artist ?: "",
-                artworkUrl = item.getArtwork(),
-                duration = item.playbackDuration.toLong(),
-                album = item.albumTitle ?: "",
-                albumArtist = item.albumArtist ?: "",
-                genres = listOf(item.genre).mapNotNull { it }
-            )
-        }
+        get() =
+            player.nowPlayingItem()?.let { item ->
+                return MusicEntry(
+                    id = item.playbackStoreID,
+                    entryId = item.playbackStoreID,
+                    title = item.title ?: "",
+                    artist = item.artist ?: "",
+                    artworkUrl = item.getArtwork(),
+                    duration = item.playbackDuration.toLong(),
+                    album = item.albumTitle ?: "",
+                    albumArtist = item.albumArtist ?: "",
+                    genres = listOf(item.genre).mapNotNull { it },
+                )
+            }
     actual override val elapsedTime: Double
         get() = player.currentPlaybackTime
 
@@ -57,8 +58,9 @@ actual class MediaPlayerNativePlayer : NativePlayer {
     @OptIn(ExperimentalForeignApi::class)
     private fun MPMediaItem.getArtwork(): String {
         val itemArtwork = artwork ?: return ""
-        val size = itemArtwork.bounds.useContents { size }
-            .readValue()
+        val size =
+            itemArtwork.bounds.useContents { size }
+                .readValue()
         val image = itemArtwork.imageWithSize(size) ?: return ""
         val data = UIImageJPEGRepresentation(image, compressionQuality = 1.0) ?: return ""
         return "data:image/jpeg;base64,${data.base64Encoding()}"

@@ -8,8 +8,7 @@ import dev.igorcferreira.musicstreamsync.model.PlaylistEntry
 class PlaylistsUseCase(
     private val configuration: Configuration,
 ) : ResultUseCase<List<PlaylistEntry>>(listOf()) {
-
-    override suspend fun operate() = configuration.appleMusicAPI
-        .getUserPlaylists()
-
+    override suspend fun operate() =
+        configuration.appleMusicAPI
+            .getUserPlaylists()
 }

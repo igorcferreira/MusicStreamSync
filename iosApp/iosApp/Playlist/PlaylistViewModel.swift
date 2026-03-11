@@ -11,17 +11,17 @@ import MusicStream
 @Observable
 class PlaylistViewModel: ListViewModel {
     let useCase: PlaylistsUseCase
-    
+
     private(set) var loading: Bool = false
     private(set) var history: [PlaylistEntry] = []
-    
+
     init(useCase: PlaylistsUseCase) {
         self.useCase = useCase
-        
+
         collect(useCase.isPerformingFlow, into: \.loading)
         collect(useCase.resultFlow, into: \.history)
     }
-    
+
     func load() async throws {
         try await useCase.perform()
     }

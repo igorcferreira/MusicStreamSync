@@ -13,23 +13,24 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @HiddenFromObjC
-internal suspend fun IDeveloperToken.signWith(
-    signer: TokenSigner
-): String {
-    val header = JWTHeader(
-        alg = "ES256",
-        kid = keyId
-    )
-    val body = JWTBody(
-        iss = teamId,
-        iat = Clock.System.now().epochSeconds,
-        exp = Clock.System.now().plus(1.days).epochSeconds
-    )
+internal suspend fun IDeveloperToken.signWith(signer: TokenSigner): String {
+    val header =
+        JWTHeader(
+            alg = "ES256",
+            kid = keyId,
+        )
+    val body =
+        JWTBody(
+            iss = teamId,
+            iat = Clock.System.now().epochSeconds,
+            exp = Clock.System.now().plus(1.days).epochSeconds,
+        )
 
-    val unsignedJWT = listOf(
-        Json.encodeToString(header),
-        Json.encodeToString(body),
-    ).map(String::encodeToByteArray).joinToString(".", transform = ByteArray::toBase64)
+    val unsignedJWT =
+        listOf(
+            Json.encodeToString(header),
+            Json.encodeToString(body),
+        ).map(String::encodeToByteArray).joinToString(".", transform = ByteArray::toBase64)
 
     return signer.sign(unsignedJWT, privateKey)
 }

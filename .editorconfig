@@ -1,0 +1,23 @@
+root = true
+
+[*.kt]
+# Compose @Composable functions use PascalCase by convention
+ktlint_function_naming_ignore_when_annotated_with = Composable,Preview
+# Package names with underscores exist in the codebase (use_cases, apple_music) — structural rename is out of scope
+ktlint_standard_package-name = disabled
+
+[*.{kt,kts}]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+trim_trailing_whitespace = true
+ktlint_standard_no-wildcard-imports = disabled
+
+
+[*.kts]
+ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
+# Gradle DSLs (swiftklib, cinterops) require PascalCase property names — suppress the naming rule
+ktlint_standard_property-naming = disabled

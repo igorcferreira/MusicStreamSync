@@ -9,5 +9,5 @@ internal data class JWTBody(
     val iss: String,
     val iat: Long,
     val exp: Long,
-    val origin: String? = null
+    val origin: String? = null,
 )

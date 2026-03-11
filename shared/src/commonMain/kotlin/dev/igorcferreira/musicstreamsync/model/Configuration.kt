@@ -7,7 +7,7 @@ import dev.igorcferreira.musicstreamsync.network.AppleMusicAPI
 import dev.igorcferreira.musicstreamsync.network.URLSession
 
 class Configuration internal constructor(
-    internal val appleMusicAPI: AppleMusicAPI
+    internal val appleMusicAPI: AppleMusicAPI,
 ) {
     val developerToken: IDeveloperToken
         get() = appleMusicAPI.developerToken
@@ -17,18 +17,18 @@ class Configuration internal constructor(
         get() = appleMusicAPI.userTokenProvider
 
     constructor(
-        tokenSigner: TokenSigner
+        tokenSigner: TokenSigner,
     ) : this(DeveloperToken(), tokenSigner)
 
     constructor(
         developerToken: DeveloperToken,
-        tokenSigner: TokenSigner
+        tokenSigner: TokenSigner,
     ) : this(
         AppleMusicAPI(
             tokenSigner = tokenSigner,
             userTokenProvider = createUserTokenProvider(),
             developerToken = developerToken,
-            urlSession = URLSession()
-        )
+            urlSession = URLSession(),
+        ),
     )
 }

@@ -14,13 +14,13 @@ struct EntryView<E: EntryData>: View {
     @State var entry: E
     private let tapAction: ((E) -> Void)?
     private let playerUseCase: PlayerUseCase
-    
+
     init(entry: E, factory: Factory, tapAction: ((E) -> Void)? = nil) {
         self.entry = entry
         self.playerUseCase = factory.makePlayerUseCase()
         self.tapAction = tapAction
     }
-    
+
     var body: some View {
         HStack(alignment: .center, spacing: 8.0) {
             if let artwork = entry.artworkUrl {
@@ -35,10 +35,13 @@ struct EntryView<E: EntryData>: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(10.0)
                     .frame(width: 60, height: 60)
-                    .background(Color(uiColor: UIColor.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 4.0))
+                    .background(
+                        Color(uiColor: UIColor.tertiarySystemGroupedBackground),
+                        in: RoundedRectangle(cornerRadius: 4.0)
+                    )
                     .foregroundStyle(Color(uiColor: UIColor.secondarySystemBackground))
             }
-            
+
             VStack(alignment: .leading) {
                 Text(entry.title)
                     .font(.headline)
@@ -76,12 +79,13 @@ struct EntryView<E: EntryData>: View {
         id: "1184710148",
         title: "Clocks",
         artist: "Vision Of Atlantis",
+        // swiftlint:disable:next line_length
         artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
         album: "The Human Contradiction",
         albumArtist: "Vision Of Atlantis"
     )
     @Previewable @Environment(\.factory) var factory
-    
+
     EntryView(entry: entry, factory: factory)
         .colorScheme(.light)
     EntryView(entry: entry, factory: factory)

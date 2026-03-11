@@ -1,12 +1,12 @@
 package dev.igorcferreira.lastfm.network.authentication
 
-import io.ktor.utils.io.charsets.*
-import io.ktor.utils.io.core.*
+import io.ktor.utils.io.charsets.Charsets
+import io.ktor.utils.io.core.toByteArray
 import org.kotlincrypto.hash.md.MD5
 
 internal class KeyHasher(
     val apiKey: String,
-    private val apiSecret: String
+    private val apiSecret: String,
 ) {
     fun hash(parameters: Map<String, String>): String {
         val components = mutableListOf<String>()

@@ -11,7 +11,7 @@ data class PlaylistEntry(
     val lastModifiedDate: String? = null,
     val entryDescription: String? = null,
     override val artworkUrl: String? = null,
-    val songs: List<MusicEntry>? = null
+    val songs: List<MusicEntry>? = null,
 ) : EntryData {
     override val title: String
         get() = name

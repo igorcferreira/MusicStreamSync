@@ -13,9 +13,10 @@ import kotlin.coroutines.cancellation.CancellationException
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class LastFMUseCase(
-    private val scrobbler: Scrobbler
+    private val scrobbler: Scrobbler,
 ) : UseCase() {
     private val _isAuthenticated = MutableStateFlow(scrobbler.isAuthenticated)
+
     @NativeCoroutinesState
     val isAuthenticated: StateFlow<Boolean>
         get() = _isAuthenticated.asStateFlow()
@@ -32,7 +33,10 @@ class LastFMUseCase(
     }
 
     @Throws(HTTPException::class, CancellationException::class)
-    suspend fun authenticate(username: String, password: String) {
+    suspend fun authenticate(
+        username: String,
+        password: String,
+    ) {
         try {
             scrobbler
                 .authenticate(username, password)

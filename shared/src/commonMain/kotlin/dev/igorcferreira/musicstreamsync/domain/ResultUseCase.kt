@@ -8,26 +8,27 @@ import kotlinx.coroutines.flow.update
 import kotlin.native.HiddenFromObjC
 
 abstract class ResultUseCase<T>(
-    initialValue: T
+    initialValue: T,
 ) : UseCase() {
     @HiddenFromObjC
     private val _result = MutableStateFlow(initialValue)
+
     @NativeCoroutinesState
     val result: StateFlow<T>
         get() = _result.asStateFlow()
 
     @Throws(Exception::class)
     suspend fun perform(): T {
-        _error.update { null }
-        _performing.update { true }
+        mutableError.update { null }
+        mutablePerforming.update { true }
         try {
             val response = operate()
             _result.update { response }
         } catch (e: Exception) {
-            _error.update { e }
+            mutableError.update { e }
             throw e
         } finally {
-            _performing.update { false }
+            mutablePerforming.update { false }
         }
         return _result.value
     }

@@ -13,7 +13,7 @@ internal data class Artwork(
     val textColor1: String? = null,
     val textColor2: String? = null,
     val textColor3: String? = null,
-    val textColor4: String? = null
+    val textColor4: String? = null,
 ) {
     val mappedUrl: String
         get() {

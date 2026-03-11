@@ -9,11 +9,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
-    private val useCase: PlaylistsUseCase
+    private val useCase: PlaylistsUseCase,
 ) : ViewModel() {
-
     constructor(
-        configuration: Configuration
+        configuration: Configuration,
     ) : this(PlaylistsUseCase(configuration))
 
     val loading: StateFlow<Boolean>

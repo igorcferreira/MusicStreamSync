@@ -24,7 +24,7 @@ extension Observable where Self: AnyObject {
             Task.detached { @MainActor in self?[keyPath: path] = mapped }
         }
     }}
-    
+
     func collect<Output, Failure: Error>(
         _ flow: @escaping NativeFlow<Output, Failure, KotlinUnit>,
         into path: ReferenceWritableKeyPath<Self, Output>

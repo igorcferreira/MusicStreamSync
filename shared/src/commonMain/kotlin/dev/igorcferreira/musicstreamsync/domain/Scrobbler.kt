@@ -24,7 +24,7 @@ import kotlin.time.ExperimentalTime
 class Scrobbler(
     apiKey: String = ArkanaKeys.Global.lastFMAPIKey,
     apiKeySecret: String = ArkanaKeys.Global.lastFMAPISecret,
-    private val playerUserCase: PlayerUseCase = PlayerUseCase()
+    private val playerUserCase: PlayerUseCase = PlayerUseCase(),
 ) {
     private val coroutineContext = CoroutineScope(Dispatchers.Unconfined)
     private var client: LastFMClient? = null
@@ -39,7 +39,10 @@ class Scrobbler(
     fun logout() = client?.logout()
 
     @Throws(HTTPException::class, CancellationException::class)
-    suspend fun authenticate(username: String, password: String) {
+    suspend fun authenticate(
+        username: String,
+        password: String,
+    ) {
         val currentClient = client ?: return
         currentClient.authenticate(username, password)
     }
@@ -48,59 +51,65 @@ class Scrobbler(
     suspend fun scrobble(items: List<MusicEntry>) {
         val currentClient = client ?: return
         try {
-            currentClient.scrobble(items.map {
-                Scrobble(
-                    track = it.title,
-                    artist = it.artist,
-                    timestamp = Clock.System.now(),
-                    album = it.album,
-                    albumArtist = it.albumArtist,
-                )
-            })
+            currentClient.scrobble(
+                items.map {
+                    Scrobble(
+                        track = it.title,
+                        artist = it.artist,
+                        timestamp = Clock.System.now(),
+                        album = it.album,
+                        albumArtist = it.albumArtist,
+                    )
+                },
+            )
         } catch (e: Exception) {
             SystemLogger.error("LAST_FM_SCROBBLER", "Unable to scrobble: ${e.message ?: ""}", e)
         }
     }
 
     @OptIn(ExperimentalTime::class)
-    private fun start(apiKey: String, apiKeySecret: String) {
+    private fun start(
+        apiKey: String,
+        apiKeySecret: String,
+    ) {
         job?.cancel()
         client = LastFMClient(apiKey, apiKeySecret)
-        job = coroutineContext.launch {
-            playerUserCase.playingItem
-                .shareIn(this, SharingStarted.Lazily)
-                .onEach {
-                    val currentClient = client ?: return@onEach
-                    val item = it ?: return@onEach
-                    if (!currentClient.isAuthenticated) {
-                        return@onEach
-                    }
-                    if (item.entryId == lastItemScrobbled) {
-                        return@onEach
-                    }
-                    if (playerUserCase.playerState == NativePlayer.PlayerState.NOT_PLAYING) {
-                        return@onEach
-                    }
-                    lastItemScrobbled = item.entryId
+        job =
+            coroutineContext.launch {
+                playerUserCase.playingItem
+                    .shareIn(this, SharingStarted.Lazily)
+                    .onEach {
+                        val currentClient = client ?: return@onEach
+                        val item = it ?: return@onEach
+                        if (!currentClient.isAuthenticated) {
+                            return@onEach
+                        }
+                        if (item.entryId == lastItemScrobbled) {
+                            return@onEach
+                        }
+                        if (playerUserCase.playerState == NativePlayer.PlayerState.NOT_PLAYING) {
+                            return@onEach
+                        }
+                        lastItemScrobbled = item.entryId
 
-                    SystemLogger.info("Scrobbler", "Scrobbling ${item.title} - ${item.artist}")
+                        SystemLogger.info("Scrobbler", "Scrobbling ${item.title} - ${item.artist}")
 
-                    currentClient.scrobble(
-                        artist = item.artist,
-                        track = item.title,
-                        timestamp = Clock.System.now(),
-                        album = item.album,
-                        albumArtist = item.albumArtist,
-                    )
+                        currentClient.scrobble(
+                            artist = item.artist,
+                            track = item.title,
+                            timestamp = Clock.System.now(),
+                            album = item.album,
+                            albumArtist = item.albumArtist,
+                        )
 
-                    currentClient.updateNowPlaying(
-                        artist = item.artist,
-                        track = item.title,
-                        album = item.album,
-                        albumArtist = item.albumArtist
-                    )
-                }.launchIn(this)
-        }
+                        currentClient.updateNowPlaying(
+                            artist = item.artist,
+                            track = item.title,
+                            album = item.album,
+                            albumArtist = item.albumArtist,
+                        )
+                    }.launchIn(this)
+            }
     }
 
     companion object {

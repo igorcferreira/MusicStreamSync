@@ -34,6 +34,12 @@ jobs:
         run: arkana -l kotlin
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+      - name: Lint Kotlin
+        run: ./gradlew ktlintCheck
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: Lint Swift
+        run: swiftlint lint --config .swiftlint.yml --reporter github-actions-logging
       - name: Run tests
         run: ./gradlew testAndroid iosSimulatorArm64Test
       - name: Publish Test Report

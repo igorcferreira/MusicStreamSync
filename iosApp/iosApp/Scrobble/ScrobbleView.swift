@@ -10,22 +10,23 @@ import SwiftUI
 import MusicStream
 
 struct ScrobbleView: View {
-    
+
     @Environment(\.factory) var factory
     @State var recentlyPlayed: RecentlyPlayedViewModel
     @State var lastFMViewModel: LastFMViewModel
     @State var selection = [MusicEntry]()
-    
+
     init(factory: Factory) {
-        self._recentlyPlayed = .init(initialValue: RecentlyPlayedViewModel(useCase: factory.makeRecentlyPlayedUseCase()))
+        let useCase = factory.makeRecentlyPlayedUseCase()
+        self._recentlyPlayed = .init(initialValue: RecentlyPlayedViewModel(useCase: useCase))
         self._lastFMViewModel = .init(initialValue: LastFMViewModel())
     }
-    
+
     init(recentlyPlayed: RecentlyPlayedViewModel, lastFMViewModel: LastFMViewModel) {
         self._recentlyPlayed = .init(initialValue: recentlyPlayed)
         self._lastFMViewModel = .init(initialValue: lastFMViewModel)
     }
-    
+
     var body: some View {
         List {
             if recentlyPlayed.loading {
@@ -42,13 +43,13 @@ struct ScrobbleView: View {
                     .listRowSeparator(.hidden)
                     .id("header_text")
             }
-            
+
             ForEach(recentlyPlayed.history) { entry in
                 EntryView(entry: entry, factory: factory) { item in
                     toggle(selection: item)
                 }
                 .overlay {
-                    if (isSelected(entry)) {
+                    if isSelected(entry) {
                         RoundedRectangle(cornerRadius: 4.0)
                             .foregroundStyle(Color(uiColor: UIColor.tintColor.withAlphaComponent(0.33)))
                             .onTapGesture { toggle(selection: entry) }
@@ -77,15 +78,15 @@ struct ScrobbleView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
     }
-    
+
     private func load() { Task {
         try? await recentlyPlayed.load()
     }}
-    
+
     private func isSelected(_ entry: MusicEntry) -> Bool {
         return selection.contains(entry)
     }
-    
+
     private func toggle(selection: MusicEntry) {
         if isSelected(selection) {
             self.selection.removeAll(where: {
@@ -95,7 +96,7 @@ struct ScrobbleView: View {
             self.selection.append(selection)
         }
     }
-    
+
     private func scrobble() { Task {
         await lastFMViewModel.scrobble(
             selection,

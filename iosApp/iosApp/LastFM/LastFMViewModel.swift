@@ -12,12 +12,12 @@ import MusicStream
 class LastFMViewModel {
     private let useCase: LastFMUseCase
     private(set) var isAuthenticated: Bool = false
-    
+
     init(useCase: LastFMUseCase = LastFMUseCase()) {
         self.useCase = useCase
         collect(useCase.isAuthenticatedFlow, into: \.isAuthenticated)
     }
-    
+
     func authenticate(
         username: String,
         password: String
@@ -29,14 +29,14 @@ class LastFMViewModel {
             Task { @MainActor in isAuthenticated = false }
         }
     }
-    
+
     func scrobble(_ selection: [MusicEntry], items: [MusicEntry]) async {
-        //This is done to keep the sorting of the input, regardless
-        //of the order of the selection made by the user.
+        // This is done to keep the sorting of the input, regardless
+        // of the order of the selection made by the user.
         let itemsToUpload = items.filter({ selection.contains($0) })
         try? await useCase.scrobble(selection: itemsToUpload)
     }
-    
+
     func logout() {
         useCase.logout()
         isAuthenticated = false

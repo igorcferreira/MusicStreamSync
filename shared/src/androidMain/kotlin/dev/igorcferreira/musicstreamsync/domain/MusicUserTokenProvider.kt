@@ -16,7 +16,7 @@ import kotlin.coroutines.suspendCoroutine
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class MusicUserTokenProvider : UserTokenProvider, Application.ActivityLifecycleCallbacks {
-    private var _currentActivity = WeakReference<ComponentActivity>(null)
+    private var currentActivityRef = WeakReference<ComponentActivity>(null)
     private lateinit var vault: KVault
 
     fun init(application: Application) {
@@ -25,42 +25,42 @@ actual class MusicUserTokenProvider : UserTokenProvider, Application.ActivityLif
         vault = KVault(application)
     }
 
-    actual override suspend fun getUserToken(
-        developerToken: String
-    ): String = getLocalToken() ?: getExternalToken(developerToken)
+    actual override suspend fun getUserToken(developerToken: String): String =
+        getLocalToken() ?: getExternalToken(developerToken)
 
     private fun getLocalToken(): String? = vault.string(VAULT_KEY)
 
-    private suspend fun getExternalToken(
-        developerToken: String
-    ): String {
-        val currentActivity = _currentActivity.get() ?: throw ActivityNotFoundException()
-        val authenticationManager = AuthenticationFactory
-            .createAuthenticationManager(currentActivity.applicationContext)
+    private suspend fun getExternalToken(developerToken: String): String {
+        val currentActivity = currentActivityRef.get() ?: throw ActivityNotFoundException()
+        val authenticationManager =
+            AuthenticationFactory
+                .createAuthenticationManager(currentActivity.applicationContext)
 
-        val intent = authenticationManager
-            .createIntentBuilder(developerToken)
-            .build()
+        val intent =
+            authenticationManager
+                .createIntentBuilder(developerToken)
+                .build()
 
-        val token = suspendCoroutine { continuation ->
-            currentActivity.activityResultRegistry.register(
-                "token_request",
-                ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode != Activity.RESULT_OK) {
-                    continuation.resumeWithException(UserNotAuthenticatedException())
-                } else if (result.data == null) {
-                    continuation.resumeWithException(UserNotAuthenticatedException())
-                } else {
-                    val token = authenticationManager.handleTokenResult(result.data)
-                    if (token.isError) {
+        val token =
+            suspendCoroutine { continuation ->
+                currentActivity.activityResultRegistry.register(
+                    "token_request",
+                    ActivityResultContracts.StartActivityForResult(),
+                ) { result ->
+                    if (result.resultCode != Activity.RESULT_OK) {
+                        continuation.resumeWithException(UserNotAuthenticatedException())
+                    } else if (result.data == null) {
                         continuation.resumeWithException(UserNotAuthenticatedException())
                     } else {
-                        continuation.resume(token.musicUserToken)
+                        val token = authenticationManager.handleTokenResult(result.data)
+                        if (token.isError) {
+                            continuation.resumeWithException(UserNotAuthenticatedException())
+                        } else {
+                            continuation.resume(token.musicUserToken)
+                        }
                     }
-                }
-            }.launch(intent)
-        }
+                }.launch(intent)
+            }
 
         vault.set(VAULT_KEY, token)
         return token
@@ -68,20 +68,30 @@ actual class MusicUserTokenProvider : UserTokenProvider, Application.ActivityLif
 
     override fun onActivityStarted(activity: Activity) {
         (activity as? ComponentActivity)?.let {
-            _currentActivity = WeakReference(it)
+            currentActivityRef = WeakReference(it)
         }
     }
 
     override fun onActivityResumed(activity: Activity) {
         (activity as? ComponentActivity)?.let {
-            _currentActivity = WeakReference(it)
+            currentActivityRef = WeakReference(it)
         }
     }
 
-    override fun onActivityCreated(p0: Activity, p1: Bundle?) {}
+    override fun onActivityCreated(
+        p0: Activity,
+        p1: Bundle?,
+    ) {}
+
     override fun onActivityPaused(p0: Activity) {}
+
     override fun onActivityStopped(p0: Activity) {}
-    override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {}
+
+    override fun onActivitySaveInstanceState(
+        p0: Activity,
+        p1: Bundle,
+    ) {}
+
     override fun onActivityDestroyed(p0: Activity) {}
 
     companion object {

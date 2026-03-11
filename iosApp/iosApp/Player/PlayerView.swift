@@ -11,10 +11,10 @@ import NukeUI
 import MusicKit
 
 struct PlayerView: View {
-    
+
     @State private var viewModel: PlayerViewModel
     private var actionOverwrite: (() -> Void)?
-    
+
     init(
         viewModel: PlayerViewModel,
         actionOverwrite: (() -> Void)? = nil
@@ -22,7 +22,7 @@ struct PlayerView: View {
         self._viewModel = .init(wrappedValue: viewModel)
         self.actionOverwrite = actionOverwrite
     }
-    
+
     init(
         factory: Factory,
         actionOverwrite: (() -> Void)? = nil
@@ -30,11 +30,11 @@ struct PlayerView: View {
         self._viewModel = .init(wrappedValue: .init(factory: factory))
         self.actionOverwrite = actionOverwrite
     }
-    
+
     var item: MusicEntry? {
         viewModel.playingItem
     }
-    
+
     var actionImage: String {
         if viewModel.isPlaying {
             "pause.fill"
@@ -42,7 +42,7 @@ struct PlayerView: View {
             "play.fill"
         }
     }
-    
+
     @ViewBuilder
     func player(for item: MusicEntry) -> some View {
         HStack {
@@ -63,10 +63,13 @@ struct PlayerView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(10.0)
                     .frame(width: 40, height: 40)
-                    .background(Color(uiColor: UIColor.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 4.0))
+                    .background(
+                        Color(uiColor: UIColor.secondarySystemBackground),
+                        in: RoundedRectangle(cornerRadius: 4.0)
+                    )
                     .foregroundStyle(Color(uiColor: UIColor.tertiarySystemGroupedBackground))
             }
-            
+
             VStack(alignment: .leading) {
                 Text(item.title)
                     .font(.body)
@@ -75,9 +78,9 @@ struct PlayerView: View {
                     .font(.footnote)
                     .lineLimit(1)
             }
-            
+
             Spacer()
-            
+
             Image(systemName: actionImage)
                 .transition(.symbolEffect(.automatic))
         }
@@ -85,7 +88,7 @@ struct PlayerView: View {
         .padding()
         .onTapGesture { action() }
     }
-    
+
     var body: some View {
         ZStack {
             if let item {
@@ -95,7 +98,7 @@ struct PlayerView: View {
         }
         .animation(.default, value: item)
     }
-    
+
     private func action() {
         if let overwrite = actionOverwrite {
             return overwrite()
@@ -115,17 +118,18 @@ struct PlayerView: View {
         id: "1184710148",
         title: "Clocks",
         artist: "Vision Of Atlantis",
+        // swiftlint:disable:next line_length
         artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
         album: "The Human Contradiction",
         albumArtist: "Vision Of Atlantis"
     )
     @Previewable @Environment(\.factory) var factory
-    
+
     PlayerView(viewModel: MockedPlayerViewModel(
         isPlaying: false,
         playingItem: entry
     )).colorScheme(.light)
-    
+
     PlayerView(viewModel: MockedPlayerViewModel(
         isPlaying: true,
         playingItem: entry

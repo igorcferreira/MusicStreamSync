@@ -15,5 +15,5 @@ internal data class SongAttributes(
     val url: String? = null,
     val isrc: String? = null,
     val artistUrl: String? = null,
-    val genreNames: List<String> = listOf()
+    val genreNames: List<String> = listOf(),
 )

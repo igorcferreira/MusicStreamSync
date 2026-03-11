@@ -19,6 +19,6 @@ internal data class LibraryPlaylistsRelationships(
     internal data class Tracks(
         val href: String? = null,
         val next: String? = null,
-        val data: List<LibrarySongs> = emptyList()
+        val data: List<LibrarySongs> = emptyList(),
     )
 }

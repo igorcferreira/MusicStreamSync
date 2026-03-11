@@ -9,5 +9,5 @@ import kotlin.native.HiddenFromObjC
 internal data class LibrarySongs(
     val id: String,
     val href: String,
-    val attributes: SongAttributes
+    val attributes: SongAttributes,
 )

@@ -34,6 +34,35 @@ Copy `.env.sample` to `.env` and fill in required values first.
 ./gradlew :shared:iosSimulatorArm64Test --tests "dev.igorcferreira.musicstreamsync.SomeTest"
 ```
 
+### Validating
+
+**Always run the builds before committing.** Ensuring a build passes locally before commiting is vital for a health codebase
+
+```shell
+# Build Android app
+./gradlew :composeApp:assembleDebug
+```
+
+Use the `iosApp` on `iosApp/iosApp.xcodeproj` and `xcrun` MCP tooling or `xcodebuild` command to build the iOS app.
+
+### Linting
+
+**Always run linters before committing.** Ktlint and SwiftLint are enforced in CI.
+
+```bash
+# Kotlin: check for violations
+./gradlew ktlintCheck
+
+# Kotlin: auto-fix violations
+./gradlew ktlintFormat
+
+# Swift: check for violations (requires: brew install swiftlint)
+swiftlint lint --config .swiftlint.yml
+
+# Swift: auto-fix violations
+swiftlint --fix --config .swiftlint.yml
+```
+
 ### Running the Apps
 - **Android**: Use the `composeApp` run configuration in IntelliJ IDEA
 - **iOS**: Open `iosApp/iosApp.xcodeproj` in Xcode, update Bundle ID and Team ID in `App.xcconfig`, then run

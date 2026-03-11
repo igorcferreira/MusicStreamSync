@@ -8,4 +8,5 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlinAndroid) apply false
     alias(libs.plugins.nativecoroutines) apply false
+    alias(libs.plugins.ktlint) apply false
 }
