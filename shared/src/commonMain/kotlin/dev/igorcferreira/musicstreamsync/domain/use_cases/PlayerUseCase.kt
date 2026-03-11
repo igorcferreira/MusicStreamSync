@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 class PlayerUseCase(
     private val nativePlayer: NativePlayer,
 ) : UseCase() {
-
     constructor() : this(buildNativePlayer())
 
     @NativeCoroutinesState
     val isPlaying: StateFlow<Boolean>
         get() = PlayerWatcher.getWatcher(nativePlayer).isPlaying
+
     @NativeCoroutinesState
     val playingItem: StateFlow<MusicEntry?>
         get() = PlayerWatcher.getWatcher(nativePlayer).playingItem
@@ -25,8 +25,11 @@ class PlayerUseCase(
         get() = nativePlayer.playerState
 
     fun play() = nativePlayer.currentPlaying?.let { play(it) }
+
     fun pause() = nativePlayer.pausePlayback()
+
     fun stop() = nativePlayer.stopPlayback()
+
     fun play(item: EntryData) {
         if (nativePlayer.currentPlaying?.id == item.id) {
             nativePlayer.startPlayback()

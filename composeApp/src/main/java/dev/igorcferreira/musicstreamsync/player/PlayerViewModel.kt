@@ -7,7 +7,7 @@ import dev.igorcferreira.musicstreamsync.model.MusicEntry
 import kotlinx.coroutines.flow.Flow
 
 class PlayerViewModel(
-    private val playerUseCase: PlayerUseCase
+    private val playerUseCase: PlayerUseCase,
 ) : ViewModel() {
     val isPlaying: Flow<Boolean>
         get() = playerUseCase.isPlaying
@@ -15,6 +15,8 @@ class PlayerViewModel(
         get() = playerUseCase.playingItem
 
     fun play() = playerUseCase.play()
+
     fun play(entry: EntryData) = playerUseCase.play(entry)
+
     fun pause() = playerUseCase.pause()
 }

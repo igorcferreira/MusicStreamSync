@@ -8,23 +8,34 @@ import kotlinx.cinterop.ExperimentalForeignApi
 actual object SystemLogger {
     private const val SUBSYSTEM = "dev.igorcferreira.musicstreamsync"
 
-    actual fun info(tag: String, message: String) {
+    actual fun info(
+        tag: String,
+        message: String,
+    ) {
         val logger = OSLogger(SUBSYSTEM, tag)
         logger.infoWithMessage(message)
     }
 
-    actual fun debug(tag: String, message: String) {
+    actual fun debug(
+        tag: String,
+        message: String,
+    ) {
         val logger = OSLogger(SUBSYSTEM, tag)
         logger.debugWithMessage(message)
     }
 
-    actual fun error(tag: String, message: String, error: Throwable?) {
+    actual fun error(
+        tag: String,
+        message: String,
+        error: Throwable?,
+    ) {
         val logger = OSLogger(SUBSYSTEM, tag)
-        val formatted = if (error == null) {
-            message
-        } else {
-            "$message\n${error.stackTraceToString()}"
-        }
+        val formatted =
+            if (error == null) {
+                message
+            } else {
+                "$message\n${error.stackTraceToString()}"
+            }
         logger.errorWithMessage(formatted)
     }
 }

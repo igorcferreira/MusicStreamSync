@@ -3,31 +3,36 @@ package dev.igorcferreira.lastfm
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.serialization.decodeValueOrNull
 import com.russhwolf.settings.serialization.encodeValue
-import dev.igorcferreira.lastfm.model.*
+import dev.igorcferreira.lastfm.model.HTTPException
+import dev.igorcferreira.lastfm.model.NowPlaying
+import dev.igorcferreira.lastfm.model.Scrobble
+import dev.igorcferreira.lastfm.model.Session
+import dev.igorcferreira.lastfm.model.Track
 import dev.igorcferreira.lastfm.model.responses.NowPlayingResponse
 import dev.igorcferreira.lastfm.model.responses.RecenteTracksResponse
 import dev.igorcferreira.lastfm.model.responses.ScrobbleResponse
 import dev.igorcferreira.lastfm.model.responses.SessionResponse
 import dev.igorcferreira.lastfm.network.API
 import dev.igorcferreira.lastfm.network.authentication.KeyHasher
-import io.ktor.http.*
+import io.ktor.http.HttpStatusCode
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 internal var Settings.session: Session?
     get() = decodeValueOrNull(Session.serializer(), API.SESSION_KEY)
-    set(value) = if (value == null) {
-        remove(API.SESSION_KEY)
-    } else {
-        encodeValue(Session.serializer(), API.SESSION_KEY, value)
-    }
+    set(value) =
+        if (value == null) {
+            remove(API.SESSION_KEY)
+        } else {
+            encodeValue(Session.serializer(), API.SESSION_KEY, value)
+        }
 
 @Suppress("unused")
 class LastFMClient internal constructor(
     apiKey: String,
     apiSecret: String,
-    private val settings: Settings
+    private val settings: Settings,
 ) {
     private val api = API(KeyHasher(apiKey, apiSecret), settings)
     val isAuthenticated: Boolean
@@ -41,13 +46,18 @@ class LastFMClient internal constructor(
     fun logout() = settings.clear()
 
     @Throws(HTTPException::class, CancellationException::class)
-    suspend fun authenticate(username: String, password: String): Session {
-        val response: SessionResponse = api.post(
-            "auth.getMobileSession", mapOf(
-                "username" to username,
-                "password" to password
+    suspend fun authenticate(
+        username: String,
+        password: String,
+    ): Session {
+        val response: SessionResponse =
+            api.post(
+                "auth.getMobileSession",
+                mapOf(
+                    "username" to username,
+                    "password" to password,
+                ),
             )
-        )
 
         if (response.session.key.isBlank()) {
             throw HTTPException(HttpStatusCode.Unauthorized, "Invalid authentication")
@@ -59,22 +69,22 @@ class LastFMClient internal constructor(
     }
 
     @Throws(HTTPException::class, CancellationException::class)
-    suspend fun listLatestTracks(
-        user: String? = null
-    ): List<Track> {
-        val response: RecenteTracksResponse = api.get(
-            "user.getRecentTracks", mapOf(
-                "user" to (user ?: settings.session?.name
-                    ?: throw HTTPException(HttpStatusCode.Unauthorized, "Failed to get current user data"))
+    suspend fun listLatestTracks(user: String? = null): List<Track> {
+        val response: RecenteTracksResponse =
+            api.get(
+                "user.getRecentTracks",
+                mapOf(
+                    "user" to (
+                        user ?: settings.session?.name
+                            ?: throw HTTPException(HttpStatusCode.Unauthorized, "Failed to get current user data")
+                    ),
+                ),
             )
-        )
         return response.tracks
     }
 
     @Throws(HTTPException::class, CancellationException::class)
-    suspend fun scrobble(
-        items: List<Scrobble>
-    ): Scrobble {
+    suspend fun scrobble(items: List<Scrobble>): Scrobble {
         try {
             val parameters = mutableMapOf<String, String>()
 
@@ -112,14 +122,17 @@ class LastFMClient internal constructor(
         album: String? = null,
         albumArtist: String? = null,
     ): NowPlaying {
-        val response: NowPlayingResponse = api.post(
-            "track.updateNowPlaying", mutableMapOf(
-                "artist" to artist,
-                "track" to track
-            ).apply {
-                album?.let { put("album", it) }
-                albumArtist?.let { put("albumArtist", it) }
-            })
+        val response: NowPlayingResponse =
+            api.post(
+                "track.updateNowPlaying",
+                mutableMapOf(
+                    "artist" to artist,
+                    "track" to track,
+                ).apply {
+                    album?.let { put("album", it) }
+                    albumArtist?.let { put("albumArtist", it) }
+                },
+            )
         return response.nowPlaying
     }
 }

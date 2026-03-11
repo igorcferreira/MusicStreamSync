@@ -15,49 +15,53 @@ import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 class ResultUseCaseTests {
+    @Test
+    fun testNetworkParsing() =
+        runTest {
+            val apiResponse =
+                listOf(
+                    MusicEntry(
+                        id = "1",
+                        title = "Song Name",
+                        artist = "Artist",
+                        artworkUrl = "https://example.com",
+                        album = "Album Name",
+                    ),
+                )
+
+            val api =
+                mock<AppleMusicAPI> {
+                    everySuspend { getRecentlyPlayed() } returns apiResponse
+                }
+            val configuration = Configuration(api)
+            val operation = RecentlyPlayedUseCase(configuration)
+
+            val response = operation.perform()
+            assertTrue(response.isNotEmpty())
+            assertEquals(response, operation.result.value)
+
+            val first = response.first()
+            assertEquals(first.id, "1")
+            assertEquals(first.title, "Song Name")
+            assertEquals(first.artist, "Artist")
+            assertEquals(first.album, "Album Name")
+        }
 
     @Test
-    fun testNetworkParsing() = runTest {
-        val apiResponse = listOf(
-            MusicEntry(
-                id = "1",
-                title = "Song Name",
-                artist = "Artist",
-                artworkUrl = "https://example.com",
-                album = "Album Name"
-            )
-        )
+    fun testErrorStorage() =
+        runTest {
+            val api =
+                mock<AppleMusicAPI> {
+                    everySuspend { getRecentlyPlayed() } throws RuntimeException()
+                }
+            val configuration = Configuration(api)
+            val operation = RecentlyPlayedUseCase(configuration)
 
-        val api = mock<AppleMusicAPI> {
-            everySuspend { getRecentlyPlayed() } returns apiResponse
+            try {
+                operation.perform()
+            } catch (ignored: RuntimeException) {
+            }
+
+            assertIs<RuntimeException>(operation.error.value)
         }
-        val configuration = Configuration(api)
-        val operation = RecentlyPlayedUseCase(configuration)
-
-        val response = operation.perform()
-        assertTrue(response.isNotEmpty())
-        assertEquals(response, operation.result.value)
-
-        val first = response.first()
-        assertEquals(first.id, "1")
-        assertEquals(first.title, "Song Name")
-        assertEquals(first.artist, "Artist")
-        assertEquals(first.album, "Album Name")
-    }
-
-    @Test
-    fun testErrorStorage() = runTest {
-        val api = mock<AppleMusicAPI> {
-            everySuspend { getRecentlyPlayed() } throws RuntimeException()
-        }
-        val configuration = Configuration(api)
-        val operation = RecentlyPlayedUseCase(configuration)
-
-        try {
-            operation.perform()
-        } catch (ignored: RuntimeException) {
-        }
-
-        assertIs<RuntimeException>(operation.error.value)
-    }
 }

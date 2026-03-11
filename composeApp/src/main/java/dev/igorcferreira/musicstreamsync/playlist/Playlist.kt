@@ -10,9 +10,7 @@ import dev.igorcferreira.musicstreamsync.list.EntryList
 import dev.igorcferreira.musicstreamsync.player.Player
 
 @Composable
-fun Playlist(
-    viewModel: PlaylistViewModel = viewModel(factory = ViewModelFactory.Playlist)
-) {
+fun Playlist(viewModel: PlaylistViewModel = viewModel(factory = ViewModelFactory.Playlist)) {
     val items = viewModel.items.collectAsState(initial = listOf())
     val loading = viewModel.loading.collectAsState(initial = false)
 

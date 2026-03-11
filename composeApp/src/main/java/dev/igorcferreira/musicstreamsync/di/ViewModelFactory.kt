@@ -20,22 +20,22 @@ class ViewModelFactory {
     companion object {
         private lateinit var playerInstance: MediaPlayerNativePlayer
 
-        private val configuration = Configuration(
-            tokenSigner = JWTTokenSigner()
-        )
+        private val configuration =
+            Configuration(
+                tokenSigner = JWTTokenSigner(),
+            )
 
-        private fun providePlayer(
-            context: Context
-        ): MediaPlayerNativePlayer {
+        private fun providePlayer(context: Context): MediaPlayerNativePlayer {
             if (!::playerInstance.isInitialized) {
-                playerInstance = MediaPlayerNativePlayer().apply {
-                    preparePlayer(
-                        context = context,
-                        developerToken = configuration.developerToken,
-                        tokenSigner = configuration.tokenSigner,
-                        userTokenProvider = configuration.userTokenProvider,
-                    )
-                }
+                playerInstance =
+                    MediaPlayerNativePlayer().apply {
+                        preparePlayer(
+                            context = context,
+                            developerToken = configuration.developerToken,
+                            tokenSigner = configuration.tokenSigner,
+                            userTokenProvider = configuration.userTokenProvider,
+                        )
+                    }
             }
             return playerInstance
         }
@@ -48,50 +48,54 @@ class ViewModelFactory {
             return LastFMUseCase(scrobbler = scrobbler)
         }
 
-        val LastFM: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
-            ): T {
-                val application = checkNotNull(extras[APPLICATION_KEY])
-                return LastFMViewModel(
-                    useCase = buildLastFMUseCase(application),
-                ) as T
+        val LastFM: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    val application = checkNotNull(extras[APPLICATION_KEY])
+                    return LastFMViewModel(
+                        useCase = buildLastFMUseCase(application),
+                    ) as T
+                }
             }
-        }
 
-        val Playlist: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
-            ): T {
-                return PlaylistViewModel(configuration) as T
+        val Playlist: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    return PlaylistViewModel(configuration) as T
+                }
             }
-        }
 
-        val Player: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
-            ): T {
-                val application = checkNotNull(extras[APPLICATION_KEY])
-                val player = providePlayer(application)
-                val playerUseCase = PlayerUseCase(player)
-                return PlayerViewModel(playerUseCase) as T
+        val Player: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    val application = checkNotNull(extras[APPLICATION_KEY])
+                    val player = providePlayer(application)
+                    val playerUseCase = PlayerUseCase(player)
+                    return PlayerViewModel(playerUseCase) as T
+                }
             }
-        }
 
-        val RecentlyPlayed: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
-            ): T {
-                return RecentlyPlayedViewModel(configuration) as T
+        val RecentlyPlayed: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    return RecentlyPlayedViewModel(configuration) as T
+                }
             }
-        }
     }
 }

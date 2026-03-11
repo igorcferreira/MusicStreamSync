@@ -10,5 +10,5 @@ internal data class LibraryPlaylists(
     val type: String,
     val href: String,
     val attributes: LibraryPlaylistsAttributes,
-    val relationships: LibraryPlaylistsRelationships? = null
+    val relationships: LibraryPlaylistsRelationships? = null,
 )

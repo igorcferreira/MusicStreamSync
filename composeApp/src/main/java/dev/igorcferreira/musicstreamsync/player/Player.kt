@@ -6,7 +6,11 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -34,7 +38,7 @@ import dev.igorcferreira.musicstreamsync.model.MusicEntry
 @Composable
 fun Player(
     modifier: Modifier = Modifier,
-    viewModel: PlayerViewModel = viewModel(factory = ViewModelFactory.Player)
+    viewModel: PlayerViewModel = viewModel(factory = ViewModelFactory.Player),
 ) {
     val playing = viewModel.isPlaying.collectAsState(initial = false)
     val playingItem = viewModel.playingItem.collectAsState(initial = null)
@@ -44,7 +48,7 @@ fun Player(
         playingItem = playingItem.value,
         playing = playing.value,
         play = { viewModel.play() },
-        pause = { viewModel.pause() }
+        pause = { viewModel.pause() },
     )
 }
 
@@ -66,7 +70,7 @@ fun Player(
             playing,
             play = play,
             pause = pause,
-            modifier
+            modifier,
         )
     }
 }
@@ -77,12 +81,12 @@ fun Player(
     isPlaying: Boolean = false,
     play: (MusicEntry) -> Unit = {},
     pause: (MusicEntry) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondary)
+            .background(MaterialTheme.colorScheme.secondary),
     ) {
         Row(
             Modifier
@@ -90,32 +94,35 @@ fun Player(
                 .padding(bottom = 20.dp)
                 .clickable {
                     if (isPlaying) pause(entry) else play(entry)
-                }, verticalAlignment = Alignment.CenterVertically
+                },
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(entry.artworkUrl)
-                    .crossfade(true)
-                    .build(),
+                model =
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(entry.artworkUrl)
+                        .crossfade(true)
+                        .build(),
                 contentDescription = entry.album ?: entry.title,
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                modifier =
+                    Modifier
+                        .size(30.dp)
+                        .clip(RoundedCornerShape(4.dp)),
             )
             Column(
                 Modifier
                     .padding(start = 8.dp)
-                    .weight(1f)
+                    .weight(1f),
             ) {
                 Text(
                     entry.title,
                     color = MaterialTheme.colorScheme.onSecondary,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
                     entry.artist,
                     color = MaterialTheme.colorScheme.onSecondary,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
 
@@ -123,24 +130,25 @@ fun Player(
                 Icon(
                     painterResource(R.drawable.ic_filled_pause),
                     contentDescription = "Pause",
-                    tint = MaterialTheme.colorScheme.onSecondary
+                    tint = MaterialTheme.colorScheme.onSecondary,
                 )
             } else {
                 Icon(
                     Icons.Filled.PlayArrow,
                     contentDescription = "Play",
-                    tint = MaterialTheme.colorScheme.onSecondary
+                    tint = MaterialTheme.colorScheme.onSecondary,
                 )
             }
         }
     }
 }
 
+@Suppress("ktlint:standard:max-line-length")
 @Composable
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     name = "Playing",
-    showBackground = true
+    showBackground = true,
 )
 fun PlayerItem_Playing_Preview() {
     AppTheme {
@@ -150,16 +158,19 @@ fun PlayerItem_Playing_Preview() {
                 title = "Stardust",
                 artist = "Delain",
                 artworkUrl = "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
-                album = "The Human Contradiction"
-            ), true
+                album = "The Human Contradiction",
+            ),
+            true,
         )
     }
 }
 
+@Suppress("ktlint:standard:max-line-length")
 @Composable
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Paused", showBackground = true
+    name = "Paused",
+    showBackground = true,
 )
 fun PlayerItem_Paused_Preview() {
     AppTheme {
@@ -169,8 +180,9 @@ fun PlayerItem_Paused_Preview() {
                 title = "Stardust",
                 artist = "Delain",
                 artworkUrl = "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
-                album = "The Human Contradiction"
-            ), false
+                album = "The Human Contradiction",
+            ),
+            false,
         )
     }
 }

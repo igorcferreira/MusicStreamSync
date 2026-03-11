@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package dev.igorcferreira.musicstreamsync.network
 
 import dev.igorcferreira.musicstreamsync.network.model.HTTPException
@@ -22,10 +24,11 @@ interface IURLSession {
     ): T
 
     companion object {
-        val json = Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        }
+        val json =
+            Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }
     }
 }
 
@@ -33,19 +36,20 @@ suspend inline fun <reified T> IURLSession.perform(
     path: String,
     method: HttpMethod,
     headers: Map<String, String> = mapOf(),
-    decoder: Json = IURLSession.json
-): T = perform(
-    deserializer = decoder.serializersModule.serializer(),
-    path = path,
-    method = method,
-    headers = headers,
-    decoder = decoder
-)
+    decoder: Json = IURLSession.json,
+): T =
+    perform(
+        deserializer = decoder.serializersModule.serializer(),
+        path = path,
+        method = method,
+        headers = headers,
+        decoder = decoder,
+    )
 
 @HiddenFromObjC
 internal class URLSession(
-    private val logger: Logger = Logger.DEFAULT
-): IURLSession {
+    private val logger: Logger = Logger.DEFAULT,
+) : IURLSession {
     override suspend fun <T> perform(
         deserializer: DeserializationStrategy<T>,
         path: String,
@@ -56,13 +60,14 @@ internal class URLSession(
         val client = buildClient()
 
         try {
-            val response = client.request(path) {
-                headers {
-                    headers.forEach { (key, value) -> header(key, value) }
-                    header(HttpHeaders.Accept, ContentType.Application.Json)
+            val response =
+                client.request(path) {
+                    headers {
+                        headers.forEach { (key, value) -> header(key, value) }
+                        header(HttpHeaders.Accept, ContentType.Application.Json)
+                    }
+                    this.method = method
                 }
-                this.method = method
-            }
 
             response.request.headers.forEach { string, strings ->
                 println("-H '$string: ${strings.joinToString(", ")}'")
@@ -89,13 +94,14 @@ internal class URLSession(
         }
     }
 
-    private fun buildClient(): HttpClient = HttpClient {
-        install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.INFO
-            format = LoggingFormat.OkHttp
-            sanitizeHeader { it == HttpHeaders.Authorization }
-            sanitizeHeader { it == "Music-User-Token" }
+    private fun buildClient(): HttpClient =
+        HttpClient {
+            install(Logging) {
+                logger = Logger.DEFAULT
+                level = LogLevel.INFO
+                format = LoggingFormat.OkHttp
+                sanitizeHeader { it == HttpHeaders.Authorization }
+                sanitizeHeader { it == "Music-User-Token" }
+            }
         }
-    }
 }

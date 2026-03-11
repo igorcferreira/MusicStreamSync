@@ -10,7 +10,10 @@ import kotlin.io.encoding.Base64
 class JWTTokenSigner : TokenSigner {
     private val json = Json { ignoreUnknownKeys = true }
 
-    override suspend fun sign(jwtToken: String, privateKey: String): String {
+    override suspend fun sign(
+        jwtToken: String,
+        privateKey: String,
+    ): String {
         val components = jwtToken.split(".")
         val header = json.decodeFromString<JWTHeader>(Base64.decode(components[0]).decodeToString())
 
@@ -18,11 +21,12 @@ class JWTTokenSigner : TokenSigner {
         val keyFactory = KeyFactory.getInstance("EC")
         val key = keyFactory.generatePrivate(spec)
 
-        val builder = Jwts.builder()
-            .header()
-            .keyId(header.kid)
-            .and()
-            .content(Base64.decode(components[1]).decodeToString())
+        val builder =
+            Jwts.builder()
+                .header()
+                .keyId(header.kid)
+                .and()
+                .content(Base64.decode(components[1]).decodeToString())
 
         return builder
             .signWith(key, Jwts.SIG.ES256)
@@ -32,9 +36,10 @@ class JWTTokenSigner : TokenSigner {
 
 internal fun String.clearKey(marker: String = "PRIVATE KEY"): ByteArray {
     val content = android.util.Base64.decode(this, android.util.Base64.NO_WRAP)
-    val stringContent = String(content, Charsets.UTF_8)
-        .removePrefix("-----BEGIN $marker-----\n")
-        .removeSuffix("\n-----END $marker-----")
-        .replace("\n", "")
+    val stringContent =
+        String(content, Charsets.UTF_8)
+            .removePrefix("-----BEGIN $marker-----\n")
+            .removeSuffix("\n-----END $marker-----")
+            .replace("\n", "")
     return android.util.Base64.decode(stringContent, android.util.Base64.NO_WRAP)
 }

@@ -7,5 +7,5 @@ import kotlin.native.HiddenFromObjC
 @Serializable
 internal data class LibraryPlaylistsPlayParams(
     val id: String,
-    val globalId: String? = null
+    val globalId: String? = null,
 )

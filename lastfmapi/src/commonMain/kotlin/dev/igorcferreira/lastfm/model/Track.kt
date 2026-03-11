@@ -18,6 +18,6 @@ data class Track(
 
     @Serializable
     data class TrackDate(
-        val uts: Long
+        val uts: Long,
     )
 }

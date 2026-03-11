@@ -8,7 +8,7 @@ interface IDeveloperToken {
     val privateKey: String
 }
 
-open class DeveloperToken: IDeveloperToken {
+open class DeveloperToken : IDeveloperToken {
     override val teamId: String
         get() = ArkanaKeys.Global.teamId
     override val keyId: String

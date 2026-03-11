@@ -3,17 +3,23 @@ package dev.igorcferreira.musicstreamsync.domain.use_cases
 import dev.igorcferreira.musicstreamsync.domain.SystemLogger
 import dev.igorcferreira.musicstreamsync.domain.player.NativePlayer
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlin.native.HiddenFromObjC
 import kotlin.time.Duration.Companion.seconds
 
 @HiddenFromObjC
 internal class PlayerWatcher(
-    private val nativePlayer: NativePlayer
+    private val nativePlayer: NativePlayer,
 ) {
     private val coroutineContext = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val _isPlaying = MutableStateFlow(nativePlayer.isPlaying)
@@ -25,22 +31,23 @@ internal class PlayerWatcher(
 
     private fun start() {
         task?.cancel()
-        task =  coroutineContext.launch {
-            while (isActive) {
-                val isPlaying = nativePlayer.isPlaying
-                if (isPlaying != _isPlaying.value) {
-                    _isPlaying.update { isPlaying }
-                }
+        task =
+            coroutineContext.launch {
+                while (isActive) {
+                    val isPlaying = nativePlayer.isPlaying
+                    if (isPlaying != _isPlaying.value) {
+                        _isPlaying.update { isPlaying }
+                    }
 
-                val current = nativePlayer.currentPlaying
-                if (current?.entryId != _playingItem.value?.entryId) {
-                    SystemLogger.info("PlayerWatcher", "Player is playing ${current?.title} - ${current?.artist}")
-                    _playingItem.update { current }
-                }
+                    val current = nativePlayer.currentPlaying
+                    if (current?.entryId != _playingItem.value?.entryId) {
+                        SystemLogger.info("PlayerWatcher", "Player is playing ${current?.title} - ${current?.artist}")
+                        _playingItem.update { current }
+                    }
 
-                delay(1.seconds)
+                    delay(1.seconds)
+                }
             }
-        }
     }
 
     private fun destroy() {

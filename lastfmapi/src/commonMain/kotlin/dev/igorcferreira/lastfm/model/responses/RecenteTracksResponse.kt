@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class RecenteTracksResponse(
-    val recenttracks: Metadata
+    val recenttracks: Metadata,
 ) {
     @Serializable
     data class Metadata(

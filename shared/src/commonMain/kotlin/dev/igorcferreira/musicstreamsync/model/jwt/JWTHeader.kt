@@ -7,5 +7,5 @@ import kotlin.native.HiddenFromObjC
 @Serializable
 internal data class JWTHeader(
     val alg: String,
-    val kid: String
+    val kid: String,
 )

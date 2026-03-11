@@ -7,5 +7,5 @@ import kotlin.native.HiddenFromObjC
 @Serializable
 internal data class DescriptionAttribute(
     val standard: String,
-    val short: String? = null
+    val short: String? = null,
 )

@@ -9,5 +9,5 @@ internal class SongResource(
     val id: String,
     val type: String,
     val href: String,
-    val attributes: SongAttributes
+    val attributes: SongAttributes,
 )

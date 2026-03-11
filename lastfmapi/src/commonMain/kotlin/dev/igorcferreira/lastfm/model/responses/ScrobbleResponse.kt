@@ -9,7 +9,7 @@ internal data class ScrobbleResponse(
 ) {
     @Serializable
     internal data class ScrobbleBody(
-        val scrobble: Scrobble
+        val scrobble: Scrobble,
     )
 
     val scrobble: Scrobble

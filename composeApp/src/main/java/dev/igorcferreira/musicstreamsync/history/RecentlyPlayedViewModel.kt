@@ -9,11 +9,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class RecentlyPlayedViewModel(
-    private val recentlyPlayedUseCase: RecentlyPlayedUseCase
+    private val recentlyPlayedUseCase: RecentlyPlayedUseCase,
 ) : ViewModel() {
-
     constructor(
-        configuration: Configuration
+        configuration: Configuration,
     ) : this(RecentlyPlayedUseCase(configuration))
 
     val history: StateFlow<List<MusicEntry>>
@@ -21,7 +20,8 @@ class RecentlyPlayedViewModel(
     val loading: StateFlow<Boolean>
         get() = recentlyPlayedUseCase.isPerforming
 
-    fun updateHistory() = viewModelScope.launch {
-        recentlyPlayedUseCase.perform()
-    }
+    fun updateHistory() =
+        viewModelScope.launch {
+            recentlyPlayedUseCase.perform()
+        }
 }

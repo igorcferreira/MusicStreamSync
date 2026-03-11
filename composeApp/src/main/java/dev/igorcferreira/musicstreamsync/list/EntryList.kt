@@ -2,7 +2,14 @@ package dev.igorcferreira.musicstreamsync.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,25 +41,26 @@ fun EntryList(
     BoxWithConstraints(
         Modifier
             .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         Column(
             Modifier
                 .safeContentPadding()
                 .fillMaxWidth()
                 .align(Alignment.TopStart),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AnimatedVisibility(loading) {
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .width(64.dp)
-                        .padding(16.dp)
-                        .semantics {
-                            testTag = "loading"
-                            contentDescription = context.getString(R.string.loading)
-                        },
-                    color = MaterialTheme.colorScheme.primary
+                    modifier =
+                        Modifier
+                            .width(64.dp)
+                            .padding(16.dp)
+                            .semantics {
+                                testTag = "loading"
+                                contentDescription = context.getString(R.string.loading)
+                            },
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
 
@@ -60,7 +68,8 @@ fun EntryList(
                 LazyColumn(
                     Modifier
                         .fillMaxWidth()
-                        .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     items(items) { entry ->
                         Row(modifier = Modifier.padding(bottom = 8.dp)) {
@@ -75,7 +84,7 @@ fun EntryList(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .weight(1f),
             ) {}
             player()
         }
@@ -94,18 +103,20 @@ fun LoadingAppPreview() {
     }
 }
 
+@Suppress("ktlint:standard:max-line-length")
 @Preview(name = "Content")
 @Composable
 fun LoadedAppPreview(
-    list: List<MusicEntry> = listOf(
-        MusicEntry(
-            id = "1184710148",
-            title = "Stardust",
-            artist = "Delain",
-            artworkUrl = "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
-            album = "The Human Contradiction"
-        )
-    )
+    list: List<MusicEntry> =
+        listOf(
+            MusicEntry(
+                id = "1184710148",
+                title = "Stardust",
+                artist = "Delain",
+                artworkUrl = "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
+                album = "The Human Contradiction",
+            ),
+        ),
 ) {
     AppTheme {
         EntryList(list, false, {

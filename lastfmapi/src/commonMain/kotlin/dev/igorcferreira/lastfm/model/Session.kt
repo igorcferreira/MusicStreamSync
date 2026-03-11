@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class Session(
     val name: String,
     val key: String,
-    val subscriber: Int
+    val subscriber: Int,
 )

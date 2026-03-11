@@ -7,5 +7,5 @@ import kotlin.native.HiddenFromObjC
 @Serializable
 internal data class Response<T>(
     val next: String? = null,
-    val data: List<T>
+    val data: List<T>,
 )

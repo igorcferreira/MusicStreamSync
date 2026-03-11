@@ -7,16 +7,20 @@ interface NativePlayer {
     enum class PlayerState {
         PLAYING,
         NOT_PLAYING,
-        UNKNOWN
+        UNKNOWN,
     }
 
     val elapsedTime: Double
     val playerState: PlayerState
     val isPlaying: Boolean
     val currentPlaying: MusicEntry?
+
     fun startPlayback()
+
     fun set(queue: List<EntryData>)
+
     fun stopPlayback()
+
     fun pausePlayback()
 }
 
@@ -26,9 +30,13 @@ expect class MediaPlayerNativePlayer : NativePlayer {
     override val playerState: NativePlayer.PlayerState
     override val isPlaying: Boolean
     override val currentPlaying: MusicEntry?
+
     override fun startPlayback()
+
     override fun set(queue: List<EntryData>)
+
     override fun stopPlayback()
+
     override fun pausePlayback()
 }
 
