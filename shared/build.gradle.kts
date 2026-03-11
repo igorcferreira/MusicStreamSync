@@ -18,12 +18,12 @@ val frameworkName = "MusicStream"
 swiftklib {
     val MusicKitBridge by creating {
         path = file(layout.projectDirectory.file("src/native/MusicKitBridge/Sources/MusicKitBridge"))
-        minIos = 26
+        minIos = libs.versions.ios.minSdk.get().toInt()
         packageName("dev.igorcferreira.os.bridge")
     }
     val OSLogger by creating {
         path = file(layout.projectDirectory.file("src/native/OSLogger/Sources/OSLogger"))
-        minIos = 26
+        minIos = libs.versions.ios.minSdk.get().toInt()
         packageName("dev.igorcferreira.os.logger")
     }
 }
