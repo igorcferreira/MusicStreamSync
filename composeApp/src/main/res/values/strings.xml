@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MusicStreamSync</string>
+    <string name="app_name">Music Stats</string>
     <string name="history">History</string>
     <string name="playlists">Playlists</string>
     <string name="recently_played">Recently Played</string>
