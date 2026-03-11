@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.seconds
 internal class PlayerWatcher(
     private val nativePlayer: NativePlayer,
 ) {
-    private val coroutineContext = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val coroutineContext = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val _isPlaying = MutableStateFlow(nativePlayer.isPlaying)
     private val _playingItem = MutableStateFlow(nativePlayer.currentPlaying)
     private var task: Job? = null
