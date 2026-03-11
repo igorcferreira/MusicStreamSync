@@ -6,27 +6,29 @@ import OSLog
 import StoreKit
 
 @main
+// swiftlint:disable:next type_name
 struct iOSApp: App {
     private let logger = Logger(subsystem: "dev.igorcferreira.musicstream", category: "music")
-    
+
     var appVersion: String? {
         guard let shortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
             return nil
         }
-        
+
         return if let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             "\(shortVersion) (\(buildVersion))"
         } else {
             shortVersion
         }
     }
-    
+
     @Environment(\.factory) var factory
+    // swiftlint:disable:next line_length
     @State private var recentlyPlayedViewModel = RecentlyPlayedViewModel(useCase: FactoryKey.defaultValue.makeRecentlyPlayedUseCase())
     @State private var playerViewModel = PlayerViewModel(factory: FactoryKey.defaultValue)
     @State private var lastFMViewModel = LastFMViewModel()
-    @State private var storeEnvironment: String? = nil
-    
+    @State private var storeEnvironment: String?
+
     @ViewBuilder
     var versionHeader: some View {
         HStack {
@@ -38,7 +40,7 @@ struct iOSApp: App {
             }
         }
     }
-    
+
     var body: some Scene {
         WindowGroup(id: "main") {
             TabView {
@@ -55,7 +57,7 @@ struct iOSApp: App {
                         }
                     }
                 }
-                
+
                 Tab("Playlists", systemImage: "play.square.stack.fill") {
                     NavigationStack {
                         ContentView(
@@ -69,7 +71,7 @@ struct iOSApp: App {
                         }
                     }
                 }
-                
+
                 Tab("Scrobble", systemImage: "icloud.and.arrow.up.fill") {
                     NavigationStack {
                         ScrobbleView(
@@ -94,7 +96,7 @@ struct iOSApp: App {
             }
         }
     }
-    
+
     func loadEnvironment() async {
         do {
             let state = try await AppTransaction.shared
@@ -105,11 +107,10 @@ struct iOSApp: App {
             } else {
                 nil
             }
-            
-            
+
             guard let environment else { return }
-            
-            storeEnvironment =  switch environment {
+
+            storeEnvironment = switch environment {
             case .production: "Production"
             case .sandbox: "Sandbox"
             case .xcode: "Xcode"

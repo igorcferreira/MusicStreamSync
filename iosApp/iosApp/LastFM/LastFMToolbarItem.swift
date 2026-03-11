@@ -10,11 +10,11 @@ import SwiftUI
 struct LastFMToolbarItem: View {
     @State private var lastFMViewModel: LastFMViewModel
     @State private var authenticating: Bool = false
-    
+
     init(lastFMViewModel: LastFMViewModel = LastFMViewModel()) {
         self.lastFMViewModel = lastFMViewModel
     }
-    
+
     var body: some View {
         ZStack {
             if lastFMViewModel.isAuthenticated {
@@ -24,7 +24,7 @@ struct LastFMToolbarItem: View {
             }
         }
         .sheet(isPresented: $authenticating) {
-            LastFMAuthentication() {
+            LastFMAuthentication {
                 await lastFMViewModel.authenticate(username: $0, password: $1)
                 authenticating = false
             }

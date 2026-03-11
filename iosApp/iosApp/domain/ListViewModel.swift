@@ -10,7 +10,7 @@ import MusicStream
 
 protocol ListViewModel: ObservableObject {
     associatedtype ListEntry: EntryData, Hashable
-    
+
     var loading: Bool { get }
     var history: [ListEntry] { get }
     func load() async throws

@@ -8,36 +8,36 @@
 import SwiftUI
 
 struct LastFMAuthentication: View {
-    
+
     enum FieldFocus: Int {
         case username
         case password
     }
-    
+
     private let authenticate: (String, String) async -> Void
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var isAuthenticating: Bool = false
     @FocusState private var focus: FieldFocus?
-    
+
     init(
         authenticate: @escaping (String, String) async -> Void
     ) {
         self.authenticate = authenticate
     }
-    
+
     var body: some View {
         VStack(spacing: 16.0) {
             Text("Authenticate to Last.FM")
                 .font(.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 8.0)
-            
+
             Text("Input Username and Password to scrobble current listening to Last.FM")
                 .font(.body)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 8.0)
-            
+
             VStack {
                 Text("Username:")
                     .font(.caption)
@@ -47,7 +47,7 @@ struct LastFMAuthentication: View {
                     .textFieldStyle(.roundedBorder)
                     .focused($focus, equals: .username)
             }
-            
+
             VStack {
                 Text("Password:")
                     .font(.caption)
@@ -57,7 +57,7 @@ struct LastFMAuthentication: View {
                     .textFieldStyle(.roundedBorder)
                     .focused($focus, equals: .password)
             }
-            
+
             if isAuthenticating {
                 ProgressView()
             } else {
@@ -75,7 +75,7 @@ struct LastFMAuthentication: View {
         .onFirstTask { focus = .username }
         .padding()
     }
-    
+
     func action() { Task {
         isAuthenticating = true
         await authenticate(username, password)
@@ -84,5 +84,5 @@ struct LastFMAuthentication: View {
 }
 
 #Preview {
-    LastFMAuthentication() { _, _ in }
+    LastFMAuthentication { _, _ in }
 }

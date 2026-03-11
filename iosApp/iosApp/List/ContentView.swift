@@ -6,12 +6,12 @@ struct ContentView<VM: ListViewModel>: View {
     @Environment(\.factory) private var factory
     @State private var title: String
     @StateObject private var viewModel: VM
-    
+
     init(title: String, viewModel: VM) {
         self._title = .init(initialValue: title)
         self._viewModel = .init(wrappedValue: viewModel)
     }
-    
+
     var body: some View {
         List {
             if viewModel.loading {
@@ -22,13 +22,13 @@ struct ContentView<VM: ListViewModel>: View {
                     .listRowSeparator(.hidden)
                     .id(UUID())
             }
-            
+
             ForEach(viewModel.history, id: \.id) { entry in
                 EntryView(entry: entry, factory: factory)
             }
         }
         .listStyle(.plain)
-        .refreshable { Task { await self.load() }}
+        .refreshable { Task { await self.load() } }
         .ignoresSafeArea(.container, edges: .bottom)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding()
@@ -42,7 +42,7 @@ struct ContentView<VM: ListViewModel>: View {
         }
         .navigationBarTitleDisplayMode(.inline)
     }
-    
+
     private func load() async {
         do {
             try await viewModel.load()

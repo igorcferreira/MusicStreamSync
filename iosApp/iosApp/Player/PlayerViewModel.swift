@@ -13,19 +13,19 @@ open class PlayerViewModel {
     let playerUseCase: PlayerUseCase?
     fileprivate(set) var isPlaying: Bool = false
     fileprivate(set) var playingItem: MusicEntry?
-    
+
     init(playerUseCase: PlayerUseCase?) {
         self.playerUseCase = playerUseCase
         guard let playerUseCase else { return }
-        
+
         collect(playerUseCase.isPlayingFlow, into: \.isPlaying)
         collect(playerUseCase.playingItemFlow, into: \.playingItem)
     }
-    
+
     convenience init(factory: Factory) {
         self.init(playerUseCase: factory.makePlayerUseCase())
     }
-    
+
     open func play() { playerUseCase?.play() }
     open func pause() { playerUseCase?.pause() }
 }
@@ -40,9 +40,8 @@ class MockedPlayerViewModel: PlayerViewModel {
         self.isPlaying = isPlaying
         self.playingItem = playingItem
     }
-    
+
     override func play() {}
     override func pause() {}
 }
 #endif
-

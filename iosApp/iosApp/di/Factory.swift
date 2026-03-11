@@ -28,7 +28,7 @@ class JWTTokenSigner: TokenSigner {
             guard let signature = signedJWT.stringArray.last else {
                 throw URLError(.init(rawValue: 401))
             }
-            
+
             return signature
         } catch {
             print("Error: \(error)")
@@ -41,15 +41,15 @@ class Factory {
     private(set) lazy var configuration: MusicStream.Configuration = {
         .init(tokenSigner: JWTTokenSigner())
     }()
-    
+
     func makeRecentlyPlayedUseCase() -> RecentlyPlayedUseCase {
         .init(configuration: configuration)
     }
-    
+
     func makePlayerUseCase() -> PlayerUseCase {
         .init()
     }
-    
+
     func makePlaylistsUseCase() -> PlaylistsUseCase {
         .init(configuration: configuration)
     }

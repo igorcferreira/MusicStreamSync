@@ -8,13 +8,13 @@
 import SwiftUI
 
 extension View {
-  func onFirstTask(_ action: @escaping @Sendable () async -> ()) -> some View {
+  func onFirstTask(_ action: @escaping @Sendable () async -> Void) -> some View {
     modifier(FirstTask(action: action))
   }
 }
 
 private struct FirstTask: ViewModifier {
-  let action: @Sendable () async -> ()
+  let action: @Sendable () async -> Void
 
   // Use this to ensure the block is only executed once
     @State private var hasAppeared = false

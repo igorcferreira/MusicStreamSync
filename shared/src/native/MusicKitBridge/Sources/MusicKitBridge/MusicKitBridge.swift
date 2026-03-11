@@ -14,7 +14,7 @@ extension MusicAuthorization.Status {
     }
 }
 
-@objc public class MusicKitBridge : NSObject {
+@objc public class MusicKitBridge: NSObject {
 
     @objc public func authenticate() async throws {
         let current = MusicAuthorization.currentStatus
