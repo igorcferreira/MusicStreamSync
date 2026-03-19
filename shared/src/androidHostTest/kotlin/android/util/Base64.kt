@@ -7,23 +7,17 @@ public object Base64 {
     public fun encodeToString(
         input: ByteArray?,
         flags: Int,
-    ): String {
-        return Base64.getEncoder().encodeToString(input)
-    }
+    ): String = Base64.getEncoder().encodeToString(input)
 
     @JvmStatic
     public fun decode(
         str: String?,
         flags: Int,
-    ): ByteArray {
-        return Base64.getDecoder().decode(str)
-    }
+    ): ByteArray = Base64.getDecoder().decode(str)
 
     @JvmStatic
     public fun decode(
         input: ByteArray?,
         flags: Int,
-    ): ByteArray {
-        return Base64.getDecoder().decode(input)
-    }
+    ): ByteArray = Base64.getDecoder().decode(input)
 }

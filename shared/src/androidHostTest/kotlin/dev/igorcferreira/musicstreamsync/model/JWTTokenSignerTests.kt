@@ -37,7 +37,8 @@ class JWTTokenSignerTests {
             val key = keyFactory.generatePublic(spec)
 
             val jwt =
-                Jwts.parser()
+                Jwts
+                    .parser()
                     .verifyWith(key)
                     .requireIssuer("TEAM_ID")
                     .build()
@@ -61,7 +62,11 @@ class JWTTokenSignerTests {
     fun testInvalidHeader() =
         runTest {
             val iat = Clock.System.now().epochSeconds
-            val exp = Clock.System.now().plus(1.days).epochSeconds
+            val exp =
+                Clock.System
+                    .now()
+                    .plus(1.days)
+                    .epochSeconds
 
             val body = Base64.encode("{\"iss\":\"TEAM_ID\",\"iat\":$iat,\"exp\":$exp}".encodeToByteArray())
             val header = Base64.encode("{\"invalid\": \"header\"}".encodeToByteArray())
@@ -73,7 +78,11 @@ class JWTTokenSignerTests {
 
     private fun mockToken(): String {
         val iat = Clock.System.now().epochSeconds
-        val exp = Clock.System.now().plus(1.days).epochSeconds
+        val exp =
+            Clock.System
+                .now()
+                .plus(1.days)
+                .epochSeconds
         val body = Base64.encode("{\"iss\":\"TEAM_ID\",\"iat\":$iat,\"exp\":$exp}".encodeToByteArray())
         val header = Base64.encode("{\"alg\": \"ES256\", \"kid\": \"KEY_ID\"}".encodeToByteArray())
 

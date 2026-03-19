@@ -59,7 +59,8 @@ actual class MediaPlayerNativePlayer : NativePlayer {
     private fun MPMediaItem.getArtwork(): String {
         val itemArtwork = artwork ?: return ""
         val size =
-            itemArtwork.bounds.useContents { size }
+            itemArtwork.bounds
+                .useContents { size }
                 .readValue()
         val image = itemArtwork.imageWithSize(size) ?: return ""
         val data = UIImageJPEGRepresentation(image, compressionQuality = 1.0) ?: return ""

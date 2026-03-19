@@ -68,9 +68,7 @@ class ViewModelFactory {
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T {
-                    return PlaylistViewModel(configuration) as T
-                }
+                ): T = PlaylistViewModel(configuration) as T
             }
 
         val Player: ViewModelProvider.Factory =
@@ -93,9 +91,7 @@ class ViewModelFactory {
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T {
-                    return RecentlyPlayedViewModel(configuration) as T
-                }
+                ): T = RecentlyPlayedViewModel(configuration) as T
             }
     }
 }

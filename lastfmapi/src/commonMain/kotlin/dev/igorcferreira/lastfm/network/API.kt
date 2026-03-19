@@ -34,8 +34,7 @@ internal class API(
                     parameters.complement(method, null)
                 } else {
                     parameters
-                }
-                    .map { (key, value) -> "$key=$value" }
+                }.map { (key, value) -> "$key=$value" }
                     .joinToString("&")
 
             val response = client.get("$endpoint?$query")

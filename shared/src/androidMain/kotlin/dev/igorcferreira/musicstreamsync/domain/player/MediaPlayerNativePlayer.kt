@@ -225,8 +225,7 @@ actual class MediaPlayerNativePlayer : NativePlayer {
 
                     else -> builder
                 }
-            }
-            .build()
+            }.build()
 
     actual override fun stopPlayback() {
         currentPlayer?.stop()

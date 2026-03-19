@@ -20,7 +20,8 @@ internal data class Artwork(
             val width = width ?: 600
             val height = height ?: width
 
-            return url.replace("{w}", "$width")
+            return url
+                .replace("{w}", "$width")
                 .replace("{h}", "$height")
         }
 }

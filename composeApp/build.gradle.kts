@@ -47,12 +47,21 @@ kotlin {
 
 android {
     namespace = "dev.igorcferreira.musicstreamsync"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = getProperty("project.applicationId", "dev.igorcferreira.musicstreamsync")
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.android.targetSdk
+                .get()
+                .toInt()
         versionCode = getProperty("project.versionCode", "1").toInt()
         versionName = getProperty("project.versionName", "1.0")
     }

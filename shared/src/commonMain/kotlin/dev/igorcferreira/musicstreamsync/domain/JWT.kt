@@ -23,7 +23,11 @@ internal suspend fun IDeveloperToken.signWith(signer: TokenSigner): String {
         JWTBody(
             iss = teamId,
             iat = Clock.System.now().epochSeconds,
-            exp = Clock.System.now().plus(1.days).epochSeconds,
+            exp =
+                Clock.System
+                    .now()
+                    .plus(1.days)
+                    .epochSeconds,
         )
 
     val unsignedJWT =

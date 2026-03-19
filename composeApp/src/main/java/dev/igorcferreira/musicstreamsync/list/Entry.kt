@@ -61,8 +61,7 @@ fun Entry(
                     .semantics(mergeDescendants = true) {
                         testTag = "entry_${entry.id}"
                         contentDescription = "${entry.title} - ${entry.body ?: ""}"
-                    }
-                    .clickable { onClick(entry) },
+                    }.clickable { onClick(entry) },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (entry.artworkUrl.isNullOrBlank()) {
@@ -76,13 +75,13 @@ fun Entry(
                                 .background(
                                     color = MaterialTheme.colorScheme.tertiary,
                                     shape = RoundedCornerShape(4.dp),
-                                )
-                                .clip(RoundedCornerShape(4.dp)),
+                                ).clip(RoundedCornerShape(4.dp)),
                     )
                 } else {
                     AsyncImage(
                         model =
-                            ImageRequest.Builder(LocalContext.current)
+                            ImageRequest
+                                .Builder(LocalContext.current)
                                 .data(entry.artworkUrl)
                                 .crossfade(true)
                                 .build(),

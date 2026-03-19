@@ -19,12 +19,18 @@ val frameworkName = "MusicStream"
 swiftklib {
     val MusicKitBridge by creating {
         path = file(layout.projectDirectory.file("src/native/MusicKitBridge/Sources/MusicKitBridge"))
-        minIos = libs.versions.ios.minSdk.get().toInt()
+        minIos =
+            libs.versions.ios.minSdk
+                .get()
+                .toInt()
         packageName("dev.igorcferreira.os.bridge")
     }
     val OSLogger by creating {
         path = file(layout.projectDirectory.file("src/native/OSLogger/Sources/OSLogger"))
-        minIos = libs.versions.ios.minSdk.get().toInt()
+        minIos =
+            libs.versions.ios.minSdk
+                .get()
+                .toInt()
         packageName("dev.igorcferreira.os.logger")
     }
 }
@@ -44,8 +50,14 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_17)
         }
         namespace = "dev.igorcferreira.musicstreamsync.shared"
-        compileSdk = libs.versions.android.compileSdk.get().toInt()
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        compileSdk =
+            libs.versions.android.compileSdk
+                .get()
+                .toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
         // Opt-in to enable and configure host-side (unit) tests
         withHostTest {
             isIncludeAndroidResources = true

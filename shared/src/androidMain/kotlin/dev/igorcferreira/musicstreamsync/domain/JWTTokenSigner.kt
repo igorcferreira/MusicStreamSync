@@ -22,7 +22,8 @@ class JWTTokenSigner : TokenSigner {
         val key = keyFactory.generatePrivate(spec)
 
         val builder =
-            Jwts.builder()
+            Jwts
+                .builder()
                 .header()
                 .keyId(header.kid)
                 .and()

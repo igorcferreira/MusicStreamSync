@@ -15,7 +15,9 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-actual class MusicUserTokenProvider : UserTokenProvider, Application.ActivityLifecycleCallbacks {
+actual class MusicUserTokenProvider :
+    UserTokenProvider,
+    Application.ActivityLifecycleCallbacks {
     private var currentActivityRef = WeakReference<ComponentActivity>(null)
     private lateinit var vault: KVault
 
@@ -43,23 +45,24 @@ actual class MusicUserTokenProvider : UserTokenProvider, Application.ActivityLif
 
         val token =
             suspendCoroutine { continuation ->
-                currentActivity.activityResultRegistry.register(
-                    "token_request",
-                    ActivityResultContracts.StartActivityForResult(),
-                ) { result ->
-                    if (result.resultCode != Activity.RESULT_OK) {
-                        continuation.resumeWithException(UserNotAuthenticatedException())
-                    } else if (result.data == null) {
-                        continuation.resumeWithException(UserNotAuthenticatedException())
-                    } else {
-                        val token = authenticationManager.handleTokenResult(result.data)
-                        if (token.isError) {
+                currentActivity.activityResultRegistry
+                    .register(
+                        "token_request",
+                        ActivityResultContracts.StartActivityForResult(),
+                    ) { result ->
+                        if (result.resultCode != Activity.RESULT_OK) {
+                            continuation.resumeWithException(UserNotAuthenticatedException())
+                        } else if (result.data == null) {
                             continuation.resumeWithException(UserNotAuthenticatedException())
                         } else {
-                            continuation.resume(token.musicUserToken)
+                            val token = authenticationManager.handleTokenResult(result.data)
+                            if (token.isError) {
+                                continuation.resumeWithException(UserNotAuthenticatedException())
+                            } else {
+                                continuation.resume(token.musicUserToken)
+                            }
                         }
-                    }
-                }.launch(intent)
+                    }.launch(intent)
             }
 
         vault.set(VAULT_KEY, token)

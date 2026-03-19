@@ -99,7 +99,8 @@ fun Player(
         ) {
             AsyncImage(
                 model =
-                    ImageRequest.Builder(LocalContext.current)
+                    ImageRequest
+                        .Builder(LocalContext.current)
                         .data(entry.artworkUrl)
                         .crossfade(true)
                         .build(),
