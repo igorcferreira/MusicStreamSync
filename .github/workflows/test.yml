@@ -7,6 +7,13 @@ name: Test
 
 on: [ pull_request ]
 
+env:
+  PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
+  TeamId: '<APPLE_STORE_TEAM_ID>'
+  KeyId: '<MUSIC_SERVICE_KEY_ID>'
+  LastFMAPIKey: '<LAST_FM_KEY>'
+  LastFMAPISecret: '<LAST_FM_KEY>'
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -41,12 +48,6 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
       - name: Generate Arkana module
-        env:
-          PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
-          TeamId: '<APPLE_STORE_TEAM_ID>'
-          KeyId: '<MUSIC_SERVICE_KEY_ID>'
-          LastFMAPIKey: '<LAST_FM_KEY>'
-          LastFMAPISecret: '<LAST_FM_KEY>'
         run: |
           bundle config set --local path 'vendor/bundle'
           bundle install
@@ -73,12 +74,6 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
       - name: Generate Arkana module
-        env:
-          PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
-          TeamId: '<APPLE_STORE_TEAM_ID>'
-          KeyId: '<MUSIC_SERVICE_KEY_ID>'
-          LastFMAPIKey: '<LAST_FM_KEY>'
-          LastFMAPISecret: '<LAST_FM_KEY>'
         run: |
           bundle config set --local path 'vendor/bundle'
           bundle install
@@ -108,12 +103,6 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
       - name: Generate Arkana module
-        env:
-          PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
-          TeamId: '<APPLE_STORE_TEAM_ID>'
-          KeyId: '<MUSIC_SERVICE_KEY_ID>'
-          LastFMAPIKey: '<LAST_FM_KEY>'
-          LastFMAPISecret: '<LAST_FM_KEY>'
         run: |
           bundle config set --local path 'vendor/bundle'
           bundle install
