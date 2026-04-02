@@ -1,0 +1,14 @@
+format_version: "23"
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: kotlin-multiplatform
+app:
+  envs:
+  - PROJECT_ROOT_DIR: ./
+workflows:
+  run_tests:
+    steps:
+    - git-clone@8: {}
+    - gradle-unit-test@2:
+        inputs:
+        - project_root_dir: $PROJECT_ROOT_DIR
+    - deploy-to-bitrise-io@2: {}
