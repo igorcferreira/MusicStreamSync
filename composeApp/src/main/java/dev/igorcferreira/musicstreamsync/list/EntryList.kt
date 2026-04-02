@@ -1,15 +1,9 @@
 package dev.igorcferreira.musicstreamsync.list
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,7 +32,7 @@ fun EntryList(
 ) {
     val context = LocalContext.current
 
-    BoxWithConstraints(
+    Box(
         Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize(),
@@ -58,6 +52,7 @@ fun EntryList(
                             .padding(16.dp)
                             .semantics {
                                 testTag = "loading"
+                                @SuppressLint("LocalContextGetResourceValueCall")
                                 contentDescription = context.getString(R.string.loading)
                             },
                     color = MaterialTheme.colorScheme.primary,

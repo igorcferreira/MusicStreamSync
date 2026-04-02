@@ -21,7 +21,7 @@ jobs:
           java-version: '17'
           cache: gradle
       - name: Install Arkana
-        run: gem install arkana
+        run: bundle install
       - name: Run Arkana
         env:
           PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
@@ -29,11 +29,13 @@ jobs:
           KeyId: '<MUSIC_SERVICE_KEY_ID>'
           LastFMAPIKey: '<LAST_FM_KEY>'
           LastFMAPISecret: '<LAST_FM_KEY>'
-        run: arkana -l kotlin
+        run: bundle exec arkana -l kotlin
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
       - name: Lint Kotlin
         run: ./gradlew ktlintCheck
+      - name: Lint Android
+        run: ./gradlew lint
       - name: Install SwiftLint
         run: brew install swiftlint
       - name: Lint Swift

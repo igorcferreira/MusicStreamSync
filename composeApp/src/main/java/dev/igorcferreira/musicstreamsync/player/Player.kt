@@ -6,11 +6,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -66,11 +62,11 @@ fun Player(
         exit = slideOutVertically(targetOffsetY = { it }),
     ) {
         Player(
-            playingItem!!,
-            playing,
+            entry = playingItem!!,
+            isPlaying = playing,
             play = play,
             pause = pause,
-            modifier,
+            modifier = modifier,
         )
     }
 }
@@ -78,10 +74,10 @@ fun Player(
 @Composable
 fun Player(
     entry: MusicEntry,
+    modifier: Modifier = Modifier,
     isPlaying: Boolean = false,
     play: (MusicEntry) -> Unit = {},
     pause: (MusicEntry) -> Unit = {},
-    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier
@@ -154,14 +150,15 @@ fun Player(
 fun PlayerItem_Playing_Preview() {
     AppTheme {
         Player(
-            MusicEntry(
-                id = "1184710148",
-                title = "Stardust",
-                artist = "Delain",
-                artworkUrl = "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
-                album = "The Human Contradiction",
-            ),
-            true,
+            entry =
+                MusicEntry(
+                    id = "1184710148",
+                    title = "Stardust",
+                    artist = "Delain",
+                    artworkUrl = "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
+                    album = "The Human Contradiction",
+                ),
+            isPlaying = true,
         )
     }
 }
@@ -176,14 +173,15 @@ fun PlayerItem_Playing_Preview() {
 fun PlayerItem_Paused_Preview() {
     AppTheme {
         Player(
-            MusicEntry(
-                id = "1184710148",
-                title = "Stardust",
-                artist = "Delain",
-                artworkUrl = "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
-                album = "The Human Contradiction",
-            ),
-            false,
+            entry =
+                MusicEntry(
+                    id = "1184710148",
+                    title = "Stardust",
+                    artist = "Delain",
+                    artworkUrl = "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/5d/3b/6b/5d3b6b36-3498-cfbc-bab1-ceb16d60f567/191018548728.jpg/1500x1500bb.jpg",
+                    album = "The Human Contradiction",
+                ),
+            isPlaying = false,
         )
     }
 }
