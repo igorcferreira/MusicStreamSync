@@ -6,47 +6,116 @@ name: Test
 # documentation.
 
 on: [ pull_request ]
+
+env:
+  PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
+  TeamId: '<APPLE_STORE_TEAM_ID>'
+  KeyId: '<MUSIC_SERVICE_KEY_ID>'
+  LastFMAPIKey: '<LAST_FM_KEY>'
+  LastFMAPISecret: '<LAST_FM_KEY>'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
-  test:
+  swiftlint:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: Lint Swift
+        run: swiftlint lint --config .swiftlint.yml --reporter github-actions-logging
+
+  ktlint:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Cache Ruby gems
+        uses: actions/cache@v5
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+      - name: Generate Arkana module
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle exec arkana -l kotlin
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Lint Kotlin
+        run: ./gradlew ktlintCheck
+
+  android-lint:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Cache Ruby gems
+        uses: actions/cache@v5
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+      - name: Generate Arkana module
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle exec arkana -l kotlin
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Lint Android
+        run: ./gradlew lint
+
+  tests:
     runs-on: macos-latest
     permissions:
       checks: write
       pull-requests: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+        uses: actions/checkout@v6
+      - name: Cache Ruby gems
+        uses: actions/cache@v5
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+      - name: Generate Arkana module
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle exec arkana -l kotlin
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
           java-version: '17'
           cache: gradle
-      - name: Install Arkana
-        run: gem install arkana
-      - name: Run Arkana
-        env:
-          PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
-          TeamId: '<APPLE_STORE_TEAM_ID>'
-          KeyId: '<MUSIC_SERVICE_KEY_ID>'
-          LastFMAPIKey: '<LAST_FM_KEY>'
-          LastFMAPISecret: '<LAST_FM_KEY>'
-        run: arkana -l kotlin
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-      - name: Lint Kotlin
-        run: ./gradlew ktlintCheck
-      - name: Install SwiftLint
-        run: brew install swiftlint
-      - name: Lint Swift
-        run: swiftlint lint --config .swiftlint.yml --reporter github-actions-logging
+        uses: gradle/actions/setup-gradle@v5
       - name: Run tests
         run: ./gradlew testAndroid iosSimulatorArm64Test
       - name: Publish Test Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: test-results
           path: ./shared/build/test-results
       - name: Annotate Test Report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: success() || failure()
         with:
           report_paths: '**/build/test-results/**/TEST-*.xml'

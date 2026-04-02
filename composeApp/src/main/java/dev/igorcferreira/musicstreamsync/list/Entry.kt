@@ -3,11 +3,7 @@ package dev.igorcferreira.musicstreamsync.list
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -39,12 +35,13 @@ import dev.igorcferreira.musicstreamsync.player.PlayerViewModel
 @Composable
 fun Entry(
     entry: EntryData,
-    modifier: Modifier =
-        Modifier
-            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp)),
+    modifier: Modifier = Modifier,
     viewModel: PlayerViewModel = viewModel(factory = ViewModelFactory.Player),
 ) {
-    Entry(modifier, entry) { viewModel.play(entry) }
+    Entry(
+        modifier.background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp)),
+        entry,
+    ) { viewModel.play(entry) }
 }
 
 @Composable
