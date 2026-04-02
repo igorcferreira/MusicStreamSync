@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.3"
+agp = "9.0.0-alpha06"
 android-compileSdk = "36"
 android-minSdk = "26"
 ios-minSdk = "26"
