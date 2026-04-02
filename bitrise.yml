@@ -7,8 +7,72 @@ app:
 workflows:
   run_tests:
     steps:
+    - bundle::_setup: {}
+    - bundle::_unit_test: {}
+    - bundle::_teardown: {}
+  build:
+    steps:
+    - bundle::_setup: {}
+    - bundle::_teardown: {}
+step_bundles:
+  _setup:
+    title: Prepare environment
+    steps:
     - git-clone@8: {}
+    - script@1:
+        title: Install Arkana
+        inputs:
+        - content: >-
+            #!/usr/bin/env bash
+
+            # fail if any commands fails
+
+            set -e
+
+            # make pipelines' return status equal the last command to exit with
+            a non-zero status, or zero if all commands exit successfully
+
+            set -o pipefail
+
+            # debug log
+
+            set -x
+
+
+            bundle install
+    - script@1:
+        title: Run Arkana
+        inputs:
+        - content: >-
+            #!/usr/bin/env bash
+
+            # fail if any commands fails
+
+            set -e
+
+            # make pipelines' return status equal the last command to exit with
+            a non-zero status, or zero if all commands exit successfully
+
+            set -o pipefail
+
+            # debug log
+
+            set -x
+
+
+            if [ ! -f .env ]; then
+                touch .env
+            fi
+
+
+            bundle exec arkana -l kotlin
+  _teardown:
+    title: Finalise environment
+    steps:
+    - deploy-to-bitrise-io@2: {}
+  _unit_test:
+    title: Run Unit tests
+    steps:
     - gradle-unit-test@2:
         inputs:
         - project_root_dir: $PROJECT_ROOT_DIR
-    - deploy-to-bitrise-io@2: {}

@@ -24,3 +24,4 @@ aars/musickitauth/
 aars/mediaplayback/
 build.env
 .bitrise.secrets.yml
+Gemfile.lock
