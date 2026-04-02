@@ -29,7 +29,7 @@ jobs:
       - name: Lint Swift
         run: swiftlint lint --config .swiftlint.yml --reporter github-actions-logging
 
-  generate:
+  ktlint:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -40,38 +40,17 @@ jobs:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
-      - name: Install Arkana
-        run: |
-          bundle config set --local path 'vendor/bundle'
-          bundle install
-      - name: Run Arkana
+      - name: Generate Arkana module
         env:
           PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
           TeamId: '<APPLE_STORE_TEAM_ID>'
           KeyId: '<MUSIC_SERVICE_KEY_ID>'
           LastFMAPIKey: '<LAST_FM_KEY>'
           LastFMAPISecret: '<LAST_FM_KEY>'
-        run: bundle exec arkana -l kotlin
-      - name: Upload Arkana module
-        uses: actions/upload-artifact@v4
-        with:
-          name: arkana-generated
-          path: |
-            arkana/
-            !arkana/build/
-          retention-days: 1
-
-  ktlint:
-    runs-on: macos-latest
-    needs: generate
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Download Arkana module
-        uses: actions/download-artifact@v4
-        with:
-          name: arkana-generated
-          path: arkana/
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle exec arkana -l kotlin
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -84,15 +63,26 @@ jobs:
 
   android-lint:
     runs-on: macos-latest
-    needs: generate
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Download Arkana module
-        uses: actions/download-artifact@v4
+      - name: Cache Ruby gems
+        uses: actions/cache@v4
         with:
-          name: arkana-generated
-          path: arkana/
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+      - name: Generate Arkana module
+        env:
+          PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
+          TeamId: '<APPLE_STORE_TEAM_ID>'
+          KeyId: '<MUSIC_SERVICE_KEY_ID>'
+          LastFMAPIKey: '<LAST_FM_KEY>'
+          LastFMAPISecret: '<LAST_FM_KEY>'
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle exec arkana -l kotlin
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -105,18 +95,29 @@ jobs:
 
   tests:
     runs-on: macos-latest
-    needs: generate
     permissions:
       checks: write
       pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Download Arkana module
-        uses: actions/download-artifact@v4
+      - name: Cache Ruby gems
+        uses: actions/cache@v4
         with:
-          name: arkana-generated
-          path: arkana/
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+      - name: Generate Arkana module
+        env:
+          PrivateKey: '<BASE64_STRING_OF_PEM_FILE>'
+          TeamId: '<APPLE_STORE_TEAM_ID>'
+          KeyId: '<MUSIC_SERVICE_KEY_ID>'
+          LastFMAPIKey: '<LAST_FM_KEY>'
+          LastFMAPISecret: '<LAST_FM_KEY>'
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle exec arkana -l kotlin
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
