@@ -24,13 +24,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Cache SwiftLint
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/Library/Caches/Homebrew
-            /opt/homebrew/Cellar/swiftlint
-          key: ${{ runner.os }}-swiftlint
       - name: Install SwiftLint
         run: brew install swiftlint
       - name: Lint Swift
