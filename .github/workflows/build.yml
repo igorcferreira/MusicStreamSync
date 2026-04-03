@@ -117,12 +117,12 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download Android AAB
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: android-aab
           path: artifacts
       - name: Download iOS XCArchive
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: ios-xcarchive
           path: artifacts
