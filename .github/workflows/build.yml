@@ -78,15 +78,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
       - name: Extract version from tag
         run: echo "VERSION_NAME=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
-      - name: Build shared framework
+      - name: Build shared XCFramework
+        run: ./gradlew :shared:assembleMusicStreamReleaseXCFramework
+      - name: Copy framework for Xcode
         run: |
-          export SDK_NAME="iphoneos$(xcrun --sdk iphoneos --show-sdk-version)"
-          export CONFIGURATION=Release
-          export ARCHS=arm64
-          export TARGET_BUILD_DIR="$(pwd)/build/ios-framework"
-          export FRAMEWORKS_FOLDER_PATH="Frameworks"
-          export EXPANDED_CODE_SIGN_IDENTITY="-"
-          ./gradlew :shared:embedAndSignAppleFrameworkForXcode
+          SDK_NAME="iphoneos$(xcrun --sdk iphoneos --show-sdk-version)"
+          FRAMEWORK_DIR="shared/build/xcode-frameworks/Release/${SDK_NAME}"
+          mkdir -p "$FRAMEWORK_DIR"
+          cp -R shared/build/XCFrameworks/release/MusicStream.xcframework/ios-arm64/MusicStream.framework "$FRAMEWORK_DIR/"
       - name: Archive iOS app
         run: |
           xcodebuild archive \
