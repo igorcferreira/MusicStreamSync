@@ -44,7 +44,7 @@ actual class MediaPlayerNativePlayer : NativePlayer {
     }
 
     actual override fun set(queue: List<EntryData>) {
-        player.setQueueWithStoreIDs(queue.map { it.entryId })
+        player.setQueueWithStoreIDs(queue.mapNotNull { it.entryId })
     }
 
     actual override fun stopPlayback() {

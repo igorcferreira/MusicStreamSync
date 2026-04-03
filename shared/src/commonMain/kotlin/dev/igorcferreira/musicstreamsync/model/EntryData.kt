@@ -8,11 +8,11 @@ interface EntryData {
     val footer: String?
 }
 
-val EntryData.entryId: String
+val EntryData.entryId: String?
     get() =
         when (this) {
-            is PlaylistEntry -> entryId ?: ""
-            is MusicEntry -> entryId ?: ""
+            is PlaylistEntry -> entryId ?: id
+            is MusicEntry -> entryId ?: id
             else -> this.id
         }
 
