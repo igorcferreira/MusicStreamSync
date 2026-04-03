@@ -14,13 +14,18 @@ env:
   LastFMAPIKey: '<LAST_FM_KEY>'
   LastFMAPISecret: '<LAST_FM_KEY>'
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   swiftlint:
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -30,7 +35,7 @@ jobs:
         run: swiftlint lint --config .swiftlint.yml --reporter github-actions-logging
 
   ktlint:
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -56,7 +61,7 @@ jobs:
         run: ./gradlew ktlintCheck
 
   android-lint:
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -82,10 +87,7 @@ jobs:
         run: ./gradlew lint
 
   tests:
-    runs-on: macos-latest
-    permissions:
-      checks: write
-      pull-requests: write
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

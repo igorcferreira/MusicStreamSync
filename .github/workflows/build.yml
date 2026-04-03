@@ -1,0 +1,127 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  PrivateKey: ${{ secrets.PRIVATE_KEY }}
+  TeamId: ${{ secrets.TEAM_ID }}
+  KeyId: ${{ secrets.KEY_ID }}
+  LastFMAPIKey: ${{ secrets.LAST_FM_API_KEY }}
+  LastFMAPISecret: ${{ secrets.LAST_FM_API_SECRET }}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: macos-26
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Cache Ruby gems
+        uses: actions/cache@v5
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+      - name: Generate Arkana module
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle exec arkana -l kotlin
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Extract version from tag
+        run: echo "VERSION_NAME=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+      - name: Build AAB
+        run: ./gradlew :composeApp:bundleRelease -Pproject.versionName=${{ env.VERSION_NAME }} -Pproject.versionCode=${{ github.run_number }}
+      - name: Upload AAB
+        uses: actions/upload-artifact@v6
+        with:
+          name: android-aab
+          path: composeApp/build/outputs/bundle/release/composeApp-release.aab
+
+  ios:
+    runs-on: macos-26
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Cache Ruby gems
+        uses: actions/cache@v5
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+      - name: Generate Arkana module
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle exec arkana -l kotlin
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Extract version from tag
+        run: echo "VERSION_NAME=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+      - name: Archive iOS app
+        run: |
+          xcodebuild archive \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Release \
+            -archivePath build/MusicStreamSync.xcarchive \
+            -destination 'generic/platform=iOS' \
+            MARKETING_VERSION="${VERSION_NAME}" \
+            CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Zip XCArchive
+        run: ditto -c -k --sequesterRsrc build/MusicStreamSync.xcarchive build/MusicStreamSync.xcarchive.zip
+      - name: Upload XCArchive
+        uses: actions/upload-artifact@v6
+        with:
+          name: ios-xcarchive
+          path: build/MusicStreamSync.xcarchive.zip
+
+  release:
+    runs-on: macos-26
+    needs: [android, ios]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download Android AAB
+        uses: actions/download-artifact@v6
+        with:
+          name: android-aab
+          path: artifacts
+      - name: Download iOS XCArchive
+        uses: actions/download-artifact@v6
+        with:
+          name: ios-xcarchive
+          path: artifacts
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            artifacts/composeApp-release.aab \
+            artifacts/MusicStreamSync.xcarchive.zip \
+            --generate-notes
