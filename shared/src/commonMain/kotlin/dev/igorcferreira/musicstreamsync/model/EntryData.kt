@@ -11,8 +11,8 @@ interface EntryData {
 val EntryData.entryId: String
     get() =
         when (this) {
-            is PlaylistEntry -> entryId
-            is MusicEntry -> entryId
+            is PlaylistEntry -> entryId ?: ""
+            is MusicEntry -> entryId ?: ""
             else -> this.id
         }
 
