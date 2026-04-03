@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   swiftlint:
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -30,7 +30,7 @@ jobs:
         run: swiftlint lint --config .swiftlint.yml --reporter github-actions-logging
 
   ktlint:
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -56,7 +56,7 @@ jobs:
         run: ./gradlew ktlintCheck
 
   android-lint:
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -82,7 +82,7 @@ jobs:
         run: ./gradlew lint
 
   tests:
-    runs-on: macos-latest
+    runs-on: macos-26
     permissions:
       checks: write
       pull-requests: write
