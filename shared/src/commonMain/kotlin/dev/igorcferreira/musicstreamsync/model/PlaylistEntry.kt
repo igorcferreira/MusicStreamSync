@@ -2,7 +2,7 @@ package dev.igorcferreira.musicstreamsync.model
 
 data class PlaylistEntry(
     override val id: String,
-    val entryId: String,
+    val entryId: String?,
     val name: String,
     val canEdit: Boolean,
     val hasCatalog: Boolean,

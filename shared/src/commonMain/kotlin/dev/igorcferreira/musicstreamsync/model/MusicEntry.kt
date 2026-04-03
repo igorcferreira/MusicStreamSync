@@ -2,7 +2,7 @@ package dev.igorcferreira.musicstreamsync.model
 
 data class MusicEntry(
     override val id: String,
-    val entryId: String,
+    val entryId: String?,
     override val title: String,
     val artist: String,
     override val artworkUrl: String,
