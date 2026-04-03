@@ -14,6 +14,11 @@ env:
   LastFMAPIKey: '<LAST_FM_KEY>'
   LastFMAPISecret: '<LAST_FM_KEY>'
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -83,9 +88,6 @@ jobs:
 
   tests:
     runs-on: macos-26
-    permissions:
-      checks: write
-      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

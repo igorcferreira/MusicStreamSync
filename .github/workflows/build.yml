@@ -12,6 +12,9 @@ env:
   LastFMAPIKey: ${{ secrets.LAST_FM_API_KEY }}
   LastFMAPISecret: ${{ secrets.LAST_FM_API_SECRET }}
 
+permissions:
+  contents: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -19,8 +22,6 @@ concurrency:
 jobs:
   build:
     runs-on: macos-26
-    permissions:
-      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
