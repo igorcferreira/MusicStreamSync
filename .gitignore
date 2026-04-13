@@ -24,3 +24,4 @@ aars/musickitauth/
 aars/mediaplayback/
 build.env
 Gemfile.lock
+.ai/
