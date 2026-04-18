@@ -3,6 +3,7 @@ package dev.igorcferreira.musicstreamsync.lastfm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.igorcferreira.musicstreamsync.domain.use_cases.LastFMUseCase
+import dev.igorcferreira.musicstreamsync.model.MusicEntry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -15,8 +16,19 @@ class LastFMViewModel(
     val isAuthenticated: StateFlow<Boolean>
         get() = useCase.isAuthenticated
     val authenticating: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isScrobbling: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     fun logout() = useCase.logout()
+
+    fun scrobble(selection: List<MusicEntry>) =
+        viewModelScope.launch {
+            isScrobbling.update { true }
+            try {
+                useCase.scrobble(selection)
+            } finally {
+                isScrobbling.update { false }
+            }
+        }
 
     fun authenticate(
         username: String,
