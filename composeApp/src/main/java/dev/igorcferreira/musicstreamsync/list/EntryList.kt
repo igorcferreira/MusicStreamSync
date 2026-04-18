@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,19 +25,25 @@ import dev.igorcferreira.musicstreamsync.model.EntryData
 import dev.igorcferreira.musicstreamsync.model.MusicEntry
 import dev.igorcferreira.musicstreamsync.player.Player
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EntryList(
     items: List<EntryData>,
     loading: Boolean,
     entry: @Composable (EntryData) -> Unit,
     player: @Composable () -> Unit,
+    onRefresh: (() -> Unit)? = null,
+    header: (@Composable () -> Unit)? = null,
 ) {
     val context = LocalContext.current
 
-    Box(
-        Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize(),
+    PullToRefreshBox(
+        isRefreshing = loading,
+        onRefresh = { onRefresh?.invoke() },
+        modifier =
+            Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize(),
     ) {
         Column(
             Modifier
@@ -44,7 +52,7 @@ fun EntryList(
                 .align(Alignment.TopStart),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AnimatedVisibility(loading) {
+            AnimatedVisibility(loading && onRefresh == null) {
                 CircularProgressIndicator(
                     modifier =
                         Modifier
@@ -66,6 +74,9 @@ fun EntryList(
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    if (header != null) {
+                        item { header() }
+                    }
                     items(items) { entry ->
                         Row(modifier = Modifier.padding(bottom = 8.dp)) {
                             entry(entry)
