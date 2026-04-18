@@ -87,11 +87,24 @@ fun LastFMToolbar(
 }
 
 @Composable
-@Preview
+@Preview(name = "Unauthenticated")
 fun LastFMToolbarPreview() {
     AppTheme {
         LastFMToolbar(
             authenticated = false,
+            authenticating = false,
+            authenticate = { _, _ -> },
+            logout = { },
+        )
+    }
+}
+
+@Composable
+@Preview(name = "Authenticated")
+fun LastFMToolbarAuthenticatedPreview() {
+    AppTheme {
+        LastFMToolbar(
+            authenticated = true,
             authenticating = false,
             authenticate = { _, _ -> },
             logout = { },
