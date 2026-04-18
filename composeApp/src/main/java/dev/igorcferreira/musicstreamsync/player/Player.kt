@@ -82,12 +82,12 @@ fun Player(
     Row(
         modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondary),
+            .background(MaterialTheme.colorScheme.secondary)
+            .navigationBarsPadding(),
     ) {
         Row(
             Modifier
                 .padding(all = 8.dp)
-                .padding(bottom = 20.dp)
                 .clickable {
                     if (isPlaying) pause(entry) else play(entry)
                 },
