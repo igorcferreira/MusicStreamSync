@@ -89,23 +89,19 @@ fun Entry(
                                 .clip(RoundedCornerShape(4.dp)),
                     )
                 }
-                Column(Modifier.padding(start = 8.dp)) {
+                Column(Modifier.padding(start = 8.dp, end = 8.dp)) {
                     Text(
                         entry.title,
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 16.dp),
+                                .padding(top = 8.dp),
                         style = MaterialTheme.typography.bodyLarge,
                     )
                     entry.body?.let { body ->
                         Text(
                             body,
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
+                            modifier = Modifier.fillMaxWidth(),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
@@ -115,7 +111,6 @@ fun Entry(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
                                     .padding(bottom = 8.dp),
                             style = MaterialTheme.typography.bodySmall,
                         )

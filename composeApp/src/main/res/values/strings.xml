@@ -9,4 +9,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="authenticate">Authenticate</string>
+    <string name="scrobble">Scrobble</string>
+    <string name="manual_scrobble">Manual Scrobble</string>
+    <string name="scrobble_instructions">Select the items to scrobble and then hit \'Scrobble\' to update your Last.fm library</string>
 </resources>

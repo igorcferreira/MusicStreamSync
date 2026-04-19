@@ -10,11 +10,13 @@ import dev.igorcferreira.musicstreamsync.domain.Scrobbler
 import dev.igorcferreira.musicstreamsync.domain.player.MediaPlayerNativePlayer
 import dev.igorcferreira.musicstreamsync.domain.use_cases.LastFMUseCase
 import dev.igorcferreira.musicstreamsync.domain.use_cases.PlayerUseCase
+import dev.igorcferreira.musicstreamsync.domain.use_cases.RecentlyPlayedUseCase
 import dev.igorcferreira.musicstreamsync.history.RecentlyPlayedViewModel
 import dev.igorcferreira.musicstreamsync.lastfm.LastFMViewModel
 import dev.igorcferreira.musicstreamsync.model.Configuration
 import dev.igorcferreira.musicstreamsync.player.PlayerViewModel
 import dev.igorcferreira.musicstreamsync.playlist.PlaylistViewModel
+import dev.igorcferreira.musicstreamsync.scrobble.ScrobbleViewModel
 
 class ViewModelFactory {
     companion object {
@@ -92,6 +94,21 @@ class ViewModelFactory {
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T = RecentlyPlayedViewModel(configuration) as T
+            }
+
+        val Scrobble: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    val application = checkNotNull(extras[APPLICATION_KEY])
+                    return ScrobbleViewModel(
+                        lastFMUseCase = buildLastFMUseCase(application),
+                        recentlyPlayedUseCase = RecentlyPlayedUseCase(configuration),
+                    ) as T
+                }
             }
     }
 }
