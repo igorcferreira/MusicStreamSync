@@ -107,6 +107,15 @@ jobs:
         with:
           name: ios-xcarchive
           path: build/MusicStreamSync.xcarchive.zip
+      - name: Prepare Swift Package
+        run: |
+          cp -R shared/build/XCFrameworks/release/MusicStream.xcframework package/MusicStream.xcframework
+          cd package && zip -r ../build/MusicStream_SwiftPackage.zip Package.swift MusicStream.xcframework
+      - name: Upload Swift Package
+        uses: actions/upload-artifact@v6
+        with:
+          name: ios-swift-package
+          path: build/MusicStream_SwiftPackage.zip
 
   release:
     runs-on: macos-26
@@ -126,6 +135,11 @@ jobs:
         with:
           name: ios-xcarchive
           path: artifacts
+      - name: Download iOS Swift Package
+        uses: actions/download-artifact@v8
+        with:
+          name: ios-swift-package
+          path: artifacts
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -133,4 +147,5 @@ jobs:
           gh release create "$GITHUB_REF_NAME" \
             artifacts/composeApp-release.aab \
             artifacts/MusicStreamSync.xcarchive.zip \
+            artifacts/MusicStream_SwiftPackage.zip \
             --generate-notes
