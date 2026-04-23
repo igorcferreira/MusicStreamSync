@@ -107,10 +107,12 @@ jobs:
         with:
           name: ios-xcarchive
           path: build/MusicStreamSync.xcarchive.zip
-      - name: Prepare Swift Package
-        run: |
-          cp -R shared/build/XCFrameworks/release/MusicStream.xcframework package/MusicStream.xcframework
-          cd package && zip -r ../build/MusicStream_SwiftPackage.zip Package.swift MusicStream.xcframework
+      - name: Copy XCFramework to Swift Package
+        run: cp -R shared/build/XCFrameworks/release/MusicStream.xcframework package/MusicStream.xcframework
+      - name: Validate Swift Package
+        run: cd package && swift package dump-package
+      - name: Zip Swift Package
+        run: cd package && zip -r ../build/MusicStream_SwiftPackage.zip Package.swift MusicStream.xcframework
       - name: Upload Swift Package
         uses: actions/upload-artifact@v6
         with:

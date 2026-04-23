@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "Shared",
+    name: "MusicStream",
     platforms: [
         .iOS(.v18),
     ],
