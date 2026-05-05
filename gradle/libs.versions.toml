@@ -1,8 +1,12 @@
 [versions]
 agp = "9.2.1"
+#noinspection UnusedVersionCatalogEntry
 android-compileSdk = "37"
+#noinspection UnusedVersionCatalogEntry
 android-minSdk = "26"
+#noinspection UnusedVersionCatalogEntry
 ios-minSdk = "26"
+#noinspection UnusedVersionCatalogEntry
 android-targetSdk = "37"
 androidx-activityCompose = "1.13.0"
 androidx-appcompat = "1.7.1"
