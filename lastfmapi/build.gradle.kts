@@ -31,7 +31,7 @@ kotlin {
         browser()
         nodejs()
     }
-    androidLibrary {
+    android {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
