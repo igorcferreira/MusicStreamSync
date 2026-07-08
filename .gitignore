@@ -25,3 +25,4 @@ aars/mediaplayback/
 build.env
 Gemfile.lock
 .ai/
+docs/talks/*

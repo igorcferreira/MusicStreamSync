@@ -24,7 +24,9 @@ struct iOSApp: App {
 
     @Environment(\.factory) var factory
     // swiftlint:disable:next line_length
-    @State private var recentlyPlayedViewModel = RecentlyPlayedViewModel(useCase: FactoryKey.defaultValue.makeRecentlyPlayedUseCase())
+    @State private var recentlyPlayedViewModel = RecentlyPlayedViewModel(
+        useCase: FactoryKey.defaultValue.makeRecentlyPlayedUseCase()
+    )
     @State private var playerViewModel = PlayerViewModel(factory: FactoryKey.defaultValue)
     @State private var lastFMViewModel = LastFMViewModel()
     @State private var storeEnvironment: String?
