@@ -27,7 +27,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
     versionCatalogs {
-        val kotlincrypto by creating {
+        val kotlincrypto = create("kotlincrypto") {
             from("org.kotlincrypto:version-catalog:0.8.0")
         }
     }

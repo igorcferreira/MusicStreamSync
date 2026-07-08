@@ -17,22 +17,24 @@ val frameworkName = "MusicStream"
 
 @Suppress("LocalVariableName", "unused")
 swiftklib {
-    val MusicKitBridge by creating {
-        path = file(layout.projectDirectory.file("src/native/MusicKitBridge/Sources/MusicKitBridge"))
-        minIos =
-            libs.versions.ios.minSdk
-                .get()
-                .toInt()
-        packageName("dev.igorcferreira.os.bridge")
-    }
-    val OSLogger by creating {
-        path = file(layout.projectDirectory.file("src/native/OSLogger/Sources/OSLogger"))
-        minIos =
-            libs.versions.ios.minSdk
-                .get()
-                .toInt()
-        packageName("dev.igorcferreira.os.logger")
-    }
+    val MusicKitBridge =
+        create("MusicKitBridge") {
+            path = file(layout.projectDirectory.file("src/native/MusicKitBridge/Sources/MusicKitBridge"))
+            minIos =
+                libs.versions.ios.minSdk
+                    .get()
+                    .toInt()
+            packageName("dev.igorcferreira.os.bridge")
+        }
+    val OSLogger =
+        create("OSLogger") {
+            path = file(layout.projectDirectory.file("src/native/OSLogger/Sources/OSLogger"))
+            minIos =
+                libs.versions.ios.minSdk
+                    .get()
+                    .toInt()
+            packageName("dev.igorcferreira.os.logger")
+        }
 }
 
 kotlin {
@@ -77,13 +79,35 @@ kotlin {
             xcf.add(this)
         }
         @Suppress("LocalVariableName", "unused")
-        val main by iosTarget.compilations.getting {
-            val MediaPlayer by cinterops.creating {
-                definitionFile.set(project.file("src/native/OS/MediaPlayer.def"))
+        val main =
+            iosTarget.compilations.getByName("main") {
+                val MediaPlayer =
+                    cinterops.create("MediaPlayer") {
+                        definitionFile.set(project.file("src/native/OS/MediaPlayer.def"))
+                    }
+                // clang 21 (bundled with Kotlin 2.4.0+) only discovers module.modulemap directly inside
+                // -I directories, while swiftklib 0.6.4 points -I one level above the include/ dir
+                // SwiftPM emits. Add the include/ dir explicitly until swiftklib ships a fix.
+                val swiftklibArch = if (iosTarget.name == "iosX64") "x86_64" else "arm64"
+
+                fun swiftklibIncludeDir(name: String): String {
+                    val swiftBuildDir = "swiftklib/$name/${iosTarget.name}/swiftBuild/.build"
+                    return layout.buildDirectory
+                        .dir("$swiftBuildDir/$swiftklibArch-apple-macosx/release/$name.build/include")
+                        .get()
+                        .asFile
+                        .absolutePath
+                }
+
+                val OSLogger =
+                    cinterops.create("OSLogger") {
+                        compilerOpts("-I${swiftklibIncludeDir("OSLogger")}")
+                    }
+                val MusicKitBridge =
+                    cinterops.create("MusicKitBridge") {
+                        compilerOpts("-I${swiftklibIncludeDir("MusicKitBridge")}")
+                    }
             }
-            val OSLogger by cinterops.creating {}
-            val MusicKitBridge by cinterops.creating {}
-        }
         iosTarget.binaries.all {
             linkerOpts("-framework", "MediaPlayer")
         }
@@ -134,12 +158,13 @@ kotlin {
         }
 
         @Suppress("unused")
-        val androidHostTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
-                implementation(libs.kotlinx.coroutines.test)
+        val androidHostTest =
+            getByName("androidHostTest") {
+                dependencies {
+                    implementation(libs.kotlin.test)
+                    implementation(libs.kotlinx.coroutines.test)
+                }
             }
-        }
     }
 }
 
