@@ -1,8 +1,9 @@
 name: Clean spec guard
 
-# The spec/ folder is working material for feature development (see spec/AGENT.md).
-# It must not reach the main branch: this check fails any PR targeting main that
-# touches spec/ or still carries the folder in its head tree.
+# The spec/ folder is branch-local working material for feature development
+# (see .claude/skills/spec-workflow/SKILL.md). It must not reach the main branch:
+# this check fails any PR targeting main that touches spec/ or still carries the
+# folder in its head tree.
 
 on:
   pull_request:
@@ -26,12 +27,12 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           if [ -d "spec" ]; then
-            echo "::error::The spec/ folder exists in the PR head tree and must be removed before merging into main (see spec/AGENT.md)."
+            echo "::error::The spec/ folder exists in the PR head tree and must be removed before merging into main (see .claude/skills/spec-workflow/SKILL.md)."
             exit 1
           fi
           git fetch --no-tags --depth=1 origin "$BASE_SHA" "$HEAD_SHA"
           if git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -q "^spec/"; then
-            echo "::error::This PR's changes touch the spec/ folder, which must not land on main (see spec/AGENT.md)."
+            echo "::error::This PR's changes touch the spec/ folder, which must not land on main (see .claude/skills/spec-workflow/SKILL.md)."
             exit 1
           fi
           echo "OK: the spec/ folder is not part of this PR."
