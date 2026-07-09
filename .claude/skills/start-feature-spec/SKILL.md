@@ -75,6 +75,12 @@ git push -u origin feature/<x>/spec
 
 ### 6. Open the plan-approval PR
 
+Start a sub-agent, to act as a senior Kotlin developer, to review the changes made on `feature/<x>/spec` against `feature/<x>/base`, get a feedback and update/fix wherever necessary.
+
+This is done to ensure that a higher quality PR is created at the end.
+
+### 7. Open the plan-approval PR
+
 Create a PR from `feature/<x>/spec` into `feature/<x>/base`:
 
 ```bash
