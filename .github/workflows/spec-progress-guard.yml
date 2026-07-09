@@ -1,0 +1,33 @@
+name: Spec progress guard
+
+# spec/PROGRESS.md is a branch-local work journal (see spec/AGENT.md).
+# It must be deleted before a PR is opened; this check enforces that.
+
+on: [ pull_request ]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: spec-progress-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+
+      - name: Fail if spec/PROGRESS.md is part of the PR
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ -f "spec/PROGRESS.md" ]; then
+            echo "::error file=spec/PROGRESS.md::spec/PROGRESS.md is a branch-local work journal and must be deleted before opening a PR (see spec/AGENT.md)."
+            exit 1
+          fi
+          git fetch --no-tags --depth=1 origin "$BASE_SHA" "$HEAD_SHA"
+          if git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -qx "spec/PROGRESS.md"; then
+            echo "::error file=spec/PROGRESS.md::spec/PROGRESS.md appears in this PR's changes and must be removed from the branch history-visible diff (see spec/AGENT.md)."
+            exit 1
+          fi
+          echo "OK: spec/PROGRESS.md is not part of this PR."
