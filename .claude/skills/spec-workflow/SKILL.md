@@ -5,8 +5,9 @@ description: Create a spec/ folder that splits a large feature into spec-driven,
 
 # spec-workflow — spec-driven task breakdown for large features
 
-Recreate the `spec/` folder structure used for the sync-server feature (see git history
-of `feature/kotlin_server` for the reference implementation) for any new large feature.
+Recreate the `spec/` folder structure used for the sync-server feature (see
+`feature/kotlin-server/spec` for the reference implementation) for any new large
+feature.
 
 The output is a folder of markdown files that lets independent, resumable sessions
 implement the feature task by task, each on its own branch with its own PR.
