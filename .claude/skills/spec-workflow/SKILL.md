@@ -25,7 +25,7 @@ spec/
 `spec/PROGRESS.md` is NOT created up front: it is a branch-local work journal created
 while working a task branch and deleted before its PR opens (CI enforces this —
 `.github/workflows/spec-progress-guard.yml`). The whole `spec/` folder never merges to
-`dev` (`.github/workflows/clean-spec-guard.yml`).
+`main` (`.github/workflows/clean-spec-guard.yml`).
 
 ## Steps
 
@@ -114,7 +114,7 @@ Both workflows already exist in this repo and are feature-agnostic — verify th
 the new setup, don't duplicate them:
 - `.github/workflows/spec-progress-guard.yml` — fails any PR containing
   `spec/PROGRESS.md`.
-- `.github/workflows/clean-spec-guard.yml` — fails PRs targeting `dev` that carry the
+- `.github/workflows/clean-spec-guard.yml` — fails PRs targeting `main` that carry the
   `spec/` folder.
 
 ### 8. Commit
