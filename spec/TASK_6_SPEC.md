@@ -13,13 +13,20 @@ for each, with per-user failure isolation and operational visibility.
 - `SYNC_INTERVAL_MINUTES` env config exists since TASK_3 (default 5).
 - `UserStore` (TASK_4) lists users and holds per-user tokens, session, cursor,
   `tokenStale`, and the sync-run log. `SyncResult` comes from TASK_5.
-- Per-user clients: for each user the loop builds an `AppleMusicAPI` (JVM
-  `MusicUserTokenProvider` injected with that user's Music-User-Token, developer token
-  from Arkana + `JWTTokenSigner` — TASK_1) and a `LastFMClient` restored from the
-  user's stored `Session` (TASK_2, with the per-user `Settings` isolation chosen
-  there).
-- `HTTPException` types exist in both `shared` (`network/model/HTTPException.kt`, carries
-  the status code) and `lastfmapi` — use them to classify failures.
+- Per-user clients: for each user the loop builds a `Configuration` via the public
+  per-user constructor from TASK_1 (JVM `MusicUserTokenProvider` instance injected with
+  that user's Music-User-Token — one instance per user, never a singleton; developer
+  token from Arkana + `JWTTokenSigner`) and a `LastFMClient` restored from the user's
+  stored `Session` (TASK_2, with the per-user `Settings` isolation chosen there), then
+  hands both to `SyncEngine` (`:shared` jvmMain, TASK_5).
+- Failure classification: `shared`'s `HTTPException` exposes `val code: Int` **after
+  TASK_1** (before it, the code is discarded); `lastfmapi`'s `HTTPException` exposes
+  `val code: HttpStatusCode`, and TASK_2 fixes `LastFMClient.scrobble`'s catch-all that
+  used to flatten everything to 500. Classify Apple-side vs Last.fm-side failures with
+  these.
+- **Cancellation caveat:** the shared HTTP layer historically wrapped
+  `CancellationException` into `HTTPException` (fixed in TASK_1/TASK_2) — the loop must
+  still be defensive: rethrow `CancellationException` before generic handling.
 
 ## Requirements
 
@@ -34,7 +41,13 @@ for each, with per-user failure isolation and operational visibility.
    - Build the per-user clients, call `SyncEngine.sync(user)`, append the `SyncResult`
      to the user's sync-run log and `lastSync` field.
    - **Isolation:** any exception is caught, logged (tagged with the user id — never the
-     raw token), recorded in the user's log, and the loop continues with the next user.
+     raw token), recorded in the user's log, and the loop continues with the next user —
+     **except `CancellationException`, which is rethrown** (also check
+     `coroutineContext.isActive` between users) so shutdown is not mistaken for a
+     per-user failure.
+   - **Store writes are field-level** (TASK_4 update semantics): the loop only touches
+     `syncCursor`/`lastSync`/`syncLog`/`tokenStale`, never whole documents, so it cannot
+     clobber a concurrent token push from the API.
 3. **Stale-token detection:** an Apple Music 401/403 marks the user's `tokenStale = true`
    in `UserStore`; the user is skipped until an app pushes a fresh token
    (`PUT /api/users/tokens/apple-music` clears the flag — TASK_4 behavior). Surfaced by

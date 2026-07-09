@@ -1,6 +1,6 @@
 # TASK_7 — Shared push use case (`ServerSyncUseCase`)
 
-Branch: `task/7-server-sync-usecase` · Depends on: TASK_2, TASK_4 · Protocol: [AGENT.md](AGENT.md)
+Branch: `task/7-server-sync-usecase` · Depends on: TASK_1, TASK_2, TASK_4 · Protocol: [AGENT.md](AGENT.md)
 
 ## Goal
 

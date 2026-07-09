@@ -78,24 +78,24 @@ Status values: `pending` / `in_progress` / `in_review` (PR open) / `done` (PR me
 | 4 | Multi-user token-sync API + persistence | 2, 3 | pending | — | — | [TASK_4_SPEC.md](TASK_4_SPEC.md) |
 | 5 | Sync engine (diff + scrobble) | 1, 2 | pending | — | — | [TASK_5_SPEC.md](TASK_5_SPEC.md) |
 | 6 | Scheduler loop + wiring | 4, 5 | pending | — | — | [TASK_6_SPEC.md](TASK_6_SPEC.md) |
-| 7 | Shared push use case (`ServerSyncUseCase`) | 2, 4 | pending | — | — | [TASK_7_SPEC.md](TASK_7_SPEC.md) |
+| 7 | Shared push use case (`ServerSyncUseCase`) | 1, 2, 4 | pending | — | — | [TASK_7_SPEC.md](TASK_7_SPEC.md) |
 | 8 | Android app integration | 7 | pending | — | — | [TASK_8_SPEC.md](TASK_8_SPEC.md) |
 | 9 | iOS app integration | 7 | pending | — | — | [TASK_9_SPEC.md](TASK_9_SPEC.md) |
 
 ### Dependency graph / parallelism
 
 ```
-TASK_1 ─────────────┐
-TASK_2 ──┬──────────┼──► TASK_5 ──┐
-         │          │             ├──► TASK_6
+TASK_1 ──┬──────────┬──► TASK_5 ──┐
+TASK_2 ──┼──────────┤             ├──► TASK_6
+         │          │             │
 TASK_3 ──┴► TASK_4 ─┴─────────────┘
                 └─────► TASK_7 ──► TASK_8
-                                └► TASK_9
+         (also needs 1, 2)      └► TASK_9
 ```
 
 - Wave 1 (parallel): TASK_1 ∥ TASK_2 ∥ TASK_3
 - Wave 2 (parallel): TASK_4 (needs 2+3) ∥ TASK_5 (needs 1+2)
-- Wave 3: TASK_6 (needs 4+5) ∥ TASK_7 (needs 2+4)
+- Wave 3: TASK_6 (needs 4+5) ∥ TASK_7 (needs 1+2+4)
 - Wave 4 (parallel): TASK_8 ∥ TASK_9 (need 7)
 
 ## Session log
@@ -103,3 +103,4 @@ TASK_3 ──┴► TASK_4 ─┴─────────────┘
 <!-- One line per session: date — task — branch — what happened. -->
 - 2026-07-09 — spec suite created (originally on `feature/kotlin_server`).
 - 2026-07-09 — restructured into `feature/kotlin-server/base` (integration) + `feature/kotlin-server/spec` (this plan-approval branch).
+- 2026-07-09 — senior Kotlin review of PR #81 applied: fixed internal-visibility design (SyncEngine → `:shared` jvmMain, public `Configuration` path), `Session.subscriber` wire shape, `HTTPException.code` exposure, top-K prefix cursor, Arkana JDK-21 Docker constraint, token-logging/cancellation hygiene, multi-device identity caveat, Mongo field-level update semantics.

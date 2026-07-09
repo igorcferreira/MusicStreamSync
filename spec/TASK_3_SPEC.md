@@ -46,9 +46,16 @@ tasks build on. **Docker is the primary dev/deploy environment** for this module
    Serve the file at `GET /openapi.yaml`. This is the **single** API document all later
    tasks extend (see the mandate in [AGENT.md](AGENT.md)).
 6. **Docker:**
-   - `server/Dockerfile`: multi-stage — stage 1 builds with a Gradle + JDK 17 image
+   - `server/Dockerfile`: multi-stage — stage 1 builds with a Gradle + **JDK 21** image
      (`gradle :server:installDist` or shadow jar; note the Arkana generation step),
-     stage 2 runs on a slim JRE 17 image as a non-root user.
+     stage 2 runs on a slim **JRE 21** image as a non-root user.
+     **Why 21, not 17:** the generated `arkana/build.gradle.kts` declares
+     `jvmToolchain(21)` (DO NOT MODIFY header) and `settings.gradle.kts` has no
+     toolchain resolver (no foojay), so a JDK-17-only container cannot provision 21 and
+     the build fails; a JRE 17 runtime would then throw `UnsupportedClassVersionError`
+     loading Arkana classes (`:server` depends on `:arkana` directly and via `:shared`'s
+     `api(project(":arkana"))`). The other modules target 17 bytecode, which runs fine
+     on 21.
    - `docker-compose.yml` (repo root): services `server` (build from `server/Dockerfile`,
      ports `8080:8080`, env from `.env`/environment) and `mongodb` (official `mongo`
      image, named volume for `/data/db`). Server depends_on mongodb.
