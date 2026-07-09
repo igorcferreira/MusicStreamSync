@@ -65,4 +65,4 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
 Required test: **round-trip** — authenticate against a faked `API`/`Settings` (or inject
 a prebuilt `Session`), export, import into a fresh client, assert
 `isAuthenticated == true` and that a scrobble call signs with the imported key.
-Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin_server`.
+Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin-server/base`.

@@ -67,4 +67,4 @@ docker compose build
 docker compose up -d && sleep 5 && docker compose logs server | grep -i "sync tick" && docker compose down
 ```
 
-Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin_server`.
+Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin-server/base`.

@@ -76,4 +76,4 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
 
 Optional end-to-end check: `docker compose up` the server and run `pushTokens()` from a
 JVM test against `localhost` with a test secret. Delete `spec/PROGRESS.md`, then open a
-PR to `feature/kotlin_server`.
+PR to `feature/kotlin-server/base`.

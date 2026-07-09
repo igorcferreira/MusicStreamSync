@@ -20,11 +20,11 @@ and task table.
 
 ## Branch & PR mandate
 
-- `feature/kotlin_server` is the **central integration branch** — the current working
+- `feature/kotlin-server/base` is the **central integration branch** — the current working
   state. **Never commit task work directly to it.**
-- Each task is developed on its own branch cut from `feature/kotlin_server`, named
+- Each task is developed on its own branch cut from `feature/kotlin-server/base`, named
   `task/<n>-<short-name>` (e.g. `task/1-shared-jvm-target`).
-- A task ends with a **PR targeting `feature/kotlin_server`**.
+- A task ends with a **PR targeting `feature/kotlin-server/base`**.
 - Status values in the README table:
   `pending` → `in_progress` → `in_review` (PR open) → `done` (PR merged).
 - The README status update and PR link are committed on the task branch and land as part

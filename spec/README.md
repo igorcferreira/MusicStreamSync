@@ -64,7 +64,7 @@ key) to the server.
 | Persistence | **MongoDB** (docker-compose service, official Kotlin coroutine driver): per-user token, session, sync cursor, sync-run log. |
 | Environment | **Docker mandate**: dev and deploy via `Dockerfile` + `docker-compose.yml` (server + mongodb). |
 | API docs | **Swagger mandate**: single `server/openapi.yaml`, updated in the same task as any endpoint change. |
-| Branching | `feature/kotlin_server` is the integration branch; each task works on `task/<n>-<short-name>` and merges via PR. |
+| Branching | `feature/kotlin-server/base` is the integration branch; each task works on `task/<n>-<short-name>` and merges via PR. |
 
 ## Task table
 
@@ -101,4 +101,5 @@ TASK_3 ──┴► TASK_4 ─┴─────────────┘
 ## Session log
 
 <!-- One line per session: date — task — branch — what happened. -->
-- 2026-07-09 — spec suite created on `feature/kotlin_server`.
+- 2026-07-09 — spec suite created (originally on `feature/kotlin_server`).
+- 2026-07-09 — restructured into `feature/kotlin-server/base` (integration) + `feature/kotlin-server/spec` (this plan-approval branch).

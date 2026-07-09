@@ -91,4 +91,4 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
 ./gradlew :composeApp:assembleDebug
 ```
 
-Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin_server`.
+Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin-server/base`.

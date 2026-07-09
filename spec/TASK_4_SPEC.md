@@ -86,4 +86,4 @@ curl -fsS -X PUT localhost:8080/api/users/tokens/apple-music \
 docker compose down
 ```
 
-Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin_server`.
+Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin-server/base`.

@@ -74,4 +74,4 @@ docker compose build
 docker compose up -d && curl -fsS localhost:8080/health && curl -fsS localhost:8080/openapi.yaml && docker compose down
 ```
 
-Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin_server`.
+Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin-server/base`.

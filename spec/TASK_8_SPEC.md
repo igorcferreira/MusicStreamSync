@@ -54,4 +54,4 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
 Manual check: run `composeApp` against a locally running server (`docker compose up`),
 configure URL + secret, push tokens, confirm the user appears via
 `GET /api/users/status`. Delete `spec/PROGRESS.md`, then open a PR to
-`feature/kotlin_server`.
+`feature/kotlin-server/base`.

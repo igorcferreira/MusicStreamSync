@@ -81,4 +81,4 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
 ./gradlew iosSimulatorArm64Test
 ```
 
-All must pass. Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin_server`.
+All must pass. Delete `spec/PROGRESS.md`, then open a PR to `feature/kotlin-server/base`.

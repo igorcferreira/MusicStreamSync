@@ -56,4 +56,4 @@ swiftlint lint --config .swiftlint.yml
 Manual check: run in the simulator against a locally running server
 (`docker compose up`), configure URL + secret, push tokens, confirm via
 `GET /api/users/status`. Delete `spec/PROGRESS.md`, then open a PR to
-`feature/kotlin_server`.
+`feature/kotlin-server/base`.
