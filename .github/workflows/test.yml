@@ -24,7 +24,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Spec-only PRs (e.g. the plan-approval PR from the start-feature-spec skill)
+  # have nothing to build, so the code-check jobs below are skipped. Jobs skipped
+  # via a job-level `if` still satisfy required status checks.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - name: Check for changes outside spec/
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          files=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" --paginate --jq '.[].filename')
+          if echo "$files" | grep -qv '^spec/'; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+
   swiftlint:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: macos-26
     steps:
       - name: Checkout repository
@@ -35,6 +57,8 @@ jobs:
         run: swiftlint lint --config .swiftlint.yml --reporter github-actions-logging
 
   ktlint:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: macos-26
     steps:
       - name: Checkout repository
@@ -61,6 +85,8 @@ jobs:
         run: ./gradlew ktlintCheck
 
   android-lint:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: macos-26
     steps:
       - name: Checkout repository
@@ -87,6 +113,8 @@ jobs:
         run: ./gradlew lint
 
   tests:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: macos-26
     steps:
       - name: Checkout repository
