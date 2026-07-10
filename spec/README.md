@@ -75,6 +75,14 @@ feedback is provided, fix the issues raised (re-running the task's validation ma
 then open the PR. If a PR is already open when feedback arrives, push the fixes to the
 PR branch.
 
+## Commit mandate
+
+When creating commits for the changes, create **atomic commits**, not a single commit:
+each commit is one self-contained logical change (e.g. version-catalog additions,
+module scaffold, a feature slice, its tests, Docker files, spec bookkeeping), with a
+message explaining that change. This refines the "at least one commit per task" rule
+in [AGENT.md](AGENT.md).
+
 ## Task table
 
 Status values: `pending` / `in_progress` / `in_review` (PR open) / `done` (PR merged).
