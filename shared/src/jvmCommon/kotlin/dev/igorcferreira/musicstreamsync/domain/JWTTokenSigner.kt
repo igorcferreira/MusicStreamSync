@@ -36,13 +36,14 @@ class JWTTokenSigner : TokenSigner {
 }
 
 internal fun String.clearKey(marker: String = "PRIVATE KEY"): ByteArray {
-    // android.util.Base64 tolerated missing padding; keep that behavior on JVM.
+    // android.util.Base64 tolerated missing padding and skipped whitespace (\r, \n,
+    // space, tab) while decoding; keep both behaviors.
     val base64 = Base64.withPadding(Base64.PaddingOption.PRESENT_OPTIONAL)
-    val content = base64.decode(this)
+    val content = base64.decode(filterNot(Char::isWhitespace))
     val stringContent =
         String(content, Charsets.UTF_8)
             .removePrefix("-----BEGIN $marker-----\n")
             .removeSuffix("\n-----END $marker-----")
-            .replace("\n", "")
+            .filterNot(Char::isWhitespace)
     return base64.decode(stringContent)
 }

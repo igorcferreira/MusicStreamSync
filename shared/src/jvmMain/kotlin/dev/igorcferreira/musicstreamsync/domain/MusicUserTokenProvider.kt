@@ -1,5 +1,7 @@
 package dev.igorcferreira.musicstreamsync.domain
 
+import kotlin.concurrent.Volatile
+
 /**
  * JVM provider for the Apple Music **Music-User-Token**.
  *
@@ -8,10 +10,14 @@ package dev.igorcferreira.musicstreamsync.domain
  */
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class MusicUserTokenProvider(
-    var token: String?,
+    token: String?,
 ) : UserTokenProvider {
     class UserTokenNotSetException :
         IllegalStateException("No Music-User-Token was injected into this MusicUserTokenProvider")
+
+    // May be written by an HTTP handler and read by the scheduler loop on another thread.
+    @Volatile
+    var token: String? = token
 
     actual constructor() : this(null)
 

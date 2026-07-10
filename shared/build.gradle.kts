@@ -163,6 +163,7 @@ kotlin {
             dependsOn(jvmCommon)
             dependencies {
                 implementation(libs.ktor.client.okhttp)
+                implementation(libs.slf4j.api)
                 runtimeOnly(libs.jjwt.impl)
                 runtimeOnly("io.jsonwebtoken:jjwt-orgjson:${libs.versions.jjwtApi.get()}")
             }
