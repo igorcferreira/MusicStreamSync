@@ -66,14 +66,31 @@ key) to the server.
 | API docs | **Swagger mandate**: single `server/openapi.yaml`, updated in the same task as any endpoint change. |
 | Branching | `feature/kotlin-server/base` is the integration branch; each task works on `task/<n>-<short-name>` and merges via PR. |
 
+## Pre-PR review mandate
+
+After a task is finished, **before opening a PR**, start a sub-agent to behave as a
+**Senior Kotlin Developer** to review the changes made, using the task's spec file
+(`TASK_N_SPEC.md`) as reference, and give feedback, like a PR review. After the
+feedback is provided, fix the issues raised (re-running the task's validation matrix),
+then open the PR. If a PR is already open when feedback arrives, push the fixes to the
+PR branch.
+
+## Commit mandate
+
+When creating commits for the changes, create **atomic commits**, not a single commit:
+each commit is one self-contained logical change (e.g. version-catalog additions,
+module scaffold, a feature slice, its tests, Docker files, spec bookkeeping), with a
+message explaining that change. This refines the "at least one commit per task" rule
+in [AGENT.md](AGENT.md).
+
 ## Task table
 
 Status values: `pending` / `in_progress` / `in_review` (PR open) / `done` (PR merged).
 
 | ID | Title | Depends on | Status | Branch | PR | Spec |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `:shared` JVM target + actuals | — | in_review | `task/1-shared-jvm-target` | [#82](https://github.com/igorcferreira/MusicStreamSync/pull/82) | [TASK_1_SPEC.md](TASK_1_SPEC.md) |
-| 2 | lastfmapi session portability | — | pending | — | — | [TASK_2_SPEC.md](TASK_2_SPEC.md) |
+| 1 | `:shared` JVM target + actuals | — | done | `task/1-shared-jvm-target` | [#82](https://github.com/igorcferreira/MusicStreamSync/pull/82) | [TASK_1_SPEC.md](TASK_1_SPEC.md) |
+| 2 | lastfmapi session portability | — | in_review | `task/2-lastfm-session-portability` | [#83](https://github.com/igorcferreira/MusicStreamSync/pull/83) | [TASK_2_SPEC.md](TASK_2_SPEC.md) |
 | 3 | `:server` scaffold + Docker environment | — | pending | — | — | [TASK_3_SPEC.md](TASK_3_SPEC.md) |
 | 4 | Multi-user token-sync API + persistence | 2, 3 | pending | — | — | [TASK_4_SPEC.md](TASK_4_SPEC.md) |
 | 5 | Sync engine (diff + scrobble) | 1, 2 | pending | — | — | [TASK_5_SPEC.md](TASK_5_SPEC.md) |
@@ -105,3 +122,6 @@ TASK_3 ──┴► TASK_4 ─┴─────────────┘
 - 2026-07-09 — restructured into `feature/kotlin-server/base` (integration) + `feature/kotlin-server/spec` (this plan-approval branch).
 - 2026-07-09 — senior Kotlin review of PR #81 applied: fixed internal-visibility design (SyncEngine → `:shared` jvmMain, public `Configuration` path), `Session.subscriber` wire shape, `HTTPException.code` exposure, top-K prefix cursor, Arkana JDK-21 Docker constraint, token-logging/cancellation hygiene, multi-device identity caveat, Mongo field-level update semantics.
 - 2026-07-10 — TASK_1 — `task/1-shared-jvm-target` — implemented `:shared` JVM target, `jvmCommon` JWTTokenSigner, JVM actuals, public per-user `Configuration` constructor, `HTTPException.code`, `URLSession` hygiene; full validation matrix green; PR opened.
+- 2026-07-10 — TASK_1 — senior review round applied to PR #82 (clearKey whitespace parity, explicit slf4j-api, @Volatile token, Configuration/HTTPException tests); CI green; merged → done.
+- 2026-07-10 — TASK_2 — `task/2-lastfm-session-portability` — session export/import (`currentSession`, session constructor + `restoreSession`, instance-scoped via internal `InMemorySettings`), `Session.subscriber` default, now-playing-tolerant `Track`/`listLatestTracks`, `scrobble` exception hygiene; PR opened.
+- 2026-07-10 — protocol — added the pre-PR senior-Kotlin-developer sub-agent review mandate to this README; ran it on TASK_2 and applied the findings (restoreSession scoping docs, thread-safe InMemorySettings, blank-key fail-fast, evidence-grade now-playing fixture) on the PR #83 branch.
