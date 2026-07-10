@@ -72,7 +72,7 @@ Status values: `pending` / `in_progress` / `in_review` (PR open) / `done` (PR me
 
 | ID | Title | Depends on | Status | Branch | PR | Spec |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `:shared` JVM target + actuals | — | pending | — | — | [TASK_1_SPEC.md](TASK_1_SPEC.md) |
+| 1 | `:shared` JVM target + actuals | — | in_review | `task/1-shared-jvm-target` | [#82](https://github.com/igorcferreira/MusicStreamSync/pull/82) | [TASK_1_SPEC.md](TASK_1_SPEC.md) |
 | 2 | lastfmapi session portability | — | pending | — | — | [TASK_2_SPEC.md](TASK_2_SPEC.md) |
 | 3 | `:server` scaffold + Docker environment | — | pending | — | — | [TASK_3_SPEC.md](TASK_3_SPEC.md) |
 | 4 | Multi-user token-sync API + persistence | 2, 3 | pending | — | — | [TASK_4_SPEC.md](TASK_4_SPEC.md) |
@@ -104,3 +104,4 @@ TASK_3 ──┴► TASK_4 ─┴─────────────┘
 - 2026-07-09 — spec suite created (originally on `feature/kotlin_server`).
 - 2026-07-09 — restructured into `feature/kotlin-server/base` (integration) + `feature/kotlin-server/spec` (this plan-approval branch).
 - 2026-07-09 — senior Kotlin review of PR #81 applied: fixed internal-visibility design (SyncEngine → `:shared` jvmMain, public `Configuration` path), `Session.subscriber` wire shape, `HTTPException.code` exposure, top-K prefix cursor, Arkana JDK-21 Docker constraint, token-logging/cancellation hygiene, multi-device identity caveat, Mongo field-level update semantics.
+- 2026-07-10 — TASK_1 — `task/1-shared-jvm-target` — implemented `:shared` JVM target, `jvmCommon` JWTTokenSigner, JVM actuals, public per-user `Configuration` constructor, `HTTPException.code`, `URLSession` hygiene; full validation matrix green; PR opened.

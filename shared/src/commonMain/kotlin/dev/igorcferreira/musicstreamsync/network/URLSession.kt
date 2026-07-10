@@ -8,6 +8,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -69,12 +70,7 @@ internal class URLSession(
                     this.method = method
                 }
 
-            response.request.headers.forEach { string, strings ->
-                println("-H '$string: ${strings.joinToString(", ")}'")
-            }
-
             val body = response.bodyAsText()
-            print("Response: $body")
             if (!response.status.isSuccess()) {
                 throw HTTPException(response.status.value, response.status.description)
             }
@@ -86,6 +82,8 @@ internal class URLSession(
         } catch (ex: IllegalArgumentException) {
             logger.log("Error: ${ex.message}")
             throw HTTPException(HttpStatusCode.UnprocessableEntity.value, ex.message ?: "")
+        } catch (ex: CancellationException) {
+            throw ex
         } catch (ex: Exception) {
             logger.log("Error: ${ex.message}")
             throw HTTPException(505, ex.message ?: "")

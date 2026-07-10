@@ -26,6 +26,7 @@ material3 = "1.9.0"
 materialIconsExtended = "1.7.3"
 media = "1.8.0"
 multiplatformSettings = "1.3.0"
+slf4j = "2.0.17"
 swiftklib = "0.6.4"
 mokkery = "3.4.2"
 material3Android = "1.4.0"
@@ -68,6 +69,7 @@ multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-sett
 multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
 multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "multiplatformSettings" }
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
 ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
 ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-multiplatform" }

@@ -23,10 +23,16 @@ class Configuration internal constructor(
     constructor(
         developerToken: DeveloperToken,
         tokenSigner: TokenSigner,
+    ) : this(developerToken, tokenSigner, createUserTokenProvider())
+
+    constructor(
+        developerToken: DeveloperToken,
+        tokenSigner: TokenSigner,
+        userTokenProvider: UserTokenProvider,
     ) : this(
         AppleMusicAPI(
             tokenSigner = tokenSigner,
-            userTokenProvider = createUserTokenProvider(),
+            userTokenProvider = userTokenProvider,
             developerToken = developerToken,
             urlSession = URLSession(),
         ),
