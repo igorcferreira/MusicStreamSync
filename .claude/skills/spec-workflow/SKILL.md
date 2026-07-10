@@ -68,10 +68,19 @@ Must contain:
 
 Must contain:
 - Workflow: read README table → pick next `pending` task whose deps are `done` → read
-  its spec → implement only what it scopes → validate → update table + session log.
+  its spec → implement only what it scopes → validate → pre-PR review (below) → update
+  table + session log.
 - **Branch/PR mandate:** name the integration branch (the feature branch, e.g.
   `feature/<name>` — never commit task work directly to it); each task works on
   `task/<n>-<short-name>` cut from it and ends with a PR back into it.
+- **Commit discipline:** task work lands as atomic commits — one logical change per
+  commit (e.g. model, then logic, then tests/wiring) — never a single squashed commit
+  for the whole task.
+- **Pre-PR review protocol:** after a task is finished, before opening its PR, spawn a
+  sub-agent acting as a **Senior Kotlin Developer** to review the task branch's changes
+  against its `TASK_N_SPEC.md` (spec adherence, correctness, idiomatic Kotlin/KMP,
+  tests) and return PR-review-style feedback. Fix the issues it raises (repeat if the
+  fixes are substantial), then open the PR.
 - **PROGRESS.md protocol:** journal in `spec/PROGRESS.md` while working; delete before
   opening the PR (CI-enforced).
 - Project mandates that apply to every task (examples from the sync-server feature:
