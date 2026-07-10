@@ -25,6 +25,12 @@ application {
     mainClass.set("dev.igorcferreira.musicstreamsync.server.ApplicationKt")
 }
 
+// The canonical API document lives at server/openapi.yaml (spec/AGENT.md mandate);
+// package it into the jar so GET /openapi.yaml can serve it.
+tasks.processResources {
+    from(layout.projectDirectory.file("openapi.yaml"))
+}
+
 dependencies {
     implementation(project(":shared"))
     implementation(project(":lastfmapi"))

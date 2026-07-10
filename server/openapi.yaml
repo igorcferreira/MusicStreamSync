@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  title: MusicStreamSync Sync Server
+  description: |
+    HTTP API of the MusicStreamSync sync server: the native apps push per-user
+    Apple Music and Last.fm credentials to it, and a scheduled loop syncs each
+    user's Apple Music play history into Last.fm.
+
+    This is the **single** API document for the server; every task that adds or
+    changes an endpoint updates it in the same change (see spec/AGENT.md).
+  version: 0.1.0
+servers:
+  - url: http://localhost:8080
+    description: Local development (docker compose up)
+tags:
+  - name: meta
+    description: Health and documentation endpoints
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      tags: [meta]
+      summary: Service health
+      description: |
+        Liveness/readiness probe. Always returns 200 while the process is up;
+        `mongo` reflects a live ping to MongoDB and is `false` when the database
+        is unreachable (the endpoint deliberately does not switch to 503 — the
+        process itself is healthy and degradation is signaled in the payload).
+      security: []
+      responses:
+        "200":
+          description: Service is up.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+              examples:
+                healthy:
+                  value: { "status": "ok", "mongo": true }
+                degraded:
+                  summary: MongoDB unreachable
+                  value: { "status": "ok", "mongo": false }
+  /openapi.yaml:
+    get:
+      operationId: getOpenApiDocument
+      tags: [meta]
+      summary: This document
+      security: []
+      responses:
+        "200":
+          description: The OpenAPI document describing this server.
+          content:
+            application/yaml:
+              schema:
+                type: string
+components:
+  securitySchemes:
+    syncSharedSecret:
+      type: http
+      scheme: bearer
+      description: |
+        Shared-secret bearer token (the server's SYNC_SHARED_SECRET environment
+        variable). Required by every endpoint from the token API (TASK_4)
+        onwards; `/health` and `/openapi.yaml` are unauthenticated.
+  schemas:
+    Health:
+      type: object
+      required: [status, mongo]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        mongo:
+          type: boolean
+          description: Result of a live MongoDB ping.
+security:
+  - syncSharedSecret: []
