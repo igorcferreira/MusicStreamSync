@@ -38,6 +38,10 @@ swiftklib {
 }
 
 kotlin {
+    // The custom jvmCommon source set below adds manual dependsOn edges, which would
+    // otherwise disable the default hierarchy template (and with it appleMain/iosMain).
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
         all {
             languageSettings.optIn("kotlin.experimental.ExperimentalObjCRefinement")
@@ -63,6 +67,12 @@ kotlin {
         // Opt-in to enable and configure host-side (unit) tests
         withHostTest {
             isIncludeAndroidResources = true
+        }
+    }
+
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -139,6 +149,26 @@ kotlin {
         appleMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
+
+        // JVM-compatible code shared between the Android and plain-JVM targets
+        // (JWTTokenSigner and friends).
+        val jvmCommon by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                api(libs.jjwt.api)
+            }
+        }
+
+        jvmMain {
+            dependsOn(jvmCommon)
+            dependencies {
+                implementation(libs.ktor.client.okhttp)
+                runtimeOnly(libs.jjwt.impl)
+                runtimeOnly("io.jsonwebtoken:jjwt-orgjson:${libs.versions.jjwtApi.get()}")
+            }
+        }
+
+        androidMain.get().dependsOn(jvmCommon)
         androidMain.dependencies {
             implementation(libs.androidx.media)
             implementation(project(":mediaplayback"))
@@ -150,7 +180,6 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.media)
-            api(libs.jjwt.api)
             runtimeOnly(libs.jjwt.impl)
             runtimeOnly("io.jsonwebtoken:jjwt-orgjson:${libs.versions.jjwtApi.get()}") {
                 exclude(group = "org.json", module = "json") // provided by Android natively
