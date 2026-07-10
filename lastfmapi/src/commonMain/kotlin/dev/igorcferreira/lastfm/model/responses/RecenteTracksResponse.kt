@@ -12,6 +12,7 @@ internal data class RecenteTracksResponse(
         val track: List<Track>,
     )
 
+    /** All entries as returned by Last.fm, including the `@attr nowplaying` one. */
     val tracks: List<Track>
         get() = recenttracks.track
 

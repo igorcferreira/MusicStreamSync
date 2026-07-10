@@ -6,6 +6,7 @@ import dev.igorcferreira.lastfm.network.authentication.KeyHasher
 import dev.igorcferreira.lastfm.storage.InMemorySettings
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -83,10 +84,19 @@ class LastFMClientSessionTests {
     }
 
     @Test
-    fun testCurrentSessionIsNullForBlankKey() {
-        val client = LastFMClient("api-key", "api-secret", Session(name = "igor", key = ""))
+    fun testImportRejectsBlankSessionKey() {
+        assertFailsWith<IllegalArgumentException> {
+            LastFMClient("api-key", "api-secret", Session(name = "igor", key = ""))
+        }
+    }
 
-        assertNull(client.currentSession)
-        assertFalse(client.isAuthenticated)
+    @Test
+    fun testRestoreSessionRejectsBlankSessionKey() {
+        val client = LastFMClient("api-key", "api-secret", Session(name = "igor", key = "valid-key"))
+
+        assertFailsWith<IllegalArgumentException> {
+            client.restoreSession(Session(name = "igor", key = ""))
+        }
+        assertEquals("valid-key", client.currentSession?.key)
     }
 }

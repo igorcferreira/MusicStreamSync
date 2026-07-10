@@ -25,8 +25,10 @@ class RecentTracksResponseTests {
     }
 
     companion object {
-        // user.getRecentTracks while the user is mid-listen: the first entry is the
-        // currently-playing track (`@attr nowplaying`) and carries no `date`.
+        // user.getRecentTracks while the user is mid-listen, matching the real wire
+        // shape: the first entry is the currently-playing track (`@attr nowplaying`)
+        // and carries no `date`; `uts` values arrive as JSON strings, and entries
+        // carry extra fields (`mbid`, `url`, `image`, `streamable`, `date.#text`).
         private val FIXTURE =
             """
             {
@@ -34,21 +36,33 @@ class RecentTracksResponseTests {
                 "track": [
                   {
                     "name": "Song C",
-                    "artist": { "#text": "Artist" },
-                    "album": { "#text": "Album" },
+                    "artist": { "mbid": "", "#text": "Artist" },
+                    "album": { "mbid": "", "#text": "Album" },
+                    "mbid": "",
+                    "url": "https://www.last.fm/music/Artist/_/Song+C",
+                    "image": [{ "size": "small", "#text": "" }],
+                    "streamable": "0",
                     "@attr": { "nowplaying": "true" }
                   },
                   {
                     "name": "Song B",
-                    "artist": { "#text": "Artist" },
-                    "album": { "#text": "Album" },
-                    "date": { "uts": 1751980000 }
+                    "artist": { "mbid": "", "#text": "Artist" },
+                    "album": { "mbid": "", "#text": "Album" },
+                    "mbid": "",
+                    "url": "https://www.last.fm/music/Artist/_/Song+B",
+                    "image": [{ "size": "small", "#text": "" }],
+                    "streamable": "0",
+                    "date": { "uts": "1751980000", "#text": "08 Jul 2026, 13:06" }
                   },
                   {
                     "name": "Song A",
-                    "artist": { "#text": "Artist" },
-                    "album": { "#text": "Album" },
-                    "date": { "uts": 1751970000 }
+                    "artist": { "mbid": "", "#text": "Artist" },
+                    "album": { "mbid": "", "#text": "Album" },
+                    "mbid": "",
+                    "url": "https://www.last.fm/music/Artist/_/Song+A",
+                    "image": [{ "size": "small", "#text": "" }],
+                    "streamable": "0",
+                    "date": { "uts": "1751970000", "#text": "08 Jul 2026, 10:20" }
                   }
                 ]
               }

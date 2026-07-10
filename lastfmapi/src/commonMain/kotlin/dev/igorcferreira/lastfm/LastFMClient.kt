@@ -20,6 +20,11 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
+private fun Session.requireUsable(): Session {
+    require(key.isNotBlank()) { "Session key must not be blank" }
+    return this
+}
+
 internal var Settings.session: Session?
     get() = decodeValueOrNull(Session.serializer(), API.SESSION_KEY)
     set(value) =
@@ -37,10 +42,12 @@ internal var Settings.session: Session?
  * `LastFMClient(apiKey, secret, session)` (or [restoreSession]) and is authenticated
  * without ever seeing the user's password.
  *
- * Imported sessions are **instance-scoped**: the session constructor backs the client
- * with its own in-memory storage, so a multi-user server can hold one client per user
- * in one process without the sessions colliding. The two-argument constructor keeps the
- * existing mobile behavior (process-global [Settings] persistence).
+ * Sessions imported through the **session constructor** are **instance-scoped**: the
+ * client is backed by its own in-memory storage, so a multi-user server can hold one
+ * client per user in one process without the sessions colliding. The two-argument
+ * constructor keeps the existing mobile behavior (process-global [Settings]
+ * persistence) — a multi-user server must therefore always use the session
+ * constructor; [restoreSession] alone does not re-scope a client (see its docs).
  */
 @Suppress("unused")
 class LastFMClient internal constructor(
@@ -65,19 +72,30 @@ class LastFMClient internal constructor(
      * Builds a client already authenticated with a [session] exported elsewhere
      * (see [currentSession]). The session is instance-scoped: it is held in in-memory
      * storage owned by this client and is not persisted.
+     *
+     * @throws IllegalArgumentException when [session] has a blank key.
      */
     constructor(apiKey: String, secret: String, session: Session) : this(
         apiKey,
         secret,
-        InMemorySettings().apply { this.session = session },
+        InMemorySettings().apply { this.session = session.requireUsable() },
     )
 
     /**
      * Replaces the stored session with a [session] exported elsewhere. Subsequent calls
      * sign with the imported key exactly as if [authenticate] had run locally.
+     *
+     * The session lands in **whatever storage backs this client**: instance-scoped
+     * in-memory storage for clients built with the session constructor, the
+     * process-global persistent [Settings] for clients built with the two-argument
+     * constructor. Never use this to multiplex users over two-argument clients — those
+     * all share one storage and the sessions would overwrite each other; a multi-user
+     * server must build one client per user via the session constructor.
+     *
+     * @throws IllegalArgumentException when [session] has a blank key.
      */
     fun restoreSession(session: Session) {
-        settings.session = session
+        settings.session = session.requireUsable()
     }
 
     fun logout() = settings.clear()

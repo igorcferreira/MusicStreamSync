@@ -1,110 +1,113 @@
 package dev.igorcferreira.lastfm.storage
 
 import com.russhwolf.settings.Settings
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * Trivial map-backed [Settings], used to keep an imported [dev.igorcferreira.lastfm.model.Session]
  * scoped to a single [dev.igorcferreira.lastfm.LastFMClient] instance instead of the
- * process-global no-arg [Settings]. Not persisted and not thread-safe beyond the
- * import-once/read-many pattern the client uses.
+ * process-global no-arg [Settings]. Not persisted.
+ *
+ * Individual reads and writes are thread-safe (copy-on-write over an atomic map
+ * reference), so concurrent readers never observe a corrupted map. Multi-key values —
+ * a serialized session spans several keys — are still not replaced atomically as a
+ * group: callers that swap sessions while requests are in flight (e.g. a token-refresh
+ * endpoint) should serialize those updates per client.
  */
+@OptIn(ExperimentalAtomicApi::class)
 internal class InMemorySettings : Settings {
-    private val storage = mutableMapOf<String, Any>()
+    private val storage = AtomicReference<Map<String, Any>>(emptyMap())
 
-    override val keys: Set<String>
-        get() = storage.keys.toSet()
-    override val size: Int
-        get() = storage.size
-
-    override fun clear() = storage.clear()
-
-    override fun remove(key: String) {
-        storage.remove(key)
+    private fun mutate(transform: (Map<String, Any>) -> Map<String, Any>) {
+        while (true) {
+            val current = storage.load()
+            if (storage.compareAndSet(current, transform(current))) {
+                return
+            }
+        }
     }
 
-    override fun hasKey(key: String): Boolean = storage.containsKey(key)
+    override val keys: Set<String>
+        get() = storage.load().keys
+    override val size: Int
+        get() = storage.load().size
+
+    override fun clear() = mutate { emptyMap() }
+
+    override fun remove(key: String) = mutate { it - key }
+
+    override fun hasKey(key: String): Boolean = storage.load().containsKey(key)
 
     override fun putInt(
         key: String,
         value: Int,
-    ) {
-        storage[key] = value
-    }
+    ) = mutate { it + (key to value) }
 
     override fun getInt(
         key: String,
         defaultValue: Int,
     ): Int = getIntOrNull(key) ?: defaultValue
 
-    override fun getIntOrNull(key: String): Int? = storage[key] as? Int
+    override fun getIntOrNull(key: String): Int? = storage.load()[key] as? Int
 
     override fun putLong(
         key: String,
         value: Long,
-    ) {
-        storage[key] = value
-    }
+    ) = mutate { it + (key to value) }
 
     override fun getLong(
         key: String,
         defaultValue: Long,
     ): Long = getLongOrNull(key) ?: defaultValue
 
-    override fun getLongOrNull(key: String): Long? = storage[key] as? Long
+    override fun getLongOrNull(key: String): Long? = storage.load()[key] as? Long
 
     override fun putString(
         key: String,
         value: String,
-    ) {
-        storage[key] = value
-    }
+    ) = mutate { it + (key to value) }
 
     override fun getString(
         key: String,
         defaultValue: String,
     ): String = getStringOrNull(key) ?: defaultValue
 
-    override fun getStringOrNull(key: String): String? = storage[key] as? String
+    override fun getStringOrNull(key: String): String? = storage.load()[key] as? String
 
     override fun putFloat(
         key: String,
         value: Float,
-    ) {
-        storage[key] = value
-    }
+    ) = mutate { it + (key to value) }
 
     override fun getFloat(
         key: String,
         defaultValue: Float,
     ): Float = getFloatOrNull(key) ?: defaultValue
 
-    override fun getFloatOrNull(key: String): Float? = storage[key] as? Float
+    override fun getFloatOrNull(key: String): Float? = storage.load()[key] as? Float
 
     override fun putDouble(
         key: String,
         value: Double,
-    ) {
-        storage[key] = value
-    }
+    ) = mutate { it + (key to value) }
 
     override fun getDouble(
         key: String,
         defaultValue: Double,
     ): Double = getDoubleOrNull(key) ?: defaultValue
 
-    override fun getDoubleOrNull(key: String): Double? = storage[key] as? Double
+    override fun getDoubleOrNull(key: String): Double? = storage.load()[key] as? Double
 
     override fun putBoolean(
         key: String,
         value: Boolean,
-    ) {
-        storage[key] = value
-    }
+    ) = mutate { it + (key to value) }
 
     override fun getBoolean(
         key: String,
         defaultValue: Boolean,
     ): Boolean = getBooleanOrNull(key) ?: defaultValue
 
-    override fun getBooleanOrNull(key: String): Boolean? = storage[key] as? Boolean
+    override fun getBooleanOrNull(key: String): Boolean? = storage.load()[key] as? Boolean
 }
