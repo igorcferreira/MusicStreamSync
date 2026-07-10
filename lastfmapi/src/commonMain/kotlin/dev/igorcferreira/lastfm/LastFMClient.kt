@@ -14,6 +14,7 @@ import dev.igorcferreira.lastfm.model.responses.ScrobbleResponse
 import dev.igorcferreira.lastfm.model.responses.SessionResponse
 import dev.igorcferreira.lastfm.network.API
 import dev.igorcferreira.lastfm.network.authentication.KeyHasher
+import dev.igorcferreira.lastfm.storage.InMemorySettings
 import io.ktor.http.HttpStatusCode
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.ExperimentalTime
@@ -28,6 +29,19 @@ internal var Settings.session: Session?
             encodeValue(Session.serializer(), API.SESSION_KEY, value)
         }
 
+/**
+ * Client for the Last.fm API.
+ *
+ * Sessions are portable: a client that ran [authenticate] on-device can export its
+ * session via [currentSession]; another process restores it with
+ * `LastFMClient(apiKey, secret, session)` (or [restoreSession]) and is authenticated
+ * without ever seeing the user's password.
+ *
+ * Imported sessions are **instance-scoped**: the session constructor backs the client
+ * with its own in-memory storage, so a multi-user server can hold one client per user
+ * in one process without the sessions colliding. The two-argument constructor keeps the
+ * existing mobile behavior (process-global [Settings] persistence).
+ */
 @Suppress("unused")
 class LastFMClient internal constructor(
     apiKey: String,
@@ -41,7 +55,30 @@ class LastFMClient internal constructor(
             return session.key.isNotBlank()
         }
 
+    /** The stored [Session], or `null` when not authenticated. */
+    val currentSession: Session?
+        get() = settings.session?.takeIf { it.key.isNotBlank() }
+
     constructor(apiKey: String, secret: String) : this(apiKey, secret, Settings())
+
+    /**
+     * Builds a client already authenticated with a [session] exported elsewhere
+     * (see [currentSession]). The session is instance-scoped: it is held in in-memory
+     * storage owned by this client and is not persisted.
+     */
+    constructor(apiKey: String, secret: String, session: Session) : this(
+        apiKey,
+        secret,
+        InMemorySettings().apply { this.session = session },
+    )
+
+    /**
+     * Replaces the stored session with a [session] exported elsewhere. Subsequent calls
+     * sign with the imported key exactly as if [authenticate] had run locally.
+     */
+    fun restoreSession(session: Session) {
+        settings.session = session
+    }
 
     fun logout() = settings.clear()
 
@@ -80,7 +117,7 @@ class LastFMClient internal constructor(
                     ),
                 ),
             )
-        return response.tracks
+        return response.scrobbledTracks
     }
 
     @Throws(HTTPException::class, CancellationException::class)
@@ -100,6 +137,10 @@ class LastFMClient internal constructor(
 
             val response: ScrobbleResponse = api.post("track.scrobble", parameters)
             return response.scrobble
+        } catch (ex: CancellationException) {
+            throw ex
+        } catch (ex: HTTPException) {
+            throw ex
         } catch (ex: Exception) {
             throw HTTPException(HttpStatusCode.InternalServerError, ex.message ?: "")
         }

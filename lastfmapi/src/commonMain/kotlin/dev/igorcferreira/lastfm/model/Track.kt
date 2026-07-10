@@ -10,11 +10,12 @@ import kotlin.time.Instant
 data class Track(
     val name: String,
     val artist: CorrectableText,
-    @SerialName("date") val uts: TrackDate,
+    // Absent on the currently-playing entry of user.getRecentTracks (`@attr nowplaying`).
+    @SerialName("date") val uts: TrackDate? = null,
     val album: CorrectableText? = null,
 ) {
-    val date: Instant
-        get() = Instant.fromEpochSeconds(uts.uts)
+    val date: Instant?
+        get() = uts?.let { Instant.fromEpochSeconds(it.uts) }
 
     @Serializable
     data class TrackDate(
