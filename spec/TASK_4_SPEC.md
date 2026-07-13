@@ -1,6 +1,6 @@
 # TASK_4 — Multi-user token-sync API + MongoDB persistence
 
-Branch: `task/4-token-sync-api` · Depends on: TASK_2, TASK_3 · Protocol: [AGENT.md](AGENT.md)
+Branch: `task/4-token-sync-api` · Depends on: TASK_2, TASK_3, TASK_10 · Protocol: [AGENT.md](AGENT.md)
 
 ## Goal
 
@@ -10,7 +10,9 @@ MongoDB. This API is the contract TASK_7 (shared client use case) consumes.
 
 ## Context
 
-- Server scaffold, Mongo client, env config, and `server/openapi.yaml` exist (TASK_3).
+- Server scaffold, Mongo client, and env config exist (TASK_3). OpenAPI generation from
+  the route definitions is in place (TASK_10): document these endpoints **in code**, not
+  by hand-editing `server/openapi.yaml`, and regenerate the snapshot.
 - `Session` is `@Serializable` with `name`, `key`, and `subscriber` (defaulted to 0 by
   TASK_2 — the wire shape documented there is authoritative) and importable into a
   `LastFMClient` (TASK_2).
@@ -70,12 +72,11 @@ MongoDB. This API is the contract TASK_7 (shared client use case) consumes.
 4. **Validation/errors:** malformed bodies → 400 with a JSON error shape (define it once
    in `openapi.yaml` and reuse); secrets never logged; Music-User-Token only ever logged
    as its hash.
-5. **OpenAPI:** `server/openapi.yaml` updated with the three paths, request/response
-   schemas (reuse the `Session` shape), the bearer scheme, and error responses. Task is
-   not done until the document matches the routes.
-   > Note: TASK_10 later regenerates this document from the route definitions. Keep the
-   > hand-written entries complete and accurate (schemas, examples, error responses) so
-   > that migration is a faithful snapshot.
+5. **OpenAPI (documented in code, per TASK_10):** annotate the three routes with their
+   OpenAPI documentation — request/response schemas (reuse the `Session` shape), the
+   bearer scheme, error responses, and examples — meeting TASK_10's completeness bar, and
+   regenerate `server/openapi.yaml` so the drift guard passes. Do **not** hand-edit the
+   YAML. Task is not done until the generated document matches the routes.
 6. **Tests:** Ktor `testApplication` route tests against an in-memory `UserStore` fake
    (interface + fake) for auth, happy paths, 400/401/404; plus `UserStore` integration
    tests against a real Mongo (Testcontainers, or the compose `mongodb` service with a

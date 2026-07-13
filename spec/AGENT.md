@@ -60,7 +60,8 @@ The generated document must be as complete as possible — every operation descr
 examples.
 
 - Any task that adds or changes an endpoint documents it **in the same task** — on the
-  route (once TASK_10 has landed) or, until then, by hand-editing `server/openapi.yaml`.
+  route, using the TASK_10 generation setup (which lands before the token API). TASK_3's
+  initial document predates TASK_10 and is hand-written; TASK_10 migrates it.
 - A task touching the HTTP surface is not `done` until the served document matches the
   implemented API (paths, schemas, auth scheme, error responses) and — after TASK_10 —
   the checked-in snapshot has been regenerated.
