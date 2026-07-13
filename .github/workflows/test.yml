@@ -24,94 +24,150 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Decide whether the PR touches anything that needs building/testing. Docs-only
+  # changes (Markdown, spec/, docs/) and CI/workflow-only changes (.github/) do not.
+  #
+  # swiftlint / ktlint / android-lint / tests are REQUIRED checks on `main`, so they
+  # must always report a status — a skipped *job* would leave the check pending and
+  # block the PR. They therefore always run (keeping their names), but do their real
+  # work only when code changed, and drop to a cheap runner otherwise. The net effect:
+  # a docs-only PR gets four green checks in seconds instead of a full build matrix.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - name: Detect non-doc changes
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          files=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" \
+            --paginate --jq '.[].filename')
+          echo "Changed files:"
+          printf '%s\n' "$files"
+          # Paths that never need the build/test/lint matrix (docs, spec, CI config).
+          doc='(^spec/)|(^docs/)|(^\.github/)|(\.md$)|(^LICENSE$)'
+          non_doc=$(printf '%s\n' "$files" | grep -vE "$doc" || true)
+          if [ -n "$non_doc" ]; then code=true; else code=false; fi
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "Detected code=$code"
+
   swiftlint:
-    runs-on: macos-26
+    needs: changes
+    runs-on: ${{ needs.changes.outputs.code == 'true' && 'macos-26' || 'ubuntu-latest' }}
     steps:
       - name: Checkout repository
+        if: needs.changes.outputs.code == 'true'
         uses: actions/checkout@v6
       - name: Install SwiftLint
+        if: needs.changes.outputs.code == 'true'
         run: brew install swiftlint
       - name: Lint Swift
+        if: needs.changes.outputs.code == 'true'
         run: swiftlint lint --config .swiftlint.yml --reporter github-actions-logging
 
   ktlint:
-    runs-on: macos-26
+    needs: changes
+    runs-on: ${{ needs.changes.outputs.code == 'true' && 'macos-26' || 'ubuntu-latest' }}
     steps:
       - name: Checkout repository
+        if: needs.changes.outputs.code == 'true'
         uses: actions/checkout@v6
       - name: Cache Ruby gems
+        if: needs.changes.outputs.code == 'true'
         uses: actions/cache@v5
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
       - name: Generate Arkana module
+        if: needs.changes.outputs.code == 'true'
         run: |
           bundle config set --local path 'vendor/bundle'
           bundle install
           bundle exec arkana -l kotlin
       - uses: actions/setup-java@v5
+        if: needs.changes.outputs.code == 'true'
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: gradle
       - name: Setup Gradle
+        if: needs.changes.outputs.code == 'true'
         uses: gradle/actions/setup-gradle@v5
       - name: Lint Kotlin
+        if: needs.changes.outputs.code == 'true'
         run: ./gradlew ktlintCheck
 
   android-lint:
-    runs-on: macos-26
+    needs: changes
+    runs-on: ${{ needs.changes.outputs.code == 'true' && 'macos-26' || 'ubuntu-latest' }}
     steps:
       - name: Checkout repository
+        if: needs.changes.outputs.code == 'true'
         uses: actions/checkout@v6
       - name: Cache Ruby gems
+        if: needs.changes.outputs.code == 'true'
         uses: actions/cache@v5
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
       - name: Generate Arkana module
+        if: needs.changes.outputs.code == 'true'
         run: |
           bundle config set --local path 'vendor/bundle'
           bundle install
           bundle exec arkana -l kotlin
       - uses: actions/setup-java@v5
+        if: needs.changes.outputs.code == 'true'
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: gradle
       - name: Setup Gradle
+        if: needs.changes.outputs.code == 'true'
         uses: gradle/actions/setup-gradle@v5
       - name: Lint Android
+        if: needs.changes.outputs.code == 'true'
         run: ./gradlew lint
 
   tests:
-    runs-on: macos-26
+    needs: changes
+    runs-on: ${{ needs.changes.outputs.code == 'true' && 'macos-26' || 'ubuntu-latest' }}
     steps:
       - name: Checkout repository
+        if: needs.changes.outputs.code == 'true'
         uses: actions/checkout@v6
       - name: Cache Ruby gems
+        if: needs.changes.outputs.code == 'true'
         uses: actions/cache@v5
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
       - name: Generate Arkana module
+        if: needs.changes.outputs.code == 'true'
         run: |
           bundle config set --local path 'vendor/bundle'
           bundle install
           bundle exec arkana -l kotlin
       - uses: actions/setup-java@v5
+        if: needs.changes.outputs.code == 'true'
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: gradle
       - name: Setup Gradle
+        if: needs.changes.outputs.code == 'true'
         uses: gradle/actions/setup-gradle@v5
       - name: Run tests
+        if: needs.changes.outputs.code == 'true'
         run: ./gradlew testAndroid iosSimulatorArm64Test :lastfmapi:jvmTest :server:test
       - name: Publish Test Report
+        if: needs.changes.outputs.code == 'true'
         uses: actions/upload-artifact@v6
         with:
           name: test-results
@@ -120,8 +176,8 @@ jobs:
             ./lastfmapi/build/test-results
             ./server/build/test-results
       - name: Annotate Test Report
+        if: needs.changes.outputs.code == 'true' && (success() || failure())
         uses: mikepenz/action-junit-report@v6
-        if: success() || failure()
         with:
           report_paths: '**/build/test-results/**/TEST-*.xml'
           comment: 'true'
