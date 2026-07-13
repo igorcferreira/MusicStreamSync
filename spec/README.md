@@ -91,7 +91,7 @@ Status values: `pending` / `in_progress` / `in_review` (PR open) / `done` (PR me
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `:shared` JVM target + actuals | — | done | `task/1-shared-jvm-target` | [#82](https://github.com/igorcferreira/MusicStreamSync/pull/82) | [TASK_1_SPEC.md](TASK_1_SPEC.md) |
 | 2 | lastfmapi session portability | — | done | `task/2-lastfm-session-portability` | [#83](https://github.com/igorcferreira/MusicStreamSync/pull/83) | [TASK_2_SPEC.md](TASK_2_SPEC.md) |
-| 3 | `:server` scaffold + Docker environment | — | in_review | `task/3-server-scaffold` | — | [TASK_3_SPEC.md](TASK_3_SPEC.md) |
+| 3 | `:server` scaffold + Docker environment | — | in_review | `task/3-server-scaffold` | [#84](https://github.com/igorcferreira/MusicStreamSync/pull/84) | [TASK_3_SPEC.md](TASK_3_SPEC.md) |
 | 4 | Multi-user token-sync API + persistence | 2, 3 | pending | — | — | [TASK_4_SPEC.md](TASK_4_SPEC.md) |
 | 5 | Sync engine (diff + scrobble) | 1, 2 | pending | — | — | [TASK_5_SPEC.md](TASK_5_SPEC.md) |
 | 6 | Scheduler loop + wiring | 4, 5 | pending | — | — | [TASK_6_SPEC.md](TASK_6_SPEC.md) |
