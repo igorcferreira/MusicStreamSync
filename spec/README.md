@@ -90,8 +90,8 @@ Status values: `pending` / `in_progress` / `in_review` (PR open) / `done` (PR me
 | ID | Title | Depends on | Status | Branch | PR | Spec |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `:shared` JVM target + actuals | — | done | `task/1-shared-jvm-target` | [#82](https://github.com/igorcferreira/MusicStreamSync/pull/82) | [TASK_1_SPEC.md](TASK_1_SPEC.md) |
-| 2 | lastfmapi session portability | — | in_review | `task/2-lastfm-session-portability` | [#83](https://github.com/igorcferreira/MusicStreamSync/pull/83) | [TASK_2_SPEC.md](TASK_2_SPEC.md) |
-| 3 | `:server` scaffold + Docker environment | — | pending | — | — | [TASK_3_SPEC.md](TASK_3_SPEC.md) |
+| 2 | lastfmapi session portability | — | done | `task/2-lastfm-session-portability` | [#83](https://github.com/igorcferreira/MusicStreamSync/pull/83) | [TASK_2_SPEC.md](TASK_2_SPEC.md) |
+| 3 | `:server` scaffold + Docker environment | — | in_review | `task/3-server-scaffold` | [#84](https://github.com/igorcferreira/MusicStreamSync/pull/84) | [TASK_3_SPEC.md](TASK_3_SPEC.md) |
 | 4 | Multi-user token-sync API + persistence | 2, 3 | pending | — | — | [TASK_4_SPEC.md](TASK_4_SPEC.md) |
 | 5 | Sync engine (diff + scrobble) | 1, 2 | pending | — | — | [TASK_5_SPEC.md](TASK_5_SPEC.md) |
 | 6 | Scheduler loop + wiring | 4, 5 | pending | — | — | [TASK_6_SPEC.md](TASK_6_SPEC.md) |
@@ -125,3 +125,5 @@ TASK_3 ──┴► TASK_4 ─┴─────────────┘
 - 2026-07-10 — TASK_1 — senior review round applied to PR #82 (clearKey whitespace parity, explicit slf4j-api, @Volatile token, Configuration/HTTPException tests); CI green; merged → done.
 - 2026-07-10 — TASK_2 — `task/2-lastfm-session-portability` — session export/import (`currentSession`, session constructor + `restoreSession`, instance-scoped via internal `InMemorySettings`), `Session.subscriber` default, now-playing-tolerant `Track`/`listLatestTracks`, `scrobble` exception hygiene; PR opened.
 - 2026-07-10 — protocol — added the pre-PR senior-Kotlin-developer sub-agent review mandate to this README; ran it on TASK_2 and applied the findings (restoreSession scoping docs, thread-safe InMemorySettings, blank-key fail-fast, evidence-grade now-playing fixture) on the PR #83 branch.
+- 2026-07-10 — TASK_2 — merged → done; also added the atomic-commit mandate to this README.
+- 2026-07-10 — TASK_3 — `task/3-server-scaffold` — scaffolded the `:server` Ktor/JVM module (env `ServerConfig`, MongoDB coroutine client, DI `DatabasePinger`, `GET /health`), the single `server/openapi.yaml` served at `GET /openapi.yaml`, `:server:test` suites, and the Docker environment (multi-stage JDK21 build + JRE21 runtime, `docker-compose.yml`); `docker compose up` smoke passed. Extended CI (`test.yml`) to run the lastfmapi + server JVM tests. Rebased onto merged base; atomic commits; PR opened.
