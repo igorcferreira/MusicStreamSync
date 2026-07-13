@@ -63,7 +63,7 @@ key) to the server.
 | Last.fm auth | **Apps push the session key** (apps authenticate on-device via `LastFMClient`, export the `Session`, upload it). No Last.fm credentials on the server. |
 | Persistence | **MongoDB** (docker-compose service, official Kotlin coroutine driver): per-user token, session, sync cursor, sync-run log. |
 | Environment | **Docker mandate**: dev and deploy via `Dockerfile` + `docker-compose.yml` (server + mongodb). |
-| API docs | **Swagger mandate**: single `server/openapi.yaml`, updated in the same task as any endpoint change. |
+| API docs | **OpenAPI generation mandate**: a single `server/openapi.yaml` served at `GET /openapi.yaml`, **generated from the code's route definitions** (code is the source of truth; summaries, schemas, and examples live on the routes) with a CI drift check on the checked-in snapshot. Realized by TASK_10; until then, tasks hand-edit the file in the same task as any endpoint change. |
 | Branching | `feature/kotlin-server/base` is the integration branch; each task works on `task/<n>-<short-name>` and merges via PR. |
 
 ## Pre-PR review mandate
@@ -98,6 +98,7 @@ Status values: `pending` / `in_progress` / `in_review` (PR open) / `done` (PR me
 | 7 | Shared push use case (`ServerSyncUseCase`) | 1, 2, 4 | pending | — | — | [TASK_7_SPEC.md](TASK_7_SPEC.md) |
 | 8 | Android app integration | 7 | pending | — | — | [TASK_8_SPEC.md](TASK_8_SPEC.md) |
 | 9 | iOS app integration | 7 | pending | — | — | [TASK_9_SPEC.md](TASK_9_SPEC.md) |
+| 10 | Generate `openapi.yaml` from code | 3, 4 | pending | — | — | [TASK_10_SPEC.md](TASK_10_SPEC.md) |
 
 ### Dependency graph / parallelism
 
@@ -112,7 +113,8 @@ TASK_3 ──┴► TASK_4 ─┴─────────────┘
 
 - Wave 1 (parallel): TASK_1 ∥ TASK_2 ∥ TASK_3
 - Wave 2 (parallel): TASK_4 (needs 2+3) ∥ TASK_5 (needs 1+2)
-- Wave 3: TASK_6 (needs 4+5) ∥ TASK_7 (needs 1+2+4)
+- Wave 3: TASK_6 (needs 4+5) ∥ TASK_7 (needs 1+2+4) ∥ TASK_10 (needs 3+4 — generate
+  `openapi.yaml` from code once the full HTTP surface exists)
 - Wave 4 (parallel): TASK_8 ∥ TASK_9 (need 7)
 
 ## Session log
@@ -127,3 +129,4 @@ TASK_3 ──┴► TASK_4 ─┴─────────────┘
 - 2026-07-10 — protocol — added the pre-PR senior-Kotlin-developer sub-agent review mandate to this README; ran it on TASK_2 and applied the findings (restoreSession scoping docs, thread-safe InMemorySettings, blank-key fail-fast, evidence-grade now-playing fixture) on the PR #83 branch.
 - 2026-07-10 — TASK_2 — merged → done; also added the atomic-commit mandate to this README.
 - 2026-07-10 — TASK_3 — `task/3-server-scaffold` — scaffolded the `:server` Ktor/JVM module (env `ServerConfig`, MongoDB coroutine client, DI `DatabasePinger`, `GET /health`), the single `server/openapi.yaml` served at `GET /openapi.yaml`, `:server:test` suites, and the Docker environment (multi-stage JDK21 build + JRE21 runtime, `docker-compose.yml`); `docker compose up` smoke passed. Extended CI (`test.yml`) to run the lastfmapi + server JVM tests. Rebased onto merged base; atomic commits; PR opened.
+- 2026-07-10 — spec — added the OpenAPI-generation goal: `server/openapi.yaml` will be generated from the code's route definitions (new TASK_10, needs 3+4), reworked the API-docs mandate (AGENT.md) and the decisions record accordingly.

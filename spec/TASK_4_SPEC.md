@@ -73,6 +73,9 @@ MongoDB. This API is the contract TASK_7 (shared client use case) consumes.
 5. **OpenAPI:** `server/openapi.yaml` updated with the three paths, request/response
    schemas (reuse the `Session` shape), the bearer scheme, and error responses. Task is
    not done until the document matches the routes.
+   > Note: TASK_10 later regenerates this document from the route definitions. Keep the
+   > hand-written entries complete and accurate (schemas, examples, error responses) so
+   > that migration is a faithful snapshot.
 6. **Tests:** Ktor `testApplication` route tests against an in-memory `UserStore` fake
    (interface + fake) for auth, happy paths, 400/401/404; plus `UserStore` integration
    tests against a real Mongo (Testcontainers, or the compose `mongodb` service with a

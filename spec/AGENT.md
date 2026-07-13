@@ -49,13 +49,21 @@ is **branch-local scratch state**:
 ## API documentation mandate (Swagger/OpenAPI)
 
 Every HTTP API created for consumption by the native apps MUST be documented in the
-single Swagger document **`server/openapi.yaml`** (created by TASK_3, served by the
-server at `GET /openapi.yaml`).
+single Swagger document **`server/openapi.yaml`**, served by the server at
+`GET /openapi.yaml`.
 
-- Any task that adds or changes an endpoint updates `server/openapi.yaml` **in the same
-  task**.
-- A task touching the HTTP surface is not `done` until the document matches the
-  implemented API (paths, schemas, auth scheme, error responses).
+**Target end-state (TASK_10): the document is _generated from the code's route
+definitions_**, so the code is the single source of truth. The documentation
+(summaries, schemas, examples, error responses, security) lives on the routes, and the
+checked-in `server/openapi.yaml` is a generated snapshot that CI verifies stays in sync.
+The generated document must be as complete as possible — every operation described, with
+examples.
+
+- Any task that adds or changes an endpoint documents it **in the same task** — on the
+  route (once TASK_10 has landed) or, until then, by hand-editing `server/openapi.yaml`.
+- A task touching the HTTP surface is not `done` until the served document matches the
+  implemented API (paths, schemas, auth scheme, error responses) and — after TASK_10 —
+  the checked-in snapshot has been regenerated.
 
 ## Docker mandate
 
