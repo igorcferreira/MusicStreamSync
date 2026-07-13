@@ -23,6 +23,9 @@ fun main() {
     val client = MongoClient.create(connection)
     val database = client.getDatabase(connection.database ?: ServerConfig.DEFAULT_DATABASE_NAME)
 
+    // Release the driver's connection pool on SIGTERM (docker stop) / JVM exit.
+    Runtime.getRuntime().addShutdownHook(Thread(client::close))
+
     embeddedServer(Netty, port = config.port) {
         module(MongoDatabasePinger(database))
     }.start(wait = true)
