@@ -1,0 +1,24 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      MONGODB_URI: mongodb://mongodb:27017/musicstreamsync
+      # No compose-level default: the server itself fails fast with a clear
+      # message when the secret is blank (ServerConfig.fromEnvironment).
+      SYNC_SHARED_SECRET: ${SYNC_SHARED_SECRET:-}
+      SYNC_INTERVAL_MINUTES: ${SYNC_INTERVAL_MINUTES:-5}
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:8
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:

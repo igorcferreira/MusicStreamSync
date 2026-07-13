@@ -1,0 +1,15 @@
+.git
+.gradle
+.kotlin
+.idea
+.fleet
+.DS_Store
+**/build
+arkana/
+iosApp/
+package/
+docs/
+kotlin-js-store/
+local.properties
+captures
+xcuserdata
