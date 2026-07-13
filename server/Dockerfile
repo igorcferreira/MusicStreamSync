@@ -41,6 +41,11 @@ RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon :server:instal
 # ---------------------------------------------------------------------------
 FROM eclipse-temurin:21-jre AS runtime
 
+# curl backs the compose healthcheck (GET /health).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN useradd --system --home /app --shell /usr/sbin/nologin appuser
 WORKDIR /app
 COPY --from=build /app/server/build/install/server/ /app/

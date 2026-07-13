@@ -20,10 +20,14 @@ tested, and deployed **with Docker** (see the Docker mandate in
 # One-time: Arkana needs the secrets env file at the repo root
 cp .env.sample .env   # then fill in the values, and add SYNC_SHARED_SECRET=<secret>
 
-docker compose up --build
+docker compose up --build --wait       # --wait blocks until healthchecks pass
 curl -fsS localhost:8080/health        # {"status":"ok","mongo":true}
 curl -fsS localhost:8080/openapi.yaml  # the API document
 ```
+
+Both services declare healthchecks and `server` waits for `mongodb` to become
+healthy (`depends_on: condition: service_healthy`), so `--wait` returns only once
+`/health` is actually answering.
 
 `docker compose` starts two services: `server` (built from
 [`server/Dockerfile`](Dockerfile)) and `mongodb` (official image, named volume for
