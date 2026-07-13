@@ -21,6 +21,7 @@ data class ServerConfig(
         const val DEFAULT_MONGODB_URI = "mongodb://mongodb:27017/musicstreamsync"
         const val DEFAULT_SYNC_INTERVAL_MINUTES = 5
         const val DEFAULT_DATABASE_NAME = "musicstreamsync"
+        private const val MAX_PORT = 65535
 
         fun fromEnvironment(env: (String) -> String? = System::getenv): ServerConfig {
             val secret =
@@ -30,11 +31,33 @@ data class ServerConfig(
                             "secret the mobile apps use to authenticate against the token API.",
                     )
             return ServerConfig(
-                port = env("PORT")?.toIntOrNull() ?: DEFAULT_PORT,
+                port =
+                    positiveInt("PORT", env("PORT"), DEFAULT_PORT).also { port ->
+                        check(port <= MAX_PORT) { "PORT must be in 1..$MAX_PORT, was: $port" }
+                    },
                 mongodbUri = env("MONGODB_URI")?.takeIf { it.isNotBlank() } ?: DEFAULT_MONGODB_URI,
                 syncSharedSecret = secret,
-                syncIntervalMinutes = env("SYNC_INTERVAL_MINUTES")?.toIntOrNull() ?: DEFAULT_SYNC_INTERVAL_MINUTES,
+                syncIntervalMinutes =
+                    positiveInt(
+                        "SYNC_INTERVAL_MINUTES",
+                        env("SYNC_INTERVAL_MINUTES"),
+                        DEFAULT_SYNC_INTERVAL_MINUTES,
+                    ),
             )
+        }
+
+        // Absent/blank falls back to the default; a *present* value that does not parse
+        // to a positive integer is an operator error and fails startup, mirroring the
+        // fail-fast handling of SYNC_SHARED_SECRET.
+        private fun positiveInt(
+            name: String,
+            raw: String?,
+            default: Int,
+        ): Int {
+            val value = raw?.takeIf { it.isNotBlank() }?.trim() ?: return default
+            val parsed = value.toIntOrNull() ?: error("$name must be an integer, was: \"$value\"")
+            check(parsed > 0) { "$name must be a positive integer, was: $parsed" }
+            return parsed
         }
     }
 }

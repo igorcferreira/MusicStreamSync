@@ -53,16 +53,37 @@ class ServerConfigTests {
     }
 
     @Test
-    fun testMalformedNumbersFallBackToDefaults() {
+    fun testBlankNumbersFallBackToDefaults() {
         val environment =
             mapOf(
-                "PORT" to "not-a-port",
+                "PORT" to "",
                 "SYNC_SHARED_SECRET" to "secret",
-                "SYNC_INTERVAL_MINUTES" to "soon",
+                "SYNC_INTERVAL_MINUTES" to "   ",
             )
         val config = ServerConfig.fromEnvironment(environment::get)
 
         assertEquals(ServerConfig.DEFAULT_PORT, config.port)
         assertEquals(ServerConfig.DEFAULT_SYNC_INTERVAL_MINUTES, config.syncIntervalMinutes)
+    }
+
+    @Test
+    fun testMalformedPortFailsFast() {
+        val environment = mapOf("PORT" to "not-a-port", "SYNC_SHARED_SECRET" to "secret")
+
+        assertFailsWith<IllegalStateException> { ServerConfig.fromEnvironment(environment::get) }
+    }
+
+    @Test
+    fun testOutOfRangePortFailsFast() {
+        val environment = mapOf("PORT" to "99999", "SYNC_SHARED_SECRET" to "secret")
+
+        assertFailsWith<IllegalStateException> { ServerConfig.fromEnvironment(environment::get) }
+    }
+
+    @Test
+    fun testNonPositiveIntervalFailsFast() {
+        val environment = mapOf("SYNC_INTERVAL_MINUTES" to "0", "SYNC_SHARED_SECRET" to "secret")
+
+        assertFailsWith<IllegalStateException> { ServerConfig.fromEnvironment(environment::get) }
     }
 }
