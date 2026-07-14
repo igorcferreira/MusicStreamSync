@@ -45,6 +45,12 @@ C → C; A again → A; nothing new → nothing).
    `SyncEngine(configuration, lastFMClient, stateRepository, clock)` with a single
    entry point `suspend fun sync(userId: String): SyncResult`. Only public types in its
    signatures, so `:server` (TASK_6) can drive it.
+   - **Last.fm indirection (implementation note):** `LastFMClient` is `final` and the
+     project's Mokkery config refuses to mock final classes, so the engine's primary
+     constructor takes a small **`LastFmScrobbler`** interface (`listLatestTracks()`,
+     `scrobble(items)`) instead; `LastFmClientScrobbler` is the production adapter and a
+     `SyncEngine(configuration, lastFMClient, …)` convenience constructor wraps a raw
+     client automatically, preserving the signature above. Tests inject a hand-rolled fake.
 2. **Diff algorithm (top-K prefix cursor):**
    - Fetch the Apple recent list (newest first).
    - The persisted cursor is the **ordered list of the top K entryIds** from the last
