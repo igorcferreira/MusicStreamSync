@@ -170,6 +170,61 @@ class SyncEngineTest {
         }
 
     @Test
+    fun guardKeepsCandidatesWhoseHistoryPlayPredatesTheWindow() =
+        runTest {
+            val api =
+                mock<AppleMusicAPI> {
+                    everySuspend { getRecentlyPlayed() } returns listOf(entry("C"), entry("B"), entry("A"))
+                }
+            // C is in Last.fm history but was played BEFORE the last sync → outside the window,
+            // so it must not suppress this genuinely-new re-listen candidate.
+            val scrobbler =
+                FakeLastFmScrobbler(
+                    history = listOf(track(title = "C", artist = "Artist C", date = base - 100.seconds)),
+                )
+            val repo = FakeSyncStateRepository(SyncState(cursor = listOf("B", "A"), lastSyncAt = base))
+            val engine = SyncEngine(Configuration(api), scrobbler, repo, FixedClock(base + 60.seconds))
+
+            val result = engine.sync(userId)
+
+            assertEquals(0, result.droppedByGuard)
+            assertEquals(1, result.scrobbled)
+            assertEquals(listOf("C"), scrobbler.batches.single().map { it.track.text })
+        }
+
+    @Test
+    fun entriesWithNullEntryId_areSkippedFromDiffScrobblesAndCursor() =
+        runTest {
+            val nullId =
+                MusicEntry(
+                    id = "0_null",
+                    entryId = null,
+                    title = "Ghost",
+                    artist = "Nobody",
+                    artworkUrl = "",
+                    duration = 200,
+                    album = null,
+                    albumArtist = null,
+                    genres = emptyList(),
+                )
+            val api =
+                mock<AppleMusicAPI> {
+                    everySuspend { getRecentlyPlayed() } returns listOf(entry("C"), nullId, entry("A"))
+                }
+            val scrobbler = FakeLastFmScrobbler()
+            val repo = FakeSyncStateRepository(SyncState(cursor = emptyList(), lastSyncAt = null))
+            val engine = SyncEngine(Configuration(api), scrobbler, repo, FixedClock(base))
+
+            val result = engine.sync(userId)
+
+            assertEquals(3, result.fetched) // the skipped entry is still counted as fetched
+            assertEquals(2, result.candidates) // but never diffed or scrobbled
+            assertEquals(2, result.scrobbled)
+            assertEquals(listOf("A", "C"), scrobbler.batches.single().map { it.track.text })
+            assertEquals(listOf("C", "A"), repo.state.cursor) // and never lands in the cursor
+        }
+
+    @Test
     fun guardTreatsNowPlayingEntryAsRecent() =
         runTest {
             val api =

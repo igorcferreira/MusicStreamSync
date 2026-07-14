@@ -94,7 +94,15 @@ class SyncEngine(
         // First run: seed the cursor, never replay history recorded before registration.
         if (state.cursor == null) {
             stateRepository.saveCursor(userId, newCursor, clock.now())
-            return SyncResult(userId, fetched.size, 0, 0, 0, newCursor, firstRun = true)
+            return SyncResult(
+                userId = userId,
+                fetched = fetched.size,
+                candidates = 0,
+                droppedByGuard = 0,
+                scrobbled = 0,
+                cursor = newCursor,
+                firstRun = true,
+            )
         }
 
         val split = firstAlignedIndex(fetchedIds, state.cursor)
@@ -102,7 +110,14 @@ class SyncEngine(
 
         if (candidates.isEmpty()) {
             stateRepository.saveCursor(userId, newCursor, clock.now())
-            return SyncResult(userId, fetched.size, 0, 0, 0, newCursor)
+            return SyncResult(
+                userId = userId,
+                fetched = fetched.size,
+                candidates = 0,
+                droppedByGuard = 0,
+                scrobbled = 0,
+                cursor = newCursor,
+            )
         }
 
         // Double-scrobble guard: drop plays the mobile apps already scrobbled in real time.
@@ -123,7 +138,14 @@ class SyncEngine(
 
         if (toScrobble.isEmpty()) {
             stateRepository.saveCursor(userId, newCursor, clock.now())
-            return SyncResult(userId, fetched.size, candidates.size, dropped, 0, newCursor)
+            return SyncResult(
+                userId = userId,
+                fetched = fetched.size,
+                candidates = candidates.size,
+                droppedByGuard = dropped,
+                scrobbled = 0,
+                cursor = newCursor,
+            )
         }
 
         try {
@@ -137,7 +159,14 @@ class SyncEngine(
         }
 
         stateRepository.saveCursor(userId, newCursor, clock.now())
-        return SyncResult(userId, fetched.size, candidates.size, dropped, toScrobble.size, newCursor)
+        return SyncResult(
+            userId = userId,
+            fetched = fetched.size,
+            candidates = candidates.size,
+            droppedByGuard = dropped,
+            scrobbled = toScrobble.size,
+            cursor = newCursor,
+        )
     }
 
     /**
