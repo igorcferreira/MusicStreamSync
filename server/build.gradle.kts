@@ -25,10 +25,29 @@ application {
     mainClass.set("dev.igorcferreira.musicstreamsync.server.ApplicationKt")
 }
 
-// The canonical API document lives at server/openapi.yaml (spec/AGENT.md mandate);
-// package it into the jar so GET /openapi.yaml can serve it.
-tasks.processResources {
-    from(layout.projectDirectory.file("openapi.yaml"))
+// The canonical API document lives at server/openapi.yaml (spec/AGENT.md mandate).
+// It is generated from the route documentation (see the OpenApi plugin in Application.kt)
+// rather than hand-authored: the routes are the single source of truth and the served
+// GET /openapi.yaml renders the document at request time, so it is not packaged as a
+// resource. `openApiSnapshot` points both the drift guard (:server:test) and the
+// regeneration task at the checked-in snapshot.
+val openApiSnapshot = layout.projectDirectory.file("openapi.yaml")
+
+tasks.withType<Test>().configureEach {
+    systemProperty("openapi.file", openApiSnapshot.asFile.absolutePath)
+}
+
+// Regenerate server/openapi.yaml from the code: runs only the snapshot test with the
+// write flag on. `./gradlew :server:generateOpenApi`.
+tasks.register<Test>("generateOpenApi") {
+    description = "Regenerates server/openapi.yaml from the documented routes."
+    group = "documentation"
+    val testTask = tasks.named<Test>("test").get()
+    testClassesDirs = testTask.testClassesDirs
+    classpath = testTask.classpath
+    systemProperty("openapi.generate", "true")
+    filter { includeTestsMatching("dev.igorcferreira.musicstreamsync.server.OpenApiDocumentTest") }
+    outputs.upToDateWhen { false }
 }
 
 dependencies {
@@ -41,6 +60,13 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.openapi)
+    // Kotlinx-serialization-backed schema/example generation for the OpenApi plugin; these
+    // schema-kenerator modules are implementation-scoped inside ktor-openapi, so they are
+    // declared here to make SchemaGenerator.kotlinx()/ExampleEncoder.kotlinx() resolvable.
+    implementation(libs.schemakenerator.core)
+    implementation(libs.schemakenerator.serialization)
+    implementation(libs.schemakenerator.swagger)
     implementation(libs.logback.classic)
     implementation(libs.mongodb.driver.kotlin.coroutine)
     testImplementation(libs.kotlin.test)
