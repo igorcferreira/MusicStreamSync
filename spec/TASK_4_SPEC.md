@@ -91,7 +91,7 @@ MongoDB. This API is the contract TASK_7 (shared client use case) consumes.
 ## Validation
 
 ```bash
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
 ./gradlew ktlintCheck
 ./gradlew :server:test
 docker compose build

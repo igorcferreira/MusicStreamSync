@@ -22,7 +22,7 @@ tasks build on. **Docker is the primary dev/deploy environment** for this module
   `:lastfmapi`, `:arkana` (JVM-ready; provides `teamId`/`keyId`/`privateKey`/
   `lastFMAPIKey`/`lastFMAPISecret` — requires `arkana -l kotlin` before building, see
   root `CLAUDE.md`).
-- Build convention: JDK 17, ktlint (`alias(libs.plugins.ktlint)` like the other
+- Build convention: JDK 21, ktlint (`alias(libs.plugins.ktlint)` like the other
   modules).
 
 ## Requirements
@@ -73,7 +73,7 @@ tasks build on. **Docker is the primary dev/deploy environment** for this module
 ## Validation
 
 ```bash
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
 ./gradlew ktlintCheck
 ./gradlew :server:test
 ./gradlew :composeApp:assembleDebug        # repo stays green

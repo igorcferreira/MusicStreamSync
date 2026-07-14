@@ -87,10 +87,12 @@ All `:server` development, testing, and deployment happens with Docker support:
 
 ## Validation commands
 
-All Gradle commands use JDK 17:
+All Gradle commands use JDK 21 (the `:server` OpenAPI generation depends on
+`schema-kenerator`, whose published bytecode targets JDK 21; the Docker build/runtime
+and `:arkana` already use JDK 21):
 
 ```bash
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
 ```
 
 | Check | Command |

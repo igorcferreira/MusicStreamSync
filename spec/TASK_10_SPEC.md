@@ -97,7 +97,7 @@ an endpoint" means annotating its route, and the Swagger document falls out auto
 ## Validation
 
 ```bash
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
 ./gradlew ktlintCheck
 ./gradlew :server:generateOpenApi   # (or the equivalent) — regenerates server/openapi.yaml
 ./gradlew :server:test              # includes the drift guard + completeness assertions

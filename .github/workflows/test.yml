@@ -92,7 +92,7 @@ jobs:
         if: needs.changes.outputs.code == 'true'
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: gradle
       - name: Setup Gradle
         if: needs.changes.outputs.code == 'true'
@@ -125,7 +125,7 @@ jobs:
         if: needs.changes.outputs.code == 'true'
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: gradle
       - name: Setup Gradle
         if: needs.changes.outputs.code == 'true'
@@ -158,7 +158,7 @@ jobs:
         if: needs.changes.outputs.code == 'true'
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: gradle
       - name: Setup Gradle
         if: needs.changes.outputs.code == 'true'
