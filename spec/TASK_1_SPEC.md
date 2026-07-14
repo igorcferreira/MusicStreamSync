@@ -109,7 +109,7 @@ entry point is `SyncEngine` in `:shared` jvmMain (TASK_5) plus the public
 ## Validation
 
 ```bash
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
 ./gradlew ktlintCheck
 ./gradlew :shared:jvmTest
 ./gradlew :shared:testAndroidHostTest

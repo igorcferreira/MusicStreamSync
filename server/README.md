@@ -43,8 +43,24 @@ slim **JRE 21** running as a non-root user.
 ## API document
 
 The single OpenAPI document for this server is [`server/openapi.yaml`](openapi.yaml),
-served at `GET /openapi.yaml`. Any task that adds or changes an endpoint must update
-it in the same change.
+served at `GET /openapi.yaml` (as `application/yaml`). **It is generated from the
+route definitions, not hand-edited** — the routes in
+[`Application.kt`](src/main/kotlin/dev/igorcferreira/musicstreamsync/server/Application.kt)
+carry their own OpenAPI documentation (summaries, schemas, examples, security) via the
+[`ktor-openapi`](https://github.com/SMILEY4/ktor-openapi-tools) plugin, and the code is
+the single source of truth.
+
+To document an endpoint, annotate its route. When the HTTP surface changes, regenerate
+the checked-in snapshot:
+
+```bash
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
+./gradlew :server:generateOpenApi   # rewrites server/openapi.yaml from the code
+```
+
+`./gradlew :server:test` includes a drift guard that fails if `server/openapi.yaml` is
+out of sync with the routes, so CI catches a stale snapshot. Do not edit
+`server/openapi.yaml` by hand — it will be overwritten on the next regeneration.
 
 ## Health
 
@@ -55,7 +71,7 @@ unreachable — degradation is signaled in the payload rather than via 503.
 ## Building without Docker
 
 ```bash
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
 ./gradlew :server:test          # unit tests (no MongoDB needed)
 ./gradlew :server:run           # needs SYNC_SHARED_SECRET and a reachable MongoDB
 ```

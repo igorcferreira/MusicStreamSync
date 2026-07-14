@@ -1,77 +1,103 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: MusicStreamSync Sync Server
-  description: |
+  description: |-
     HTTP API of the MusicStreamSync sync server: the native apps push per-user
     Apple Music and Last.fm credentials to it, and a scheduled loop syncs each
     user's Apple Music play history into Last.fm.
 
-    This is the **single** API document for the server; every task that adds or
-    changes an endpoint updates it in the same change (see spec/AGENT.md).
+    This document is generated from the server's route definitions; the code is
+    the single source of truth (see spec/AGENT.md).
   version: 0.1.0
+externalDocs:
+  description: MusicStreamSync sync-server spec suite
+  url: https://github.com/igorcferreira/MusicStreamSync/tree/main/spec
 servers:
-  - url: http://localhost:8080
-    description: Local development (docker compose up)
+- url: http://localhost:8080
+  description: Local development (docker compose up)
 tags:
-  - name: meta
-    description: Health and documentation endpoints
+- name: meta
+  description: Health and documentation endpoints.
 paths:
   /health:
     get:
-      operationId: getHealth
-      tags: [meta]
+      tags:
+      - meta
       summary: Service health
-      description: |
-        Liveness/readiness probe. Always returns 200 while the process is up;
-        `mongo` reflects a live ping to MongoDB and is `false` when the database
-        is unreachable (the endpoint deliberately does not switch to 503 — the
-        process itself is healthy and degradation is signaled in the payload).
-      security: []
+      description: |-
+        Liveness/readiness probe. Always returns 200 while the process is up; `mongo`
+        reflects a live ping to MongoDB and is `false` when the database is unreachable
+        (the endpoint deliberately does not switch to 503 — the process itself is
+        healthy and degradation is signaled in the payload).
+      operationId: getHealth
+      parameters: []
       responses:
         "200":
           description: Service is up.
+          headers: {}
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Health"
+                $ref: "#/components/schemas/HealthResponse"
               examples:
                 healthy:
-                  value: { "status": "ok", "mongo": true }
+                  summary: MongoDB reachable
+                  value:
+                    status: ok
+                    mongo: true
                 degraded:
                   summary: MongoDB unreachable
-                  value: { "status": "ok", "mongo": false }
+                  description: Process is healthy but the database ping failed.
+                  value:
+                    status: ok
+                    mongo: false
+      deprecated: false
   /openapi.yaml:
     get:
-      operationId: getOpenApiDocument
-      tags: [meta]
+      tags:
+      - meta
       summary: This document
-      security: []
+      description: "Returns this OpenAPI document, generated from the server's route\
+        \ definitions."
+      operationId: getOpenApiDocument
+      parameters: []
       responses:
         "200":
-          description: The OpenAPI document describing this server.
+          description: The OpenAPI 3.1 document describing this server.
+          headers: {}
           content:
             application/yaml:
               schema:
                 type: string
+              examples:
+                document:
+                  summary: Excerpt (full document elided)
+                  value: |-
+                    openapi: 3.1.0
+                    info:
+                      title: MusicStreamSync Sync Server
+                      version: 0.1.0
+                    # paths and components elided
+      deprecated: false
 components:
-  securitySchemes:
-    syncSharedSecret:
-      type: http
-      scheme: bearer
-      description: |
-        Shared-secret bearer token (the server's SYNC_SHARED_SECRET environment
-        variable). Required by every endpoint from the token API (TASK_4)
-        onwards; `/health` and `/openapi.yaml` are unauthenticated.
   schemas:
-    Health:
+    HealthResponse:
       type: object
-      required: [status, mongo]
       properties:
         status:
           type: string
-          enum: [ok]
         mongo:
           type: boolean
-          description: Result of a live MongoDB ping.
-security:
-  - syncSharedSecret: []
+      required:
+      - mongo
+      - status
+  examples: {}
+  securitySchemes:
+    syncSharedSecret:
+      type: http
+      description: |-
+        Shared-secret bearer token (the server's SYNC_SHARED_SECRET environment
+        variable). Required by every endpoint from the token API (TASK_4) onwards;
+        /health and /openapi.yaml are unauthenticated.
+      scheme: bearer
+webhooks: {}

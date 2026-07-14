@@ -20,6 +20,11 @@ kotlin = "2.4.0"
 kotlinxDatetime = "0.8.0-0.6.x-compat"
 kotlinxSerializationJson = "1.11.0"
 ktor = "3.5.1"
+ktorOpenApi = "5.7.0"
+# Schema/example generation backing ktor-openapi; version pinned to what ktor-openapi 5.7.0 uses.
+schemaKenerator = "2.7.2"
+# OpenAPI parser used only in tests to validate the generated document; matches ktor-openapi's.
+swaggerParser = "2.1.39"
 coroutines = "1.11.0"
 kvault = "1.12.0"
 logback = "1.5.18"
@@ -63,6 +68,11 @@ ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negoti
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
+ktor-openapi = { module = "io.github.smiley4:ktor-openapi", version.ref = "ktorOpenApi" }
+schemakenerator-core = { module = "io.github.smiley4:schema-kenerator-core", version.ref = "schemaKenerator" }
+schemakenerator-serialization = { module = "io.github.smiley4:schema-kenerator-serialization", version.ref = "schemaKenerator" }
+schemakenerator-swagger = { module = "io.github.smiley4:schema-kenerator-swagger", version.ref = "schemaKenerator" }
+swagger-parser = { module = "io.swagger.parser.v3:swagger-parser", version.ref = "swaggerParser" }
 kvault = { module = "com.liftric:kvault", version.ref = "kvault" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 mongodb-driver-kotlin-coroutine = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
