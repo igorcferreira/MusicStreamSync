@@ -77,6 +77,12 @@ MongoDB. This API is the contract TASK_7 (shared client use case) consumes.
    bearer scheme, error responses, and examples — meeting TASK_10's completeness bar, and
    regenerate `server/openapi.yaml` so the drift guard passes. Do **not** hand-edit the
    YAML. Task is not done until the generated document matches the routes.
+   - **Security wiring (from TASK_10):** the `syncSharedSecret` bearer scheme is already
+     modelled in `components` and TASK_10 sets **no** global default security. Secure the
+     `/api/*` routes per-route with `protected = true` +
+     `securitySchemeNames("syncSharedSecret")`. If you instead add a document-level default
+     scheme, you must explicitly opt `/health` and `/openapi.yaml` back out — they are
+     unauthenticated and must stay so.
 6. **Tests:** Ktor `testApplication` route tests against an in-memory `UserStore` fake
    (interface + fake) for auth, happy paths, 400/401/404; plus `UserStore` integration
    tests against a real Mongo (Testcontainers, or the compose `mongodb` service with a

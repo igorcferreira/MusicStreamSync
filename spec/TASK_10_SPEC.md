@@ -73,8 +73,14 @@ an endpoint" means annotating its route, and the Swagger document falls out auto
    - **every** response status the route can return (200 plus 400/401/404 as applicable),
      each with a schema and a realistic example (including the `/health` `mongo:false`
      degraded example);
-   - the `securityScheme` (bearer `syncSharedSecret`) modelled and applied to secured
-     routes, with `/health` and `/openapi.yaml` explicitly opted out (`security: []`);
+   - the `securityScheme` (bearer `syncSharedSecret`) modelled in `components` and applied
+     to secured routes, with `/health` and `/openapi.yaml` unauthenticated. **Implemented
+     decision:** the `ktor-openapi` generator models the scheme in `components` (emitted
+     whenever declared) but sets no document-level default security and emits **no**
+     `security` node for unprotected routes (`protected = false`) — semantically identical to
+     `security: []`. TASK_4 secures `/api/*` per-route via `protected = true` +
+     `securitySchemeNames("syncSharedSecret")`; if TASK_4 instead introduces a **global**
+     default scheme, it must then explicitly opt `/health` and `/openapi.yaml` back out.
    - reusable component schemas referenced via `$ref`, not inlined per operation.
    At TASK_3's surface this covers `/health` and `/openapi.yaml`; TASK_4 extends the same
    bar to the token payloads (`Session`, error) and `/api/*` security.
