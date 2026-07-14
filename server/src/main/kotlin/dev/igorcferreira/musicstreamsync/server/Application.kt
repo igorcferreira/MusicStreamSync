@@ -158,22 +158,23 @@ internal fun Application.module(pinger: DatabasePinger) {
                         mediaTypes(OPENAPI_CONTENT_TYPE)
                         description = "The generated OpenAPI document, as YAML."
                         example("document") {
-                            summary = "Truncated document"
+                            summary = "Excerpt (full document elided)"
                             value =
                                 """
                                 openapi: 3.1.0
                                 info:
                                   title: MusicStreamSync Sync Server
                                   version: 0.1.0
-                                paths:
-                                  /health: { ... }
-                                  /openapi.yaml: { ... }
+                                # paths and components elided
                                 """.trimIndent()
                         }
                     }
                 }
             }
         }) {
+            // getOpenApiSpec reads the document the plugin generated once at startup (a cached
+            // lookup, not a per-request rebuild). The drift-guard test exercises this path, so a
+            // generation failure is caught in CI rather than only surfacing as a runtime 500.
             call.respondText(
                 OpenApiPlugin.getOpenApiSpec(OpenApiPluginConfig.DEFAULT_SPEC_ID),
                 OPENAPI_CONTENT_TYPE,

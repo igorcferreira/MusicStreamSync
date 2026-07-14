@@ -4,6 +4,7 @@ import dev.igorcferreira.musicstreamsync.server.health.DatabasePinger
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.server.testing.testApplication
+import io.swagger.v3.parser.OpenAPIV3Parser
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,6 +24,9 @@ class OpenApiDocumentTest {
         System.getProperty("openapi.file")?.let(::File) ?: File("openapi.yaml")
     private val shouldRegenerate: Boolean = System.getProperty("openapi.generate") == "true"
 
+    // OpenApiPlugin holds the generated spec in process-global state keyed by spec id. These
+    // testApplication blocks all install the same module, so the shared DEFAULT_SPEC_ID registry
+    // is safe here; a future test installing a different route set in this JVM should be wary of it.
     private fun servedDocument(block: (String) -> Unit) =
         testApplication {
             application { module(DatabasePinger { true }) }
@@ -51,11 +55,10 @@ class OpenApiDocumentTest {
     fun generatedDocumentIsValidOpenApi3() =
         servedDocument { document ->
             assertTrue(document.startsWith("openapi: 3.1"), "Should be an OpenAPI 3.1 document")
-            assertContainsAll(
-                document,
-                "title: MusicStreamSync Sync Server",
-                "version: 0.1.0",
-            )
+            // Parse it with the OpenAPI parser so a structurally invalid document fails, not just
+            // one with the wrong first line.
+            val messages = OpenAPIV3Parser().readContents(document).messages.orEmpty()
+            assertTrue(messages.isEmpty(), "Document should be valid OpenAPI 3.x, parser reported: $messages")
         }
 
     @Test

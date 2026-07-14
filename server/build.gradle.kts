@@ -39,12 +39,14 @@ tasks.withType<Test>().configureEach {
 
 // Regenerate server/openapi.yaml from the code: runs only the snapshot test with the
 // write flag on. `./gradlew :server:generateOpenApi`.
+val testTask = tasks.named<Test>("test")
 tasks.register<Test>("generateOpenApi") {
     description = "Regenerates server/openapi.yaml from the documented routes."
     group = "documentation"
-    val testTask = tasks.named<Test>("test").get()
-    testClassesDirs = testTask.testClassesDirs
-    classpath = testTask.classpath
+    // Reuse the test source set's compiled classes and classpath without eagerly realizing
+    // the `test` task at configuration time.
+    testClassesDirs = files({ testTask.get().testClassesDirs })
+    classpath = files({ testTask.get().classpath })
     systemProperty("openapi.generate", "true")
     filter { includeTestsMatching("dev.igorcferreira.musicstreamsync.server.OpenApiDocumentTest") }
     outputs.upToDateWhen { false }
@@ -72,4 +74,5 @@ dependencies {
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.ktor.server.test.host)
+    testImplementation(libs.swagger.parser)
 }

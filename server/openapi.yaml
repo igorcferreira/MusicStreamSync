@@ -71,15 +71,13 @@ paths:
                 type: string
               examples:
                 document:
-                  summary: Truncated document
+                  summary: Excerpt (full document elided)
                   value: |-
                     openapi: 3.1.0
                     info:
                       title: MusicStreamSync Sync Server
                       version: 0.1.0
-                    paths:
-                      /health: { ... }
-                      /openapi.yaml: { ... }
+                    # paths and components elided
       deprecated: false
 components:
   schemas:
