@@ -1,5 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.konan.properties.loadProperties
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -101,3 +101,8 @@ fun getProperty(
     }
     return project.property(name)?.toString() ?: defaultValue
 }
+
+fun loadProperties(path: String): Properties =
+    Properties().apply {
+        load(project.rootProject.file(path).inputStream())
+    }

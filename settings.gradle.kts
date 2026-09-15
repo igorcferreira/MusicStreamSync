@@ -2,6 +2,10 @@ rootProject.name = "MusicStreamSync"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    // Fork of ttypic/swift-klib-plugin, checked out as a git submodule, carrying the Xcode 27
+    // (Swift Build engine) support that upstream lacks. Run `git submodule update --init` first.
+    includeBuild("swift-klib-plugin")
+
     repositories {
         google {
             mavenContent {

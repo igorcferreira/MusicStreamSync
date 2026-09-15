@@ -85,28 +85,10 @@ kotlin {
                     cinterops.create("MediaPlayer") {
                         definitionFile.set(project.file("src/native/OS/MediaPlayer.def"))
                     }
-                // clang 21 (bundled with Kotlin 2.4.0+) only discovers module.modulemap directly inside
-                // -I directories, while swiftklib 0.6.4 points -I one level above the include/ dir
-                // SwiftPM emits. Add the include/ dir explicitly until swiftklib ships a fix.
-                val swiftklibArch = if (iosTarget.name == "iosX64") "x86_64" else "arm64"
-
-                fun swiftklibIncludeDir(name: String): String {
-                    val swiftBuildDir = "swiftklib/$name/${iosTarget.name}/swiftBuild/.build"
-                    return layout.buildDirectory
-                        .dir("$swiftBuildDir/$swiftklibArch-apple-macosx/release/$name.build/include")
-                        .get()
-                        .asFile
-                        .absolutePath
-                }
-
-                val OSLogger =
-                    cinterops.create("OSLogger") {
-                        compilerOpts("-I${swiftklibIncludeDir("OSLogger")}")
-                    }
-                val MusicKitBridge =
-                    cinterops.create("MusicKitBridge") {
-                        compilerOpts("-I${swiftklibIncludeDir("MusicKitBridge")}")
-                    }
+                // The def files generated above already point -I at the directory holding
+                // module.modulemap, so no extra include paths are needed here.
+                val OSLogger = cinterops.create("OSLogger")
+                val MusicKitBridge = cinterops.create("MusicKitBridge")
             }
         iosTarget.binaries.all {
             linkerOpts("-framework", "MediaPlayer")
