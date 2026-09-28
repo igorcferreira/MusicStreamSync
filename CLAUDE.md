@@ -6,10 +6,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 MusicStreamSync is a Kotlin Multiplatform (KMP) application that syncs Apple Music playback history with Last.fm. It works as an intermediary between Apple Music and Last.fm for both iOS and Android platforms.
 
+## Toolchain Versions
+
+| Tool   | Version | Defined in                                 |
+|--------|---------|--------------------------------------------|
+| Java   | 21      | `.github/workflows/*.yml` (Temurin 21)     |
+| Gradle | 9.8     | `gradle/wrapper/gradle-wrapper.properties` |
+| AGP    | 9.4     | `gradle/libs.versions.toml` (`agp`)        |
+| Kotlin | 2.4     | `gradle/libs.versions.toml` (`kotlin`)     |
+
+Build with JDK 21 — newer JDKs are not supported by this Gradle/AGP combination.
+Note that the modules compile to JVM 17 bytecode (`jvmTarget`/`compileOptions`),
+which is independent of the JDK used to run the build.
+
 ## Build Commands
 
 ### Prerequisites
-Before building, generate the secrets module:
+Before building, generate the secrets' module:
 ```bash
 gem install arkana
 arkana -l kotlin
@@ -86,6 +99,10 @@ swiftlint --fix --config .swiftlint.yml
 
 - **`mediaplayback`/`musickitauth`**: Pre-built Android AARs for MusicKit integration
 
+- **`swift-klib-plugin`**: Gradle plugin used to compiled Swift Packages into KMP
+  - This plugin is responsible for the compilation of the packages under `shared/native/`
+  - Added to this project as a git sub-module
+
 ### Key Architectural Patterns
 
 **Domain Layer** (`shared/src/commonMain/kotlin/dev/igorcferreira/musicstreamsync/domain/`):
@@ -95,7 +112,7 @@ swiftlint --fix --config .swiftlint.yml
 - `TokenSigner` / `UserTokenProvider`: MusicKit authentication
 
 **iOS Native Integration**:
-- Uses `swiftklib` plugin to compile Swift packages into cinterop bindings
+- Uses `swift-klib-plugin` plugin to compile Swift packages into cinterop bindings
 - `MusicKitBridge`: Swift package bridging MusicKit APIs to Kotlin
 - `MediaPlayer.def`: C-interop definition for iOS MediaPlayer framework
 
@@ -112,7 +129,7 @@ swiftlint --fix --config .swiftlint.yml
 
 Tests are located in:
 - `shared/src/commonTest/kotlin/` - Cross-platform tests
-- `shared/src/androidUnitTest/kotlin/` - Android-specific tests
+- `shared/src/androidHostTest/kotlin/` - Android-specific tests (JVM host)
 - `shared/src/iosTest/kotlin/` - iOS-specific tests
 
 Uses Mokkery for mocking in tests.
