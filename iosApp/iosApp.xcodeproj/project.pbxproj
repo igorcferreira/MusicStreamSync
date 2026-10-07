@@ -18,6 +18,7 @@
 		7868BACE2D8F58C400784946 /* LastFMAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7868BACD2D8F58BE00784946 /* LastFMAuthentication.swift */; };
 		7868BAD02D8F5FD200784946 /* LastFMToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7868BACF2D8F5FD200784946 /* LastFMToolbarItem.swift */; };
 		7872A47E2D81FC1300DAF5C7 /* RecentlyPlayedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7872A47D2D81FC0F00DAF5C7 /* RecentlyPlayedViewModel.swift */; };
+		7878F3E53076F50C00A5C5EA /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7878F3E43076F50C00A5C5EA /* RxSwift */; };
 		788E628A2D88E75E003C4ADA /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788E62892D88E75E003C4ADA /* ListViewModel.swift */; };
 		788E628C2D88E9ED003C4ADA /* FirstTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788E628B2D88E9ED003C4ADA /* FirstTask.swift */; };
 		788E63312D88FF82003C4ADA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 788E63302D88FF82003C4ADA /* Localizable.xcstrings */; };
@@ -88,6 +89,7 @@
 				78CD933E2EDE666700701DAD /* KMPNativeCoroutinesAsync in Frameworks */,
 				78B9D6592D84784B00DAF7FC /* Nuke in Frameworks */,
 				78356FB22EDDF19F00F7D531 /* SwiftJWT in Frameworks */,
+				7878F3E53076F50C00A5C5EA /* RxSwift in Frameworks */,
 				78B9D65B2D84784B00DAF7FC /* NukeExtensions in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,6 +266,7 @@
 				78356FB12EDDF19F00F7D531 /* SwiftJWT */,
 				78CD933D2EDE666700701DAD /* KMPNativeCoroutinesAsync */,
 				78CD93412EDE666700701DAD /* KMPNativeCoroutinesCore */,
+				7878F3E43076F50C00A5C5EA /* RxSwift */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* MusicStreamSync.app */;
@@ -299,6 +302,7 @@
 				78B9D6572D84784B00DAF7FC /* XCRemoteSwiftPackageReference "Nuke" */,
 				78356FB02EDDF19F00F7D531 /* XCRemoteSwiftPackageReference "Swift-JWT" */,
 				78CD933C2EDE666700701DAD /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */,
+				7878F3E33076F50C00A5C5EA /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -618,6 +622,14 @@
 				minimumVersion = 4.0.2;
 			};
 		};
+		7878F3E33076F50C00A5C5EA /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.10.2;
+			};
+		};
 		78B9D6572D84784B00DAF7FC /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke.git";
@@ -641,6 +653,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 78356FB02EDDF19F00F7D531 /* XCRemoteSwiftPackageReference "Swift-JWT" */;
 			productName = SwiftJWT;
+		};
+		7878F3E43076F50C00A5C5EA /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7878F3E33076F50C00A5C5EA /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
 		};
 		78B9D6582D84784B00DAF7FC /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
