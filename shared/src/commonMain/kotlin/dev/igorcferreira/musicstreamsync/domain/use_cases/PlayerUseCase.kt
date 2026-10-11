@@ -1,6 +1,5 @@
 package dev.igorcferreira.musicstreamsync.domain.use_cases
 
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import dev.igorcferreira.musicstreamsync.domain.UseCase
 import dev.igorcferreira.musicstreamsync.domain.player.NativePlayer
 import dev.igorcferreira.musicstreamsync.domain.player.buildNativePlayer
@@ -14,11 +13,9 @@ class PlayerUseCase(
 ) : UseCase() {
     constructor() : this(buildNativePlayer())
 
-    @NativeCoroutinesState
     val isPlaying: StateFlow<Boolean>
         get() = PlayerWatcher.getWatcher(nativePlayer).isPlaying
 
-    @NativeCoroutinesState
     val playingItem: StateFlow<MusicEntry?>
         get() = PlayerWatcher.getWatcher(nativePlayer).playingItem
     val playerState: NativePlayer.PlayerState

@@ -1,6 +1,5 @@
 package dev.igorcferreira.musicstreamsync.domain.use_cases
 
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import dev.igorcferreira.lastfm.model.HTTPException
 import dev.igorcferreira.musicstreamsync.domain.Scrobbler
 import dev.igorcferreira.musicstreamsync.domain.UseCase
@@ -17,7 +16,6 @@ class LastFMUseCase(
 ) : UseCase() {
     private val _isAuthenticated = MutableStateFlow(scrobbler.isAuthenticated)
 
-    @NativeCoroutinesState
     val isAuthenticated: StateFlow<Boolean>
         get() = _isAuthenticated.asStateFlow()
 

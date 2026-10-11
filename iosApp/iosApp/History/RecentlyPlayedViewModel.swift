@@ -22,11 +22,11 @@ final class RecentlyPlayedViewModel: ListViewModel {
     init(useCase: RecentlyPlayedUseCase) {
         self.recentlyPlayedUseCase = useCase
 
-        collect(useCase.isPerformingFlow, into: \.loading)
-        collect(useCase.resultFlow, into: \.history)
+        collect(useCase.isPerforming, into: \.loading)
+        collect(useCase.result, into: \.history)
     }
 
     func load() async throws {
-        try await self.recentlyPlayedUseCase.perform()
+        try await skie(recentlyPlayedUseCase).perform()
     }
 }

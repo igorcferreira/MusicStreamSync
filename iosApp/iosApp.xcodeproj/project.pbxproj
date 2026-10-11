@@ -30,8 +30,6 @@
 		78B9D65D2D84784B00DAF7FC /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 78B9D65C2D84784B00DAF7FC /* NukeUI */; };
 		78B9D65F2D84784B00DAF7FC /* NukeVideo in Frameworks */ = {isa = PBXBuildFile; productRef = 78B9D65E2D84784B00DAF7FC /* NukeVideo */; };
 		78B9D6632D8488E200DAF7FC /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B9D6622D8488DF00DAF7FC /* Factory.swift */; };
-		78CD933E2EDE666700701DAD /* KMPNativeCoroutinesAsync in Frameworks */ = {isa = PBXBuildFile; productRef = 78CD933D2EDE666700701DAD /* KMPNativeCoroutinesAsync */; };
-		78CD93422EDE666700701DAD /* KMPNativeCoroutinesCore in Frameworks */ = {isa = PBXBuildFile; productRef = 78CD93412EDE666700701DAD /* KMPNativeCoroutinesCore */; };
 		78CD93442EDE6A2900701DAD /* FlowObserverModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD93432EDE6A2700701DAD /* FlowObserverModifier.swift */; };
 		78DBA4662D85D4D700D7B917 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DBA4652D85D4D300D7B917 /* PlayerView.swift */; };
 		78DBA4682D85D4F500D7B917 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DBA4672D85D4F100D7B917 /* PlayerViewModel.swift */; };
@@ -85,8 +83,6 @@
 			files = (
 				78B9D65F2D84784B00DAF7FC /* NukeVideo in Frameworks */,
 				78B9D65D2D84784B00DAF7FC /* NukeUI in Frameworks */,
-				78CD93422EDE666700701DAD /* KMPNativeCoroutinesCore in Frameworks */,
-				78CD933E2EDE666700701DAD /* KMPNativeCoroutinesAsync in Frameworks */,
 				78B9D6592D84784B00DAF7FC /* Nuke in Frameworks */,
 				78356FB22EDDF19F00F7D531 /* SwiftJWT in Frameworks */,
 				7878F3E53076F50C00A5C5EA /* RxSwift in Frameworks */,
@@ -264,8 +260,6 @@
 				78B9D65C2D84784B00DAF7FC /* NukeUI */,
 				78B9D65E2D84784B00DAF7FC /* NukeVideo */,
 				78356FB12EDDF19F00F7D531 /* SwiftJWT */,
-				78CD933D2EDE666700701DAD /* KMPNativeCoroutinesAsync */,
-				78CD93412EDE666700701DAD /* KMPNativeCoroutinesCore */,
 				7878F3E43076F50C00A5C5EA /* RxSwift */,
 			);
 			productName = iosApp;
@@ -301,7 +295,6 @@
 			packageReferences = (
 				78B9D6572D84784B00DAF7FC /* XCRemoteSwiftPackageReference "Nuke" */,
 				78356FB02EDDF19F00F7D531 /* XCRemoteSwiftPackageReference "Swift-JWT" */,
-				78CD933C2EDE666700701DAD /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */,
 				7878F3E33076F50C00A5C5EA /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
@@ -638,14 +631,6 @@
 				minimumVersion = 12.8.0;
 			};
 		};
-		78CD933C2EDE666700701DAD /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rickclephas/KMP-NativeCoroutines.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -678,16 +663,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 78B9D6572D84784B00DAF7FC /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeVideo;
-		};
-		78CD933D2EDE666700701DAD /* KMPNativeCoroutinesAsync */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 78CD933C2EDE666700701DAD /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
-			productName = KMPNativeCoroutinesAsync;
-		};
-		78CD93412EDE666700701DAD /* KMPNativeCoroutinesCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 78CD933C2EDE666700701DAD /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
-			productName = KMPNativeCoroutinesCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

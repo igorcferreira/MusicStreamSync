@@ -18,12 +18,12 @@ class PlaylistViewModel: ListViewModel {
     init(useCase: PlaylistsUseCase) {
         self.useCase = useCase
 
-        collect(useCase.isPerformingFlow, into: \.loading)
-        collect(useCase.resultFlow, into: \.history)
+        collect(useCase.isPerforming, into: \.loading)
+        collect(useCase.result, into: \.history)
     }
 
     func load() async throws {
-        try await useCase.perform()
+        try await skie(useCase).perform()
     }
 }
 

@@ -1,6 +1,5 @@
 package dev.igorcferreira.musicstreamsync.domain
 
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +12,6 @@ abstract class ResultUseCase<T>(
     @HiddenFromObjC
     private val _result = MutableStateFlow(initialValue)
 
-    @NativeCoroutinesState
     val result: StateFlow<T>
         get() = _result.asStateFlow()
 
