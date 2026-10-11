@@ -1,5 +1,5 @@
 {
-  "originHash" : "9c36dcf51f60ddc679f1d89051a4a7892bc4a92a7d4be0974a3350cc9426ead5",
+  "originHash" : "e55543ed9f8bad18524423640e21b7135668696bd6f9df804713eb57cda9daa7",
   "pins" : [
     {
       "identity" : "bluecryptor",
@@ -35,15 +35,6 @@
       "state" : {
         "revision" : "b98f087943d308e2e4331def11d7bbbe46a76dcd",
         "version" : "2.1.0"
-      }
-    },
-    {
-      "identity" : "kmp-nativecoroutines",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rickclephas/KMP-NativeCoroutines.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "54a45fbb15bc0bebc54081f87683830d3bc9e84e"
       }
     },
     {
