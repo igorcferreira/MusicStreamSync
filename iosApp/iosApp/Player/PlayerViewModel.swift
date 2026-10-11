@@ -18,8 +18,8 @@ open class PlayerViewModel {
         self.playerUseCase = playerUseCase
         guard let playerUseCase else { return }
 
-        collect(playerUseCase.isPlayingFlow, into: \.isPlaying)
-        collect(playerUseCase.playingItemFlow, into: \.playingItem)
+        collect(playerUseCase.isPlaying, into: \.isPlaying)
+        collect(playerUseCase.playingItem, into: \.playingItem)
     }
 
     convenience init(factory: Factory) {

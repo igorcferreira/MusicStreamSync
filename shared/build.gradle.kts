@@ -1,4 +1,3 @@
-import com.rickclephas.kmp.nativecoroutines.gradle.ExposedSeverity
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
@@ -9,7 +8,7 @@ plugins {
     alias(libs.plugins.swiftklib)
     alias(libs.plugins.mokkery)
     `maven-publish`
-    alias(libs.plugins.nativecoroutines)
+    alias(libs.plugins.skie)
     alias(libs.plugins.ktlint)
 }
 
@@ -102,6 +101,7 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.logging)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.skie.annotations)
             compileOnly(project(":arkana"))
             api(project(":arkana"))
             compileOnly(project(":lastfmapi"))
@@ -148,8 +148,4 @@ kotlin {
                 }
             }
     }
-}
-
-nativeCoroutines {
-    exposedSeverity = ExposedSeverity.NONE
 }

@@ -15,7 +15,7 @@ class LastFMViewModel {
 
     init(useCase: LastFMUseCase = LastFMUseCase()) {
         self.useCase = useCase
-        collect(useCase.isAuthenticatedFlow, into: \.isAuthenticated)
+        collect(useCase.isAuthenticated, into: \.isAuthenticated)
     }
 
     func authenticate(
