@@ -23,7 +23,7 @@ class PlaylistViewModel: ListViewModel {
     }
 
     func load() async throws {
-        try await skie(useCase).perform()
+        _ = try await skie(useCase).perform()
     }
 }
 

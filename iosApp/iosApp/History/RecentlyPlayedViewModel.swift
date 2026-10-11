@@ -27,6 +27,6 @@ final class RecentlyPlayedViewModel: ListViewModel {
     }
 
     func load() async throws {
-        try await skie(recentlyPlayedUseCase).perform()
+        _ = try await skie(recentlyPlayedUseCase).perform()
     }
 }
